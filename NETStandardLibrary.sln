@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Common", "NETStandardLibrary.Common\NETStandardLibrary.Common.csproj", "{8B69154F-8929-4353-B5D3-27B2050B5A2D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Common.Tests", "NETStandardLibrary.Common.Tests\NETStandardLibrary.Common.Tests.csproj", "{C13250B1-F6C0-4C39-9250-90C62655F82D}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Email", "NETStandardLibrary.Email\NETStandardLibrary.Email.csproj", "{B0363B00-E4FD-4BE8-82B5-A2BD1CB2CAD4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Email.Tests", "NETStandardLibrary.Email.Tests\NETStandardLibrary.Email.Tests.csproj", "{9587D30C-7530-4CAE-BA0C-A192FC174589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Common", "NETStandardLibrary.Common\NETStandardLibrary.Common.csproj", "{8B69154F-8929-4353-B5D3-27B2050B5A2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Linq", "NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj", "{1EFCCFB6-489D-44C6-B6C9-00BA9541E8CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Common.Tests", "NETStandardLibrary.Common.Tests\NETStandardLibrary.Common.Tests.csproj", "{C13250B1-F6C0-4C39-9250-90C62655F82D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Linq.Tests", "NETStandardLibrary.Linq.Tests\NETStandardLibrary.Linq.Tests.csproj", "{23A3978C-21A8-440C-8443-E9A21AC0B6C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Search", "NETStandardLibrary.Search\NETStandardLibrary.Search.csproj", "{55053499-2BAB-4743-A999-A261C95F043E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETStandardLibrary.Search.Tests", "NETStandardLibrary.Search.Tests\NETStandardLibrary.Search.Tests.csproj", "{7C687909-86C6-488A-BBD1-31023A7F2C4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,22 @@ Global
 		{C13250B1-F6C0-4C39-9250-90C62655F82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C13250B1-F6C0-4C39-9250-90C62655F82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C13250B1-F6C0-4C39-9250-90C62655F82D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EFCCFB6-489D-44C6-B6C9-00BA9541E8CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EFCCFB6-489D-44C6-B6C9-00BA9541E8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EFCCFB6-489D-44C6-B6C9-00BA9541E8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EFCCFB6-489D-44C6-B6C9-00BA9541E8CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A3978C-21A8-440C-8443-E9A21AC0B6C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A3978C-21A8-440C-8443-E9A21AC0B6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A3978C-21A8-440C-8443-E9A21AC0B6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A3978C-21A8-440C-8443-E9A21AC0B6C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55053499-2BAB-4743-A999-A261C95F043E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55053499-2BAB-4743-A999-A261C95F043E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55053499-2BAB-4743-A999-A261C95F043E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55053499-2BAB-4743-A999-A261C95F043E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C687909-86C6-488A-BBD1-31023A7F2C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C687909-86C6-488A-BBD1-31023A7F2C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C687909-86C6-488A-BBD1-31023A7F2C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C687909-86C6-488A-BBD1-31023A7F2C4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

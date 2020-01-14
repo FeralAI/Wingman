@@ -1,0 +1,4 @@
+@using RazorLight
+@inherits TemplatePage<NETStandardLibrary.Email.Tests.Emails.TestEmailInclude>
+Hello @Model.Title!
+@{ await IncludeAsync("Emails.TestEmailInclude.Include.cshtml", Model); }

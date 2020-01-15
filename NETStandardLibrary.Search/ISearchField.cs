@@ -1,4 +1,5 @@
 using System;
+using NETStandardLibrary.Linq;
 
 namespace NETStandardLibrary.Search
 {
@@ -6,7 +7,7 @@ namespace NETStandardLibrary.Search
 	{
 		string Name { get; set; }
 		object Value { get; set; }
-		SearchOperator Operator { get; set; }
+		WhereClauseType Operator { get; set; }
 		Type ValueType { get; set; }
 	}
 }

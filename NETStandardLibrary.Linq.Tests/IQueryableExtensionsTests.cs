@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NETStandardLibrary.Tests.Data;
 using Xunit;
 
 namespace NETStandardLibrary.Linq.Tests
@@ -33,11 +34,6 @@ namespace NETStandardLibrary.Linq.Tests
 		[Fact]
 		public void OrderByClause()
 		{
-			// var data = new List<dynamic> {
-			// 	new { FirstName = "Bob", LastName = "Smith", Age = 20 },
-			// 	new { FirstName = "John", LastName = "Johnson", Age = 23 },
-			// }.AsQueryable();
-
 			var data = new List<Person> {
 				new Person { FirstName = "Bob", LastName = "Smith", Age = 20 },
 				new Person { FirstName = "John", LastName = "Johnson", Age = 23 },

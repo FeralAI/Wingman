@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj" />
+    <ProjectReference Include="..\NETStandardLibrary.Tests.Data\NETStandardLibrary.Tests.Data.csproj" />
   </ItemGroup>
 
 </Project>

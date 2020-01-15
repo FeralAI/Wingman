@@ -8,14 +8,6 @@ namespace NETStandardLibrary.Linq
 	// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/how-to-use-expression-trees-to-build-dynamic-queries
 	public sealed class ExpressionMethods
 	{
-		public static Expression<Func<Type, object>> ToPropertyExpression(Type type, string propertyName)
-		{
-			var parameter = Expression.Parameter(type);
-			var property = Expression.Property(parameter, propertyName);
-			var propAsObject = Expression.Convert(property, typeof(object));
-			return Expression.Lambda<Func<Type, object>>(propAsObject, parameter);
-		}
-
 		public static MethodCallExpression ToMethodCallExpression<T>(
 			IQueryable<T> query,
 			string propertyName,
@@ -53,16 +45,17 @@ namespace NETStandardLibrary.Linq
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
 
-		public static Expression<Func<T, bool>> ToWhereClauseExpression<T, U>(
+		public static Expression<Func<T, bool>> ToWhereClauseExpression<T>(
 			string propertyName,
-			U value,
+			object value,
+			Type valueType,
 			WhereClauseType expressionType)
 		{
 			var parameter = Expression.Parameter(typeof(T), "type");
 			var property = Expression.Property(parameter, propertyName);
-			var constant = Expression.Constant(value, typeof(U));
+			var constant = Expression.Constant(value, valueType);
 
-			if (typeof(U) == typeof(string))
+			if (valueType == typeof(string))
 			{
 				// If it's a string, limit to only Contains and Equals
 				switch (expressionType)
@@ -101,6 +94,14 @@ namespace NETStandardLibrary.Linq
 						throw new NotImplementedException($"The expression type {expressionType} is not implemented");
 				}
 			}
+		}
+
+		public static Expression<Func<T, bool>> ToWhereClauseExpression<T, U>(
+			string propertyName,
+			U value,
+			WhereClauseType expressionType)
+		{
+			return ToWhereClauseExpression<T>(propertyName, value, value.GetType(), expressionType);
 		}
 	}
 }

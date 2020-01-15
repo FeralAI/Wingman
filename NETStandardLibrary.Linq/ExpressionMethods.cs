@@ -8,14 +8,13 @@ namespace NETStandardLibrary.Linq
 	// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/how-to-use-expression-trees-to-build-dynamic-queries
 	public sealed class ExpressionMethods
 	{
-		// TODO: Cleanup?
-		// public static Expression<Func<Type, object>> ToPropertyExpression(Type type, string propertyName)
-		// {
-		// 	var parameter = Expression.Parameter(type);
-		// 	var property = Expression.Property(parameter, propertyName);
-		// 	var propAsObject = Expression.Convert(property, typeof(object));
-		// 	return Expression.Lambda<Func<Type, object>>(propAsObject, parameter);
-		// }
+		public static Expression<Func<Type, object>> ToPropertyExpression(Type type, string propertyName)
+		{
+			var parameter = Expression.Parameter(type);
+			var property = Expression.Property(parameter, propertyName);
+			var propAsObject = Expression.Convert(property, typeof(object));
+			return Expression.Lambda<Func<Type, object>>(propAsObject, parameter);
+		}
 
 		public static MethodCallExpression ToMethodCallExpression<T>(
 			IQueryable<T> query,

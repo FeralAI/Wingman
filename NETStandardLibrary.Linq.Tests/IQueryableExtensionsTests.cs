@@ -6,13 +6,6 @@ namespace NETStandardLibrary.Linq.Tests
 {
 	public class IQueryableExtensionsTests
 	{
-		public class Person
-		{
-			public string FirstName { get; set; }
-			public string LastName { get; set; }
-			public int Age { get; set; }
-		}
-
 		[Fact]
 		public void GetPage()
 		{

@@ -20,6 +20,8 @@ namespace NETStandardLibrary.Search
 				return results;
 			}
 
+			// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
+			// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
 			foreach(var field in parameters.Fields)
 			{
 				// TODO: do something cool

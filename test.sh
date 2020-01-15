@@ -25,4 +25,4 @@ cd ../..
 
 # dotnet reportgenerator "-reports:_results/*.xml" "-targetdir:_results/html"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-start chrome "${DIR}/_results/html/index.htm"
+start chrome "${DIR}/tests/_results/html/index.htm"

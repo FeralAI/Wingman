@@ -12,13 +12,11 @@ cd ..
 
 cd NETStandardLibrary.Linq.Tests
 dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Linq.Tests.xml" -p:Exclude="[*]Tests.*"
-# dotnet reportgenerator "-reports:../TestResults/*.xml" "-targetdir:../TestResults/html"
 cd ..
 
-# cd NETStandardLibrary.Search.Tests
-# dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Search.Tests.xml" -p:Exclude="[*]Tests.*"
-# dotnet reportgenerator "-reports:../TestResults/*.xml" "-targetdir:../TestResults/html"
-# cd ..
+cd NETStandardLibrary.Search.Tests
+dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Search.Tests.xml" -p:Exclude="[*]Tests.*"
+cd ..
 
 cd NETStandardLibrary.Common.Tests
 dotnet reportgenerator "-reports:../TestResults/*.xml" "-targetdir:../TestResults/html"

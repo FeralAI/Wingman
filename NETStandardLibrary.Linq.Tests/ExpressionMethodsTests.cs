@@ -12,7 +12,7 @@ namespace NETStandardLibrary.Linq.Tests
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 25, WhereClauseType.Equal);
 			var result = Person.Data.Where(clause).First();
-			Assert.Equal("John", result.FirstName);
+			Assert.Equal("Jackie", result.FirstName);
 		}
 
 		[Fact]
@@ -28,15 +28,15 @@ namespace NETStandardLibrary.Linq.Tests
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 25, WhereClauseType.LessThanOrEqual);
 			var result = Person.Data.Where(clause);
-			Assert.Equal(2, result.Count());
+			Assert.Equal(3, result.Count());
 		}
 
 		[Fact]
 		public void ToWhereClauseExpressionIntGreaterThan()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 20, WhereClauseType.GreaterThan);
-			var result = Person.Data.Where(clause).First();
-			Assert.Equal("John", result.FirstName);
+			var result = Person.Data.Where(clause);
+			Assert.Equal(6, result.Count());
 		}
 
 		[Fact]
@@ -44,7 +44,7 @@ namespace NETStandardLibrary.Linq.Tests
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 20, WhereClauseType.GreaterThanOrEqual);
 			var result = Person.Data.Where(clause);
-			Assert.Equal(2, result.Count());
+			Assert.Equal(7, result.Count());
 		}
 		#endregion
 
@@ -60,9 +60,9 @@ namespace NETStandardLibrary.Linq.Tests
 		[Fact]
 		public void ToWhereClauseExpressionStringEqual()
 		{
-			var clause = ExpressionMethods.ToWhereClauseExpression<Person, string>("FirstName", "John", WhereClauseType.Equal);
-			var result = Person.Data.Where(clause).First();
-			Assert.Equal("John", result.FirstName);
+			var clause = ExpressionMethods.ToWhereClauseExpression<Person, string>("FirstName", "Bob", WhereClauseType.Equal);
+			var result = Person.Data.Where(clause);
+			Assert.Equal(2, result.Count());
 		}
 		#endregion
 	}

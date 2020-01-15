@@ -1,8 +1,9 @@
 using System;
 using System.Text.RegularExpressions;
+using NETStandardLibrary.Common;
 using Xunit;
 
-namespace NETStandardLibrary.Common.Tests
+namespace NETStandardLibraryTests.Common
 {
 	public class StringExtensionsTests
 	{

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using NETStandardLibrary.Linq;
 using Xunit;
 
-namespace NETStandardLibrary.Linq.Tests
+namespace NETStandardLibraryTests.Linq
 {
 	public class ParserTests
 	{

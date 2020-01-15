@@ -2,26 +2,27 @@
 
 # dotnet tool install -g dotnet-reportgenerator-globaltool
 
-cd NETStandardLibrary.Common.Tests
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Common.Tests.xml" -p:Exclude="[*]Tests.*"
-cd ..
+cd tests/NETStandardLibraryTests.Common
+dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Common.xml" -p:Exclude="[*]Tests.*"
+cd ../..
 
-cd NETStandardLibrary.Email.Tests
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Email.Tests.xml" -p:Exclude="[*]Tests.*"
-cd ..
+cd tests/NETStandardLibraryTests.Email
+dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Email.xml" -p:Exclude="[*]Tests.*"
+cd ../..
 
-cd NETStandardLibrary.Linq.Tests
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Linq.Tests.xml" -p:Exclude="[*]Tests.*"
-cd ..
+cd tests/NETStandardLibraryTests.Linq
+dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Linq.xml" -p:Exclude="[*]Tests.*"
+cd ../..
 
-cd NETStandardLibrary.Search.Tests
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../TestResults/NETStandardLibrary.Search.Tests.xml" -p:Exclude="[*]Tests.*"
-cd ..
+cd tests/NETStandardLibraryTests.Search
+dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Search.xml" -p:Exclude="[*]Tests.*"
+cd ../..
 
-cd NETStandardLibrary.Common.Tests
-dotnet reportgenerator "-reports:../TestResults/*.xml" "-targetdir:../TestResults/html"
-cd ..
+cd tests/NETStandardLibraryTests
+dotnet restore
+dotnet reportgenerator "-reports:../_results/*.xml" "-targetdir:../_results/html"
+cd ../..
 
-# dotnet reportgenerator "-reports:TestResults/*.xml" "-targetdir:TestResults/html"
+# dotnet reportgenerator "-reports:_results/*.xml" "-targetdir:_results/html"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-start chrome "${DIR}/TestResults/html/index.htm"
+start chrome "${DIR}/_results/html/index.htm"

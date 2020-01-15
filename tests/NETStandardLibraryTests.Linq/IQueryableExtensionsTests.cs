@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NETStandardLibrary.Tests.Data;
+using NETStandardLibrary.Linq;
 using Xunit;
 
-namespace NETStandardLibrary.Linq.Tests
+namespace NETStandardLibraryTests.Linq
 {
 	public class IQueryableExtensionsTests
 	{

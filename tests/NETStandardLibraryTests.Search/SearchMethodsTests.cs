@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using NETStandardLibrary.Linq;
-using NETStandardLibrary.Tests.Data;
+using NETStandardLibrary.Search;
 using Xunit;
 
-namespace NETStandardLibrary.Search.Tests
+namespace NETStandardLibraryTests.Search
 {
 	public class SearchMethodsTests
 	{

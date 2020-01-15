@@ -1,6 +1,6 @@
-namespace NETStandardLibrary.Email.Tests.Emails
+namespace NETStandardLibraryTests.Email.Emails
 {
-	public class TestEmailInclude : Email
+	public class TestEmailInclude : NETStandardLibrary.Email.Email
 	{
 		public string Include
 		{

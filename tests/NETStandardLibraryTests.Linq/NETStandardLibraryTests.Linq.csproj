@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj" />
-    <ProjectReference Include="..\NETStandardLibrary.Tests.Data\NETStandardLibrary.Tests.Data.csproj" />
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj" />
+    <ProjectReference Include="..\NETStandardLibraryTests\NETStandardLibraryTests.csproj" />
   </ItemGroup>
 
 </Project>

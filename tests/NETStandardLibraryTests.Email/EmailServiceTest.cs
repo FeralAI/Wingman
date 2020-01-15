@@ -1,8 +1,9 @@
 using System;
-using NETStandardLibrary.Email.Tests.Emails;
+using NETStandardLibrary.Email;
+using NETStandardLibraryTests.Email.Emails;
 using Xunit;
 
-namespace NETStandardLibrary.Email.Tests
+namespace NETStandardLibraryTests.Email
 {
 	public class EmailServiceTest : IDisposable
 	{
@@ -10,7 +11,7 @@ namespace NETStandardLibrary.Email.Tests
 
 		public EmailServiceTest()
 		{
-			emailService = new TestEmailService();
+			emailService = new TestEmailService<TestEmail>();
 		}
 
     public void Dispose()

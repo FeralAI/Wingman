@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NETStandardLibrary.Tests.Data
+namespace NETStandardLibraryTests
 {
 	public class Person
 	{

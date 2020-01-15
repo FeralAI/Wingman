@@ -1,8 +1,9 @@
 using System;
-using NETStandardLibrary.Email.Tests.Emails;
+using NETStandardLibrary.Email;
+using NETStandardLibraryTests.Email.Emails;
 using Xunit;
 
-namespace NETStandardLibrary.Email.Tests
+namespace NETStandardLibraryTests.Email
 {
 	public class EmailTest
 	{
@@ -11,7 +12,7 @@ namespace NETStandardLibrary.Email.Tests
 		public EmailTest()
 		{
 			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
-			emailService = new TestEmailService();
+			emailService = new TestEmailService<TestEmail>();
 			emailService.Initialize(options);
 		}
 

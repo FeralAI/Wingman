@@ -40,7 +40,9 @@ namespace NETStandardLibrary.Linq
 		public static Expression<Func<T, object>> ToPropertyExpression<T>(string propertyName)
 		{
 			var parameter = Expression.Parameter(typeof(T));
-			var property = Expression.Property(parameter, propertyName);
+			var property = propertyName
+				.Split('.')
+				.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
 			var propAsObject = Expression.Convert(property, typeof(object));
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
@@ -52,7 +54,9 @@ namespace NETStandardLibrary.Linq
 			WhereClauseType expressionType)
 		{
 			var parameter = Expression.Parameter(typeof(T), "type");
-			var property = Expression.Property(parameter, propertyName);
+			var property = propertyName
+				.Split('.')
+				.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
 			var constant = Expression.Constant(value, valueType);
 
 			if (valueType == typeof(string))

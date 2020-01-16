@@ -17,7 +17,7 @@ namespace NETStandardLibraryTests.Common
 		}
 
 		[Fact]
-		public void EqualsIgnoreLineBreaksBlanks()
+		public void EqualsIgnoreLineBreaks_Blanks()
 		{
 			var value = (string)null;
 			var other = string.Empty;
@@ -26,7 +26,7 @@ namespace NETStandardLibraryTests.Common
 		}
 
 		[Fact]
-		public void EqualsIgnoreLineBreaksFalse()
+		public void EqualsIgnoreLineBreaks_False()
 		{
 			var value = "This\r\nhas\nline\r\nbreaks\n";
 			var other = "This\nhas\nline\r\nbreaks\r\ntoo";
@@ -35,7 +35,7 @@ namespace NETStandardLibraryTests.Common
 		}
 
 		[Fact]
-		public void EqualsIgnoreRegex()
+		public void EqualsIgnore_Regex()
 		{
 			var value = "The number is 987654321";
 			var other = "The number is 1234567890";
@@ -44,7 +44,7 @@ namespace NETStandardLibraryTests.Common
 		}
 
 		[Fact]
-		public void EqualsIgnoreRegexNull()
+		public void EqualsIgnore_RegexNull()
 		{
 			var value = string.Empty;
 			var other = string.Empty;

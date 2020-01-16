@@ -7,7 +7,7 @@ namespace NETStandardLibraryTests.Linq
 	public class ParserTests
 	{
 		[Fact]
-		public void OrderByClauses()
+		public void ParseOrderBys()
 		{
 			var source = "LastName, FirstName DESC, Age ASC";
 			var result = Parser.ParseOrderBys(source);

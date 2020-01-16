@@ -1,5 +1,4 @@
 using System;
-using NETStandardLibrary.Email;
 using NETStandardLibraryTests.Email.Emails;
 using Xunit;
 
@@ -7,15 +6,6 @@ namespace NETStandardLibraryTests.Email
 {
 	public class EmailTest
 	{
-		private IEmailService emailService;
-
-		public EmailTest()
-		{
-			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
-			emailService = new TestEmailService<TestEmail>();
-			emailService.Initialize(options);
-		}
-
 		[Fact]
 		public void ToMailMessage()
 		{
@@ -36,40 +26,10 @@ namespace NETStandardLibraryTests.Email
 		}
 
 		[Fact]
-		public void ToMailMessageException()
+		public void ToMailMessage_Exception()
 		{
 			var email = new TestEmail();
 			Assert.ThrowsAny<NullReferenceException>(email.ToMailMessage);
-		}
-
-		[Fact]
-		public async void TestEmailInclude()
-		{
-			var email = new TestEmailInclude();
-			var body = await emailService.Render(email);
-			Assert.Equal("Hello test!\nI&#x27;m included!", body);
-		}
-
-		[Fact]
-		public async void TestEmailRenders()
-		{
-			var email = new TestEmail();
-			var body = await emailService.Render(email);
-			Assert.Equal("Hello test!", body);
-		}
-
-		[Fact]
-		public async void TestEmailSends()
-		{
-			var email = new TestEmail
-			{
-				From = "test@test.com",
-				To = "test@test.com",
-				Subject = "Test",
-			};
-
-			await emailService.Send(email);
-			Assert.True(true);
 		}
 	}
 }

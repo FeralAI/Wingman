@@ -8,7 +8,7 @@ namespace NETStandardLibraryTests.Linq
 	{
 		#region int
 		[Fact]
-		public void ToWhereClauseExpressionIntEqual()
+		public void ToWhereClauseExpression_IntEqual()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 25, WhereClauseType.Equal);
 			var result = Person.Data.Where(clause).First();
@@ -16,7 +16,7 @@ namespace NETStandardLibraryTests.Linq
 		}
 
 		[Fact]
-		public void ToWhereClauseExpressionIntLessThan()
+		public void ToWhereClauseExpression_IntLessThan()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 25, WhereClauseType.LessThan);
 			var result = Person.Data.Where(clause).First();
@@ -24,7 +24,7 @@ namespace NETStandardLibraryTests.Linq
 		}
 
 		[Fact]
-		public void ToWhereClauseExpressionIntLessThanOrEqual()
+		public void ToWhereClauseExpression_IntLessThanOrEqual()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 25, WhereClauseType.LessThanOrEqual);
 			var result = Person.Data.Where(clause);
@@ -32,7 +32,7 @@ namespace NETStandardLibraryTests.Linq
 		}
 
 		[Fact]
-		public void ToWhereClauseExpressionIntGreaterThan()
+		public void ToWhereClauseExpression_IntGreaterThan()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 20, WhereClauseType.GreaterThan);
 			var result = Person.Data.Where(clause);
@@ -40,7 +40,7 @@ namespace NETStandardLibraryTests.Linq
 		}
 
 		[Fact]
-		public void ToWhereClauseExpressionIntGreaterThanOrEqual()
+		public void ToWhereClauseExpression_IntGreaterThanOrEqual()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, int>("Age", 20, WhereClauseType.GreaterThanOrEqual);
 			var result = Person.Data.Where(clause);
@@ -50,7 +50,7 @@ namespace NETStandardLibraryTests.Linq
 
 		#region string
 		[Fact]
-		public void ToWhereClauseExpressionStringContains()
+		public void ToWhereClauseExpression_StringContains()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, string>("LastName", "mit", WhereClauseType.Contains);
 			var result = Person.Data.Where(clause).First();
@@ -58,7 +58,7 @@ namespace NETStandardLibraryTests.Linq
 		}
 
 		[Fact]
-		public void ToWhereClauseExpressionStringEqual()
+		public void ToWhereClauseExpression_StringEqual()
 		{
 			var clause = ExpressionMethods.ToWhereClauseExpression<Person, string>("FirstName", "Bob", WhereClauseType.Equal);
 			var result = Person.Data.Where(clause);

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Common\NETStandardLibrary.Common.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
     <ProjectReference Include="..\NETStandardLibraryTests\NETStandardLibraryTests.csproj" />
   </ItemGroup>

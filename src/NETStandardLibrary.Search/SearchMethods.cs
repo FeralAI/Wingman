@@ -29,9 +29,10 @@ namespace NETStandardLibrary.Search
 			{
 				var expression = ExpressionMethods.ToWhereExpression<T>(
 					field.Name,
-					field.Value,
+					field.Operator,
 					field.Value.GetType(),
-					field.Operator
+					field.Value,
+					field.MaxValue
 				);
 
 				wherePredicate = wherePredicate.And(expression);

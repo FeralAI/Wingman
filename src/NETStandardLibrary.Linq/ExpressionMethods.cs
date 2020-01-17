@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using NETStandardLibrary.Common;
 
 namespace NETStandardLibrary.Linq
 {
@@ -49,9 +50,10 @@ namespace NETStandardLibrary.Linq
 
 		public static Expression<Func<T, bool>> ToWhereExpression<T>(
 			string propertyName,
-			object value,
+			WhereClauseType clauseType,
 			Type valueType,
-			WhereClauseType expressionType)
+			object value,
+			object maxValue = null)
 		{
 			if (string.IsNullOrWhiteSpace(propertyName))
 				throw new ArgumentNullException("The propertyName must not be null or empty");
@@ -86,54 +88,17 @@ namespace NETStandardLibrary.Linq
 			});
 
 			var constant = Expression.Convert(Expression.Constant(value), property.Type);
+			var maxConstant = (Expression)null;
+			if (maxValue != null)
+				maxConstant = Expression.Convert(Expression.Constant(maxValue), property.Type);
 
 			var whereExpression = (Expression)null;
 			if (valueType == typeof(string))
-			{
-				// If it's a string, limit to only Contains and Equals
-				switch (expressionType)
-				{
-					case WhereClauseType.Contains:
-						var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-						whereExpression = Expression.Call(property, method, constant);
-						break;
-
-					case WhereClauseType.Equal:
-						whereExpression = Expression.Equal(property, constant);
-						break;
-
-					default:
-						throw new NotImplementedException("Strings are limited to Contains and Equals expression types only");
-				}
-			}
+				whereExpression = BuildWhereExpressionString(clauseType, property, constant);
+			else if (valueType.IsComparable())
+				whereExpression = BuildWhereExpressionComparable(clauseType, property, constant, maxConstant);
 			else
-			{
-				switch (expressionType)
-				{
-					case WhereClauseType.Equal:
-						whereExpression = Expression.Equal(property, constant);
-						break;
-
-					case WhereClauseType.GreaterThan:
-						whereExpression = Expression.GreaterThan(property, constant);
-						break;
-
-					case WhereClauseType.GreaterThanOrEqual:
-						whereExpression = Expression.GreaterThanOrEqual(property, constant);
-						break;
-
-					case WhereClauseType.LessThan:
-						whereExpression = Expression.LessThan(property, constant);
-						break;
-
-					case WhereClauseType.LessThanOrEqual:
-						whereExpression = Expression.LessThanOrEqual(property, constant);
-						break;
-
-					default:
-						throw new NotImplementedException($"The expression type {expressionType} is not implemented");
-				}
-			}
+				whereExpression = BuildWhereExpressionObject(clauseType, property, constant);
 
 			if (notNullCheck != null)
 			{
@@ -145,10 +110,91 @@ namespace NETStandardLibrary.Linq
 
 		public static Expression<Func<T, bool>> ToWhereExpression<T, U>(
 			string propertyName,
+			WhereClauseType expressionType,
 			U value,
-			WhereClauseType expressionType)
+			object maxValue = null)
 		{
-			return ToWhereExpression<T>(propertyName, value, value.GetType(), expressionType);
+			return ToWhereExpression<T>(propertyName, expressionType, value.GetType(), value, maxValue);
+		}
+
+		/// <summary>
+		/// Builds an expression for IComparables to be used in a .Where call.
+		/// </summary>
+		/// <param name="clauseType"></param>
+		/// <param name="property"></param>
+		/// <param name="value"></param>
+		/// <param name="maxValue"></param>
+		/// <returns></returns>
+		private static Expression BuildWhereExpressionComparable(WhereClauseType clauseType, Expression property, Expression value, Expression maxValue = null)
+		{
+			switch (clauseType)
+			{
+				case WhereClauseType.Between:
+					return Expression.AndAlso(Expression.GreaterThanOrEqual(property, value), Expression.LessThanOrEqual(property, maxValue));
+
+				case WhereClauseType.Equal:
+					return Expression.Equal(property, value);
+
+				case WhereClauseType.GreaterThan:
+					return Expression.GreaterThan(property, value);
+
+				case WhereClauseType.GreaterThanOrEqual:
+					return Expression.GreaterThanOrEqual(property, value);
+
+				case WhereClauseType.LessThan:
+					return Expression.LessThan(property, value);
+
+				case WhereClauseType.LessThanOrEqual:
+					return Expression.LessThanOrEqual(property, value);
+
+				default:
+					throw new NotImplementedException($"WhereClauseType.{clauseType} is not implemented");
+			}
+		}
+
+		/// <summary>
+		/// Builds an expression for an object to be used in a .Where call.
+		/// </summary>
+		/// <param name="clauseType"></param>
+		/// <param name="property"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		private static Expression BuildWhereExpressionObject(WhereClauseType clauseType, Expression property, Expression value)
+		{
+			// For objects we will only do an equality check
+			switch (clauseType)
+			{
+				case WhereClauseType.Equal:
+					return Expression.Equal(property, value);
+
+				default:
+					throw new NotImplementedException("Objects are limited to Equal expression types only");
+			}
+		}
+
+		/// <summary>
+		/// Builds an expression for a string to be used in a .Where call.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <param name="constant"></param>
+		/// <param name="clauseType"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		private static Expression BuildWhereExpressionString(WhereClauseType clauseType, Expression property, Expression value)
+		{
+			// If it's a string, limit to only Contains and Equals
+			switch (clauseType)
+			{
+				case WhereClauseType.Contains:
+					var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+					return Expression.Call(property, method, value);
+
+				case WhereClauseType.Equal:
+					return Expression.Equal(property, value);
+
+				default:
+					throw new NotImplementedException("Strings are limited to Contains and Equal expression types only");
+			}
 		}
 	}
 }

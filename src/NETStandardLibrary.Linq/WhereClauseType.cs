@@ -6,14 +6,19 @@ namespace NETStandardLibrary.Linq
 	public enum WhereClauseType
 	{
 		/// <summary>
-		/// Contains operator. Only applies to <c>string</c> values.
-		/// </summary>
-		Contains,
-
-		/// <summary>
 		/// Equals (=) operator.
 		/// </summary>
 		Equal,
+
+		/// <summary>
+		/// Emulates the SQL behavior of "BETWEEN".
+		/// </summary>
+		Between,
+
+		/// <summary>
+		/// Contains operator. Only applies to <c>string</c> values.
+		/// </summary>
+		Contains,
 
 		/// <summary>
 		/// Greater than (>) operator.

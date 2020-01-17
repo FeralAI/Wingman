@@ -65,10 +65,18 @@ namespace NETStandardLibrary.Linq
 			var propertyParts = propertyName.Split('.');
 			var property = propertyParts.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
 
-			// TODO: Maybe move this into a helper function
-			var notNull = Expression.NotEqual(property, Expression.Constant(null, property.Type));
-			var notNullPredicate = Expression.Lambda<Func<T, bool>>(notNull, parameter);
+			// Build the null check expression for nested properties
+			var lastNestedProperty = (Expression)null;
+			var notNullCheck = propertyParts.Aggregate<string, Expression>(parameter, (e, s) =>
+			{
+				var nestedProperty = Expression.PropertyOrField(lastNestedProperty ?? e, s);
+				var notNull = Expression.NotEqual(nestedProperty, Expression.Constant(null, nestedProperty.Type));
+				var returnExpression = lastNestedProperty == null ? notNull : Expression.AndAlso(e, notNull);
+				lastNestedProperty = nestedProperty;
+				return returnExpression;
+			});
 
+			var whereExpression = (Expression)null;
 			if (valueType == typeof(string))
 			{
 				// If it's a string, limit to only Contains and Equals
@@ -76,12 +84,12 @@ namespace NETStandardLibrary.Linq
 				{
 					case WhereClauseType.Contains:
 						var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-						var containsMethodCall = Expression.Call(property, method, constant);
-						return Expression.Lambda<Func<T, bool>>(containsMethodCall, new ParameterExpression[] { parameter });
+						whereExpression = Expression.Call(property, method, constant);
+						break;
 
 					case WhereClauseType.Equal:
-						var equalExpression = Expression.Equal(property, constant);
-						return Expression.Lambda<Func<T, bool>>(equalExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.Equal(property, constant);
+						break;
 
 					default:
 						throw new NotImplementedException("Strings are limited to Contains and Equals expression types only");
@@ -92,29 +100,37 @@ namespace NETStandardLibrary.Linq
 				switch (expressionType)
 				{
 					case WhereClauseType.Equal:
-						var equalExpression = Expression.Equal(property, constant);
-						return Expression.Lambda<Func<T, bool>>(equalExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.Equal(property, constant);
+						break;
 
 					case WhereClauseType.GreaterThan:
-						var greaterThanExpression = Expression.GreaterThan(property, constant);
-						return Expression.Lambda<Func<T, bool>>(greaterThanExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.GreaterThan(property, constant);
+						break;
 
 					case WhereClauseType.GreaterThanOrEqual:
-						var greaterThanOrEqualExpression = Expression.GreaterThanOrEqual(property, constant);
-						return Expression.Lambda<Func<T, bool>>(greaterThanOrEqualExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.GreaterThanOrEqual(property, constant);
+						break;
 
 					case WhereClauseType.LessThan:
-						var lessThanExpression = Expression.LessThan(property, constant);
-						return Expression.Lambda<Func<T, bool>>(lessThanExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.LessThan(property, constant);
+						break;
 
 					case WhereClauseType.LessThanOrEqual:
-						var lessThanOrEqualExpression = Expression.LessThanOrEqual(property, constant);
-						return Expression.Lambda<Func<T, bool>>(lessThanOrEqualExpression, new ParameterExpression[] { parameter });
+						whereExpression = Expression.LessThanOrEqual(property, constant);
+						break;
 
 					default:
 						throw new NotImplementedException($"The expression type {expressionType} is not implemented");
 				}
 			}
+
+			if (notNullCheck != null)
+			{
+				whereExpression = Expression.AndAlso(notNullCheck, whereExpression);
+			}
+
+
+			return Expression.Lambda<Func<T, bool>>(whereExpression, new ParameterExpression[] { parameter });
 		}
 
 		public static Expression<Func<T, bool>> ToWhereClauseExpression<T, U>(

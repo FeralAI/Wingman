@@ -16,6 +16,7 @@ namespace NETStandardLibraryTests.Linq
 		[InlineData("Age", 25, null, typeof(int), WhereClauseType.LessThan, "Bob")]
 		[InlineData("Age", 30, null, typeof(int), WhereClauseType.LessThanOrEqual, "James")]
 		// Comparable type - nullable
+		[InlineData("Weight", 200, 300, typeof(int?), WhereClauseType.Between, "Keith")]
 		[InlineData("Weight", 175, null, typeof(int?), WhereClauseType.Equal, "Bob")]
 		[InlineData("Weight", 200, null, typeof(int?), WhereClauseType.GreaterThan, "Keith")]
 		[InlineData("Weight", 175, null, typeof(int?), WhereClauseType.GreaterThanOrEqual, "Keith")]

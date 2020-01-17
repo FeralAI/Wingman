@@ -64,16 +64,19 @@ namespace NETStandardLibrary.Linq
 			var lastProperty = (Expression)null;
 			var notNullCheck = (Expression)null;
 
-			var propertyParts = propertyName.Split('.');
-			var property =  propertyParts.Aggregate<string, Expression>(parameter, (e, s) =>
+			// We're hijacking the aggregate callbacks to do the work around null checks, original code here was:
+			// var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
+			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (e, s) =>
 			{
-				// For each property we're going to check if the default value is null.
-				// If so, then we need to build a not null expression which will be prepended to our final expression.
+				// Get the current property reference and a default value for its type.
+				// If it's null, then start building out not null expressions to prepend to the final expression.
 				var currentProperty = Expression.PropertyOrField(lastProperty ?? e, s);
 				var defaultValue = Expression.Lambda(Expression.Default(currentProperty.Type), "", null).Compile().DynamicInvoke();
 				if (defaultValue == null)
 				{
-					var notNull = Expression.NotEqual(currentProperty, Expression.Convert(Expression.Constant(null), nestedProperty.Type));
+					var notNull = Expression.NotEqual(currentProperty, Expression.Convert(Expression.Constant(null), currentProperty.Type));
+
+					// Wanted to do a ternary here, but the if/else is better for debugging
 					if (notNullCheck == null)
 						notNullCheck = notNull;
 					else

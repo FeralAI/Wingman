@@ -95,7 +95,7 @@ namespace NETStandardLibrary.Linq
 			var whereExpression = (Expression)null;
 			if (valueType == typeof(string))
 				whereExpression = BuildWhereExpressionString(clauseType, property, constant);
-			else if (valueType.IsComparable())
+			else if (valueType.IsNumericType() || valueType.IsComparable())
 				whereExpression = BuildWhereExpressionComparable(clauseType, property, constant, maxConstant);
 			else
 				whereExpression = BuildWhereExpressionObject(clauseType, property, constant);

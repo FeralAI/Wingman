@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NETStandardLibrary.Linq;
 using Xunit;
@@ -6,64 +7,28 @@ namespace NETStandardLibraryTests.Linq
 {
 	public class ExpressionMethodsTests
 	{
-		#region int
-		[Fact]
-		public void ToWhereClauseExpression_IntEqual()
+		[Theory]
+		[InlineData("Age", 25, typeof(int), WhereClauseType.Equal, "Jackie")]
+		[InlineData("Age", 35, typeof(int), WhereClauseType.GreaterThan, "Mary")]
+		[InlineData("Age", 50, typeof(int), WhereClauseType.GreaterThanOrEqual, "Mary")]
+		[InlineData("Age", 25, typeof(int), WhereClauseType.LessThan, "Bob")]
+		[InlineData("Age", 30, typeof(int), WhereClauseType.LessThanOrEqual, "James")]
+		[InlineData("Weight", 175, typeof(int?), WhereClauseType.Equal, "Bob")]
+		[InlineData("Weight", 200, typeof(int?), WhereClauseType.GreaterThan, "Keith")]
+		[InlineData("Weight", 175, typeof(int?), WhereClauseType.GreaterThanOrEqual, "Keith")]
+		[InlineData("Weight", 250, typeof(int?), WhereClauseType.LessThan, "Mary")]
+		[InlineData("Weight", 175, typeof(int?), WhereClauseType.LessThanOrEqual, "Mary")]
+		[InlineData("LastName", "mit", typeof(string), WhereClauseType.Contains, "Bob")]
+		[InlineData("LastName", "Brown", typeof(string), WhereClauseType.Equal, "James")]
+		public void ToWhereExpression(string name, object value, Type valueType, WhereClauseType clauseType, string expected)
 		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, int>("Age", 25, WhereClauseType.Equal);
-			var result = Person.Data.Where(clause).First();
-			Assert.Equal("Jackie", result.FirstName);
-		}
+			var clause = ExpressionMethods.ToWhereExpression<Person>(name, value, valueType, clauseType);
+			var result = Person.Data.Where(clause)
+				.OrderBy(p => p.LastName)
+				.ThenBy(p => p.FirstName)
+				.First();
 
-		[Fact]
-		public void ToWhereClauseExpression_IntLessThan()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, int>("Age", 25, WhereClauseType.LessThan);
-			var result = Person.Data.Where(clause).First();
-			Assert.Equal("Bob", result.FirstName);
+			Assert.Equal(expected, result.FirstName);
 		}
-
-		[Fact]
-		public void ToWhereClauseExpression_IntLessThanOrEqual()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, int>("Age", 25, WhereClauseType.LessThanOrEqual);
-			var result = Person.Data.Where(clause);
-			Assert.Equal(3, result.Count());
-		}
-
-		[Fact]
-		public void ToWhereClauseExpression_IntGreaterThan()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, int>("Age", 20, WhereClauseType.GreaterThan);
-			var result = Person.Data.Where(clause);
-			Assert.Equal(6, result.Count());
-		}
-
-		[Fact]
-		public void ToWhereClauseExpression_IntGreaterThanOrEqual()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, int>("Age", 20, WhereClauseType.GreaterThanOrEqual);
-			var result = Person.Data.Where(clause);
-			Assert.Equal(7, result.Count());
-		}
-		#endregion
-
-		#region string
-		[Fact]
-		public void ToWhereClauseExpression_StringContains()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, string>("LastName", "mit", WhereClauseType.Contains);
-			var result = Person.Data.Where(clause).First();
-			Assert.Equal("Bob", result.FirstName);
-		}
-
-		[Fact]
-		public void ToWhereClauseExpression_StringEqual()
-		{
-			var clause = ExpressionMethods.ToWhereExpression<Person, string>("FirstName", "Bob", WhereClauseType.Equal);
-			var result = Person.Data.Where(clause);
-			Assert.Equal(2, result.Count());
-		}
-		#endregion
 	}
 }

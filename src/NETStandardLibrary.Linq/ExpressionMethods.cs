@@ -47,7 +47,7 @@ namespace NETStandardLibrary.Linq
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
 
-		public static Expression<Func<T, bool>> ToWhereClauseExpression<T>(
+		public static Expression<Func<T, bool>> ToWhereExpression<T>(
 			string propertyName,
 			object value,
 			Type valueType,
@@ -140,12 +140,12 @@ namespace NETStandardLibrary.Linq
 			return Expression.Lambda<Func<T, bool>>(whereExpression, new ParameterExpression[] { parameter });
 		}
 
-		public static Expression<Func<T, bool>> ToWhereClauseExpression<T, U>(
+		public static Expression<Func<T, bool>> ToWhereExpression<T, U>(
 			string propertyName,
 			U value,
 			WhereClauseType expressionType)
 		{
-			return ToWhereClauseExpression<T>(propertyName, value, value.GetType(), expressionType);
+			return ToWhereExpression<T>(propertyName, value, value.GetType(), expressionType);
 		}
 	}
 }

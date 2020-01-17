@@ -27,7 +27,7 @@ namespace NETStandardLibrary.Search
 			var wherePredicate = PredicateBuilder.New<T>(true);
 			foreach(var field in parameters.Fields)
 			{
-				var expression = ExpressionMethods.ToWhereClauseExpression<T>(
+				var expression = ExpressionMethods.ToWhereExpression<T>(
 					field.Name,
 					field.Value,
 					field.Value.GetType(),
@@ -37,7 +37,8 @@ namespace NETStandardLibrary.Search
 				wherePredicate = wherePredicate.And(expression);
 			}
 
-			// NOTE: Is the .AsExpandable() really needed here? Might only be for SQL Server...
+			// NOTE: Is the .AsExpandable() really needed here?
+			// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
 			var searchResults = (IOrderedQueryable<T>)queryable.AsExpandable().Where(wherePredicate);
 
 			if (parameters.OrderBys != null)

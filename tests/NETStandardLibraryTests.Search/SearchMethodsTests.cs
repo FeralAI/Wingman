@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NETStandardLibrary.Linq;
@@ -8,8 +9,11 @@ namespace NETStandardLibraryTests.Search
 {
 	public class SearchMethodsTests
 	{
-		[Fact]
-		public void Search()
+		[Theory]
+		[InlineData("FirstName", "Steven", typeof(string), WhereClauseType.Equal, "Jackson")]
+		[InlineData("Weight", 200, typeof(int?), WhereClauseType.GreaterThan, "Myers")]
+		[InlineData("Mother.FirstName", "Mary", typeof(string), WhereClauseType.Equal, "Brown")]
+		public void Search(string name, object value, Type valueType, WhereClauseType clauseType, string expected)
 		{
 			var searchParameters = new SearchParameters
 			{
@@ -17,10 +21,10 @@ namespace NETStandardLibraryTests.Search
 				{
 					new SearchField
 					{
-						Name = "FirstName",
-						Value = "Bob",
-						ValueType = typeof(string),
-						Operator = WhereClauseType.Equal,
+						Name = name,
+						Value = value,
+						ValueType = valueType,
+						Operator = clauseType,
 					},
 				},
 				OrderBys = new List<OrderByClause>
@@ -36,50 +40,7 @@ namespace NETStandardLibraryTests.Search
 			};
 
 			var results = SearchMethods.Search<Person>(Person.Data, searchParameters);
-			Assert.NotNull(results);
-			Assert.Equal(1, results.Page);
-			Assert.Equal(3, results.PageSize);
-			Assert.Equal(2, results.TotalCount);
-			Assert.Equal(2, results.Results.Count());
-			Assert.Equal(1, results.TotalPages);
-			Assert.Equal("Bob", results.Results.First().FirstName);
-		}
-
-		[Fact]
-		public void SearchDeep()
-		{
-			var searchParameters = new SearchParameters
-			{
-				Fields = new List<SearchField>
-				{
-					new SearchField
-					{
-						Name = "Mother.FirstName",
-						Value = "Mary",
-						ValueType = typeof(string),
-						Operator = WhereClauseType.Equal,
-					},
-				},
-				OrderBys = new List<OrderByClause>
-				{
-					new OrderByClause
-					{
-						Name = "LastName",
-						Direction = OrderByDirection.ASC,
-					},
-				},
-				Page = 1,
-				PageSize = 3,
-			};
-
-			var results = SearchMethods.Search<Person>(Person.Data, searchParameters);
-			Assert.NotNull(results);
-			Assert.Equal(1, results.Page);
-			Assert.Equal(3, results.PageSize);
-			Assert.Equal(2, results.TotalCount);
-			Assert.Equal(2, results.Results.Count());
-			Assert.Equal(1, results.TotalPages);
-			Assert.Equal("Brown", results.Results.First().LastName);
+			Assert.Equal(expected, results.Results.First().LastName);
 		}
 	}
 }

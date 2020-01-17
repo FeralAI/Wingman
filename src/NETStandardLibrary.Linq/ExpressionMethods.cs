@@ -47,6 +47,8 @@ namespace NETStandardLibrary.Linq
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
 
+		// TODO: Handle nullable values:
+		// The binary operator GreaterThan is not defined for the types 'System.Nullable`1[System.Int32]' and 'System.Int32'
 		public static Expression<Func<T, bool>> ToWhereClauseExpression<T>(
 			string propertyName,
 			object value,
@@ -60,10 +62,10 @@ namespace NETStandardLibrary.Linq
 				throw new ArgumentNullException("The valueType must be provided");
 
 			var parameter = Expression.Parameter(typeof(T), "type");
-			var constant = Expression.Constant(value, valueType);
 
 			var propertyParts = propertyName.Split('.');
 			var property = propertyParts.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
+			var constant = Expression.Constant(value, property.Type);
 
 			// Build the null check expression for nested properties
 			var lastNestedProperty = (Expression)null;

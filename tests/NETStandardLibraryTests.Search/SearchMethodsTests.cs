@@ -12,6 +12,7 @@ namespace NETStandardLibraryTests.Search
 		[Theory]
 		[InlineData("FirstName", "Steven", typeof(string), WhereClauseType.Equal, "Jackson")]
 		[InlineData("Weight", 200, typeof(int?), WhereClauseType.GreaterThan, "Myers")]
+		[InlineData("Age", 21, typeof(int), WhereClauseType.LessThanOrEqual, "Smith")]
 		[InlineData("Mother.FirstName", "Mary", typeof(string), WhereClauseType.Equal, "Brown")]
 		public void Search(string name, object value, Type valueType, WhereClauseType clauseType, string expected)
 		{

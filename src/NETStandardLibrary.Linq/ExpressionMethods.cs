@@ -47,8 +47,6 @@ namespace NETStandardLibrary.Linq
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
 
-		// TODO: Handle nullable values:
-		// The binary operator GreaterThan is not defined for the types 'System.Nullable`1[System.Int32]' and 'System.Int32'
 		public static Expression<Func<T, bool>> ToWhereClauseExpression<T>(
 			string propertyName,
 			object value,
@@ -63,20 +61,28 @@ namespace NETStandardLibrary.Linq
 
 			var parameter = Expression.Parameter(typeof(T), "type");
 
-			var propertyParts = propertyName.Split('.');
-			var property = propertyParts.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
-			var constant = Expression.Constant(value, property.Type);
-
-			// Build the null check expression for nested properties
 			var lastNestedProperty = (Expression)null;
-			var notNullCheck = propertyParts.Aggregate<string, Expression>(parameter, (e, s) =>
+			var notNullCheck = (Expression)null;
+
+			var propertyParts = propertyName.Split('.');
+			var property =  propertyParts.Aggregate<string, Expression>(parameter, (e, s) =>
 			{
 				var nestedProperty = Expression.PropertyOrField(lastNestedProperty ?? e, s);
-				var notNull = Expression.NotEqual(nestedProperty, Expression.Constant(null, nestedProperty.Type));
-				var returnExpression = lastNestedProperty == null ? notNull : Expression.AndAlso(e, notNull);
+				var defaultValue = Expression.Lambda(Expression.Default(nestedProperty.Type), "", null).Compile().DynamicInvoke();
+				if (defaultValue == null)
+				{
+					var notNull = Expression.NotEqual(nestedProperty, Expression.Convert(Expression.Constant(null), nestedProperty.Type));
+					if (notNullCheck == null)
+						notNullCheck = notNull;
+					else
+						notNullCheck = Expression.AndAlso(notNullCheck, notNull);
+				}
+
 				lastNestedProperty = nestedProperty;
-				return returnExpression;
+				return nestedProperty;
 			});
+
+			var constant = Expression.Convert(Expression.Constant(value), property.Type);
 
 			var whereExpression = (Expression)null;
 			if (valueType == typeof(string))
@@ -130,7 +136,6 @@ namespace NETStandardLibrary.Linq
 			{
 				whereExpression = Expression.AndAlso(notNullCheck, whereExpression);
 			}
-
 
 			return Expression.Lambda<Func<T, bool>>(whereExpression, new ParameterExpression[] { parameter });
 		}

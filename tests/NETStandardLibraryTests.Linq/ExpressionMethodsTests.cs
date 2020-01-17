@@ -37,8 +37,9 @@ namespace NETStandardLibraryTests.Linq
 			var maxValue = rawMaxValue;
 			if (valueType == typeof(DateTime) || Nullable.GetUnderlyingType(valueType) == typeof(DateTime))
 			{
-				value = DateTime.Parse(rawValue as string);
-				if (maxValue != null)
+				if (rawValue != null)
+					value = DateTime.Parse(rawValue as string);
+				if (rawMaxValue != null)
 					maxValue = DateTime.Parse(rawMaxValue as string);
 			}
 

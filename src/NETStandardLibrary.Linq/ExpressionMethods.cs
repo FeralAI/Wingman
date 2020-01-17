@@ -61,25 +61,29 @@ namespace NETStandardLibrary.Linq
 
 			var parameter = Expression.Parameter(typeof(T), "type");
 
-			var lastNestedProperty = (Expression)null;
+			var lastProperty = (Expression)null;
 			var notNullCheck = (Expression)null;
 
 			var propertyParts = propertyName.Split('.');
 			var property =  propertyParts.Aggregate<string, Expression>(parameter, (e, s) =>
 			{
-				var nestedProperty = Expression.PropertyOrField(lastNestedProperty ?? e, s);
-				var defaultValue = Expression.Lambda(Expression.Default(nestedProperty.Type), "", null).Compile().DynamicInvoke();
+				// For each property we're going to check if the default value is null.
+				// If so, then we need to build a not null expression which will be prepended to our final expression.
+				var currentProperty = Expression.PropertyOrField(lastProperty ?? e, s);
+				var defaultValue = Expression.Lambda(Expression.Default(currentProperty.Type), "", null).Compile().DynamicInvoke();
 				if (defaultValue == null)
 				{
-					var notNull = Expression.NotEqual(nestedProperty, Expression.Convert(Expression.Constant(null), nestedProperty.Type));
+					var notNull = Expression.NotEqual(currentProperty, Expression.Convert(Expression.Constant(null), nestedProperty.Type));
 					if (notNullCheck == null)
 						notNullCheck = notNull;
 					else
 						notNullCheck = Expression.AndAlso(notNullCheck, notNull);
 				}
 
-				lastNestedProperty = nestedProperty;
-				return nestedProperty;
+				lastProperty = currentProperty;
+
+				// Always return the current property
+				return currentProperty;
 			});
 
 			var constant = Expression.Convert(Expression.Constant(value), property.Type);

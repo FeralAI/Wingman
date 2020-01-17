@@ -60,17 +60,15 @@ namespace NETStandardLibrary.Linq
 				throw new ArgumentNullException("The valueType must be provided");
 
 			var parameter = Expression.Parameter(typeof(T), "type");
-
-			var lastProperty = (Expression)null;
 			var notNullCheck = (Expression)null;
 
-			// We're hijacking the aggregate callbacks to do the work around null checks, original code here was:
+			// We're hijacking the aggregate callbacks to do the work around null checks, original code was:
 			// var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
 			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (e, s) =>
 			{
 				// Get the current property reference and a default value for its type.
 				// If it's null, then start building out not null expressions to prepend to the final expression.
-				var currentProperty = Expression.PropertyOrField(lastProperty ?? e, s);
+				var currentProperty = Expression.PropertyOrField(e, s);
 				var defaultValue = Expression.Lambda(Expression.Default(currentProperty.Type), "", null).Compile().DynamicInvoke();
 				if (defaultValue == null)
 				{
@@ -82,8 +80,6 @@ namespace NETStandardLibrary.Linq
 					else
 						notNullCheck = Expression.AndAlso(notNullCheck, notNull);
 				}
-
-				lastProperty = currentProperty;
 
 				// Always return the current property
 				return currentProperty;

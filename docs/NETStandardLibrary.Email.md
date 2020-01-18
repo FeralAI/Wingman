@@ -34,7 +34,7 @@ NETStandardLibrary.Email is a helper library for building and sending e-mails us
 * Create a `.cshtml` with the same name as the *class* name of the C# object (not the file name, though it will probably be the same).  e.g. `SignupEmail.cs` and `SignupEmail.cshtml`.
 * Begin your `.cshtml` file with the following as this will give you Intellisense support:
 
-```razor
+```html
 @using RazorLight
 @inherits TemplatePage<MyLib.Email.SignupEmail>
 ```

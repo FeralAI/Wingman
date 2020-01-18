@@ -24,19 +24,19 @@ namespace NETStandardLibrary.Search
 
 			// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
 			// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
-			var wherePredicate = PredicateBuilder.New<T>(true);
-			foreach(var field in parameters.Fields)
-			{
-				var expression = ExpressionMethods.ToWhereExpression<T>(
-					field.Name,
-					field.Operator,
-					field.Value.GetType(),
-					field.Value,
-					field.MaxValue
-				);
+			var wherePredicate = parameters.Fields
+				.Aggregate<SearchField, ExpressionStarter<T>>(PredicateBuilder.New<T>(true), (predicate, field) =>
+				{
+					var expression = ExpressionMethods.ToWhereExpression<T>(
+						field.Name,
+						field.Operator,
+						field.Value.GetType(),
+						field.Value,
+						field.MaxValue
+					);
 
-				wherePredicate = wherePredicate.And(expression);
-			}
+					return predicate.And(expression);
+				});
 
 			// NOTE: Is the .AsExpandable() really needed here?
 			// NOTE: Doesn't seem to hurt, but might only be for SQL Server...

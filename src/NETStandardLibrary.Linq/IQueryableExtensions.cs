@@ -47,44 +47,21 @@ namespace NETStandardLibrary.Linq
 			if (orderByClauses == null || orderByClauses.Count == 0)
 				return orderedQueryable;
 
-			var first = true;
-			foreach (var orderByClause in orderByClauses)
+			var orderByClause = orderByClauses.First();
+			var propertyExpression = ExpressionMethods.ToPropertyExpression<T>(orderByClause.Name);
+			if (orderByClause.Direction == OrderByDirection.DESC)
+				orderedQueryable = orderedQueryable.OrderByDescending(propertyExpression);
+			else
+				orderedQueryable = orderedQueryable.OrderBy(propertyExpression);
+
+			for (var i = 1; i < orderByClauses.Count; i++)
 			{
-				// TODO: One way to do it...
-				// var propertyExpression = ExpressionMethods.ToPropertyExpression<T>(orderByClause.Name);
-
-				// if (first)
-				// {
-				// 	if (orderByClause.Direction == OrderByDirection.DESC)
-				// 		orderedQueryable = orderedQueryable.OrderByDescending(propertyExpression);
-				// 	else
-				// 		orderedQueryable = orderedQueryable.OrderBy(propertyExpression);
-				// }
-				// else
-				// {
-				// 	if (orderByClause.Direction == OrderByDirection.DESC)
-				// 		orderedQueryable = orderedQueryable.ThenByDescending(propertyExpression);
-				// 	else
-				// 		orderedQueryable = orderedQueryable.ThenBy(propertyExpression);
-				// }
-
-				// TODO: Another way to do it
-				if (first)
-				{
-					if (orderByClause.Direction == OrderByDirection.DESC)
-						orderedQueryable = orderedQueryable.OrderByDescending(orderByClause.Name);
-					else
-						orderedQueryable = orderedQueryable.OrderBy(orderByClause.Name);
-				}
+				orderByClause = orderByClauses[i];
+				propertyExpression = ExpressionMethods.ToPropertyExpression<T>(orderByClause.Name);
+				if (orderByClause.Direction == OrderByDirection.DESC)
+					orderedQueryable = orderedQueryable.ThenByDescending(propertyExpression);
 				else
-				{
-					if (orderByClause.Direction == OrderByDirection.DESC)
-						orderedQueryable = orderedQueryable.ThenByDescending(orderByClause.Name);
-					else
-						orderedQueryable = orderedQueryable.ThenBy(orderByClause.Name);
-				}
-
-				first = false;
+					orderedQueryable = orderedQueryable.ThenBy(propertyExpression);
 			}
 
 			return orderedQueryable;

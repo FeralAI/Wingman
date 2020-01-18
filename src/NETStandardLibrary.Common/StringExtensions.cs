@@ -7,22 +7,22 @@ namespace NETStandardLibrary.Common
 	{
 		private const string NewLineRegex = @"\r\n?|\n";
 
-		public static bool EqualsIgnore(this string value, string otherValue, Regex regex)
+		public static bool EqualsIgnore(this string @this, string otherValue, Regex regex)
 		{
 			if (regex == null)
 				throw new ArgumentNullException("A Regex must be provided");
 
-			if (string.IsNullOrWhiteSpace(value) && string.IsNullOrWhiteSpace(otherValue))
+			if (string.IsNullOrWhiteSpace(@this) && string.IsNullOrWhiteSpace(otherValue))
 				return true;
 
-			var cleanValue = regex.Replace(value ?? string.Empty, string.Empty);
+			var cleanValue = regex.Replace(@this ?? string.Empty, string.Empty);
 			var cleanOther = regex.Replace(otherValue ?? string.Empty, string.Empty);
 			return cleanValue.Equals(cleanOther);
 		}
 
-		public static bool EqualsIgnoreLineBreaks(this string value, string otherValue)
+		public static bool EqualsIgnoreLineBreaks(this string @this, string otherValue)
 		{
-			return value.EqualsIgnore(otherValue, new Regex(NewLineRegex));
+			return @this.EqualsIgnore(otherValue, new Regex(NewLineRegex));
 		}
 	}
 }

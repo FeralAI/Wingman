@@ -15,7 +15,7 @@ namespace NETStandardLibrary.Linq
 			string methodName,
 			IComparer<object> comparer = null)
 		{
-			var parameter = Expression.Parameter(typeof(T), "x");
+			var parameter = Expression.Parameter(typeof(T));
 			var body = propertyName
 				.Split('.')
 				.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
@@ -61,11 +61,11 @@ namespace NETStandardLibrary.Linq
 			if (valueType == null)
 				throw new ArgumentNullException("The valueType must be provided");
 
-			var parameter = Expression.Parameter(typeof(T), "type");
-			var notNullCheck = (Expression)null;
+			var parameter = Expression.Parameter(typeof(T));
 
 			// We're hijacking the aggregate callbacks to do the work around null checks, original code was:
 			// var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
+			var notNullCheck = (Expression)null;
 			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (e, s) =>
 			{
 				// Get the current property reference and a default value for its type.
@@ -87,11 +87,13 @@ namespace NETStandardLibrary.Linq
 				return currentProperty;
 			});
 
+			// Create our value expressions
 			var constant = Expression.Convert(Expression.Constant(value), property.Type);
 			var maxConstant = (Expression)null;
 			if (maxValue != null)
 				maxConstant = Expression.Convert(Expression.Constant(maxValue), property.Type);
 
+			// Which where?
 			var whereExpression = (Expression)null;
 			if (valueType == typeof(string))
 				whereExpression = BuildWhereExpressionString(clauseType, property, constant);
@@ -100,10 +102,9 @@ namespace NETStandardLibrary.Linq
 			else
 				whereExpression = BuildWhereExpressionObject(clauseType, property, constant);
 
+			// No where there?
 			if (notNullCheck != null)
-			{
 				whereExpression = Expression.AndAlso(notNullCheck, whereExpression);
-			}
 
 			return Expression.Lambda<Func<T, bool>>(whereExpression, new ParameterExpression[] { parameter });
 		}

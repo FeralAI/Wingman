@@ -24,15 +24,15 @@ namespace NETStandardLibrary.Common
 				typeof(decimal),
 			};
 
-		public static bool IsComparable(this Type type)
+		public static bool IsComparable(this Type @this)
 		{
-			var rootType = Nullable.GetUnderlyingType(type) ?? type;
+			var rootType = Nullable.GetUnderlyingType(@this) ?? @this;
 			return typeof(IComparable).IsAssignableFrom(rootType) || typeof(IComparable<>).IsAssignableFrom(rootType);
 		}
 
-		public static bool IsNumericType(this Type type)
+		public static bool IsNumericType(this Type @this)
 		{
-			return NumericTypes.Contains(type) || NumericTypes.Contains(Nullable.GetUnderlyingType(type));
+			return NumericTypes.Contains(@this) || NumericTypes.Contains(Nullable.GetUnderlyingType(@this));
 		}
 	}
 }

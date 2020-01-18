@@ -6,13 +6,24 @@ using RazorLight;
 
 namespace NETStandardLibrary.Email
 {
+	/// <summary>
+	/// An abstract class for handling rendering and sending of emails using Razor templating.
+	/// </summary>
+	/// <typeparam name="T">Any type property from the assembly with your email assets (classes, templates, etc.)</typeparam>
 	public abstract class EmailService<T> : IEmailService
 	{
+		/// <summary>
+		/// The <c>RazorLightEngine</c> instance to be used for rendering and caching email templates.
+		/// </summary>
 		public RazorLightEngine Engine { get; protected set; }
+
+		/// <summary>
+		/// The email sending options.
+		/// </summary>
 		public EmailOptions Options { get; protected set; }
 
 		/// <summary>
-		/// Initializes the RazorLight engine.
+		/// Initializes the <c>RazorLightEngine</c>.
 		/// </summary>
 		/// <param name="options">The mail delivery options.</param>
 		public virtual void Initialize(EmailOptions options)

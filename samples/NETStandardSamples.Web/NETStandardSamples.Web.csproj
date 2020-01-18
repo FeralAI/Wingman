@@ -4,4 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Common\NETStandardLibrary.Common.csproj" />
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj" />
+    <ProjectReference Include="..\..\src\NETStandardLibrary.Search\NETStandardLibrary.Search.csproj" />
+  </ItemGroup>
+
 </Project>

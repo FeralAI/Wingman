@@ -1,0 +1,32 @@
+@page "/email/email-options"
+
+@using System.Reflection
+@using Microsoft.Extensions.Options
+@inject IOptionsMonitor<NETStandardLibrary.Email.EmailOptions> options
+
+<div>
+	<h1>EmailOptions</h1>
+	@foreach (var option in optionsLookup)
+	{
+		<div>@option.Key: @option.Value</div>
+	}
+</div>
+
+@code {
+	private Dictionary<string, object> optionsLookup { get; set; }
+
+	protected override Task OnInitializedAsync()
+	{
+		// Use reflection to get all properties and values from the EmailOptions object
+		// NOTE: Does it really need to be async/await for OnInitializedAsync()?
+		var propertyInfos = typeof(NETStandardLibrary.Email.EmailOptions).GetProperties();
+		optionsLookup = new Dictionary<string, object>();
+		foreach (var propertyInfo in propertyInfos)
+		{
+			var value = propertyInfo.GetValue(options.CurrentValue);
+			optionsLookup.Add(propertyInfo.Name, value);
+		}
+
+		return Task.CompletedTask;
+	}
+}

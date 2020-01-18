@@ -75,15 +75,13 @@ namespace NETStandardLibrary.Linq
 				if (defaultValue == null)
 				{
 					var notNull = Expression.NotEqual(currentProperty, Expression.Convert(Expression.Constant(null), currentProperty.Type));
-
-					// Wanted to do a ternary here, but the if/else is better for debugging
 					if (notNullCheck == null)
 						notNullCheck = notNull;
 					else
 						notNullCheck = Expression.AndAlso(notNullCheck, notNull);
 				}
 
-				// Always return the current property
+				// This will be "e" in the next callback, so we pass the property expression for this "s"
 				return currentProperty;
 			});
 

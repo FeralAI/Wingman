@@ -1,0 +1,14 @@
+<div>
+	@foreach (var option in OptionsLookup)
+	{
+		<div>@option.Key: @option.Value</div>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public Dictionary<string, object> OptionsLookup { get; set; }
+
+	[Parameter]
+	public EventCallback<Dictionary<string, object>> OptionsLookupChanged { get; set; }
+}

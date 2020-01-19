@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NETStandardLibrary.Common
 {
@@ -25,6 +26,26 @@ namespace NETStandardLibrary.Common
 				typeof(double),
 				typeof(decimal),
 			};
+
+		/// <summary>
+		/// Returns the property names and values from an object.
+		/// </summary>
+		/// <param name="@this">The type.</param>
+		/// <param name="model">The object with the properties and values.</param>
+		/// <param name="flags">The <c>BindingFlags</c> to be used in the GetProperties call.</param>
+		/// <returns>A dictionary of properties and values.</returns>
+		public static Dictionary<string, object> GetPropertyDictionary(this Type @this, object model, BindingFlags flags = BindingFlags.Public)
+		{
+			var propertyInfos = @this.GetProperties();
+			var result = new Dictionary<string, object>();
+			foreach (var propertyInfo in propertyInfos)
+			{
+				var value = propertyInfo.GetValue(model);
+				result.Add(propertyInfo.Name, value);
+			}
+
+			return result;
+		}
 
 		/// <summary>
 		/// Determines whether this type implements the <c>IComparable</c> or <c>IComparable<></c> interfaces.

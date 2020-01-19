@@ -7,11 +7,18 @@ using RazorLight;
 namespace NETStandardLibrary.Email
 {
 	/// <summary>
-	/// An abstract class for handling rendering and sending of emails using Razor templating.
+	/// A class for handling rendering and sending of emails using Razor templating.
 	/// </summary>
 	/// <typeparam name="T">Any type property from the assembly with your email assets (classes, templates, etc.)</typeparam>
-	public abstract class EmailService<T> : IEmailService
+	public class EmailService<T> : IEmailService
 	{
+		public EmailService() { }
+
+		public EmailService(EmailOptions options)
+		{
+			Initialize(options);
+		}
+
 		/// <summary>
 		/// The <c>RazorLightEngine</c> instance to be used for rendering and caching email templates.
 		/// </summary>
@@ -48,6 +55,20 @@ namespace NETStandardLibrary.Email
 			CheckEngine();
 
 			var body = await Engine.CompileRenderAsync(email.TemplateKey, email);
+			return body;
+		}
+
+		/// <summary>
+		/// Renders an email.
+		/// </summary>
+		/// <param name="template">The email template as a string.</param>
+		/// <param name="model">The model for binding to the email template.</param>
+		/// <returns>The rendered email body.</returns>
+		public virtual async Task<string> Render(string template, object model = null)
+		{
+			CheckEngine();
+
+			var body = await Engine.CompileRenderStringAsync(template, template, model);
 			return body;
 		}
 

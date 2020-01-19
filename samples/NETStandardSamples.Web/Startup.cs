@@ -23,9 +23,17 @@ namespace NETStandardSamples.Web
 		{
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
+
 			services.AddSingleton<WeatherForecastService>();
 
 			services.Configure<EmailOptions>(Configuration.GetSection("EmailOptions"));
+			services.AddSingleton<EmailService<Startup>>(s =>
+			{
+				var options = new EmailOptions();
+				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
+				var emailService = new EmailService<Startup>(options);
+				return emailService;
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

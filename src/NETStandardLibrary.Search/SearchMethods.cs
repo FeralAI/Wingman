@@ -13,34 +13,33 @@ namespace NETStandardLibrary.Search
 				Page = parameters?.Page,
 				PageSize = parameters?.PageSize,
 				Parameters = parameters,
-				Results = queryable,
 			};
 
-			if (parameters == null || parameters.Fields == null || parameters.Fields.Count == 0)
+			var searchResults = (IOrderedQueryable<T>)queryable;
+
+			if (parameters != null && parameters.Fields != null && parameters.Fields.Count > 0)
 			{
-				results.TotalCount = queryable.Count();
-				return results;
+				// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
+				// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
+				var wherePredicate = parameters.Fields
+					.Aggregate<SearchField, ExpressionStarter<T>>(PredicateBuilder.New<T>(true), (predicate, field) =>
+					{
+						var expression = ExpressionMethods.ToWhereExpression<T>(
+							field.Name,
+							field.Operator,
+							field.Value.GetType(),
+							field.Value,
+							field.MaxValue
+						);
+
+						return predicate.And(expression);
+					});
+
+				searchResults = (IOrderedQueryable<T>)searchResults.AsExpandable().Where(wherePredicate);
 			}
-
-			// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
-			// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
-			var wherePredicate = parameters.Fields
-				.Aggregate<SearchField, ExpressionStarter<T>>(PredicateBuilder.New<T>(true), (predicate, field) =>
-				{
-					var expression = ExpressionMethods.ToWhereExpression<T>(
-						field.Name,
-						field.Operator,
-						field.Value.GetType(),
-						field.Value,
-						field.MaxValue
-					);
-
-					return predicate.And(expression);
-				});
 
 			// NOTE: Is the .AsExpandable() really needed here?
 			// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
-			var searchResults = (IOrderedQueryable<T>)queryable.AsExpandable().Where(wherePredicate);
 
 			if (parameters.OrderBys != null)
 			{

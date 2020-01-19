@@ -1,0 +1,67 @@
+@page "/search/search-methods"
+@layout ClassLayout
+
+@using NETStandardLibrary.Linq
+@using NETStandardLibrary.Search
+@using NETStandardSamples.Web.Data
+@inject TestPersonService PersonService
+
+<form>
+	<div class="form-group">
+		<label for="firstName">First Name</label>
+		<input type="text" class="form-control" id="firstName" @bind="form.FirstName">
+	</div>
+	<div class="form-group">
+		<label for="lastName">Last Name</label>
+		<input type="text" class="form-control" id="lastName" @bind="form.LastName">
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="Search">Search</button>
+</form>
+
+<br><br>
+
+@if (searchResults != null)
+{
+	<strong>Search Results</strong>
+	<div>Page: @searchResults.Page / @searchResults.TotalPages</div>
+	<div>Total: @searchResults.TotalCount</div>
+	<br><br>
+	<div>
+		@foreach (var person in searchResults.Results)
+		{
+			<div>
+				@person.FirstName @person.LastName
+			</div>
+		}
+	</div>
+}
+
+@code {
+	class SearchPerson
+	{
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public int? Age { get; set; }
+	}
+
+	private SearchPerson form = new SearchPerson();
+	private SearchResults<TestPerson> searchResults;
+
+	private void Search()
+	{
+		var criteria = SearchField.FromObject(form);
+		var data = PersonService.GetData();
+		var searchParams = new SearchParameters
+		{
+			Fields = criteria.ToList(),
+			Page = 1,
+			PageSize = 2,
+			OrderBys = new List<OrderByClause>
+				{
+					new OrderByClause { Direction = OrderByDirection.ASC, Name = "LastName" }
+				},
+		};
+
+		searchResults = data.Search(searchParams);
+	}
+}

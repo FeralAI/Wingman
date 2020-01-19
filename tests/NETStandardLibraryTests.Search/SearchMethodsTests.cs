@@ -40,7 +40,7 @@ namespace NETStandardLibraryTests.Search
 				PageSize = 3,
 			};
 
-			var results = SearchMethods.Search<Person>(Person.Data, searchParameters);
+			var results = SearchMethods.Search<TestPerson>(TestPerson.Data, searchParameters);
 			Assert.Equal(expected, results.Results.First().LastName);
 		}
 	}

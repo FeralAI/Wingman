@@ -26,7 +26,7 @@ namespace NETStandardSamples.Web
 
 			services.AddSingleton<WeatherForecastService>();
 
-			services.Configure<EmailOptions>(Configuration.GetSection("EmailOptions"));
+			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
 			services.AddSingleton<EmailService<Startup>>(s =>
 			{
 				var options = new EmailOptions();
@@ -34,6 +34,7 @@ namespace NETStandardSamples.Web
 				var emailService = new EmailService<Startup>(options);
 				return emailService;
 			});
+			services.AddSingleton<TestPersonService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

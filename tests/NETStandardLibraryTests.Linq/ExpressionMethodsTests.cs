@@ -44,8 +44,8 @@ namespace NETStandardLibraryTests.Linq
 					maxValue = DateTime.Parse(rawMaxValue as string);
 			}
 
-			var clause = ExpressionMethods.ToWhereExpression<Person>(name, clauseType, valueType, value, maxValue);
-			var result = Person.Data.Where(clause)
+			var clause = ExpressionMethods.ToWhereExpression<TestPerson>(name, clauseType, valueType, value, maxValue);
+			var result = TestPerson.Data.Where(clause)
 				.OrderBy(p => p.LastName)
 				.ThenBy(p => p.FirstName)
 				.First();

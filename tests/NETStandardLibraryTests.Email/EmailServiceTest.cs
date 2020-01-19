@@ -1,5 +1,4 @@
 using System;
-using NETStandardLibrary.Common;
 using NETStandardLibrary.Email;
 using NETStandardLibraryTests.Email.Emails;
 using Xunit;
@@ -14,10 +13,10 @@ namespace NETStandardLibraryTests.Email
 		public EmailServiceTest()
 		{
 			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
-			emailService = new TestEmailService<TestEmail>();
+			emailService = new EmailService<TestEmail>();
 			emailService.Initialize(options);
 
-			uninitializedService = new TestEmailService<TestEmail>();
+			uninitializedService = new EmailService<TestEmail>();
 		}
 
 		public void Dispose()

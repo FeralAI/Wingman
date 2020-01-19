@@ -34,9 +34,9 @@ namespace NETStandardLibraryTests.Linq
 		[Fact]
 		public void OrderByClause()
 		{
-			var data = new List<Person> {
-				new Person { FirstName = "Bob", LastName = "Smith", Age = 20 },
-				new Person { FirstName = "John", LastName = "Johnson", Age = 23 },
+			var data = new List<TestPerson> {
+				new TestPerson { FirstName = "Bob", LastName = "Smith", Age = 20 },
+				new TestPerson { FirstName = "John", LastName = "Johnson", Age = 23 },
 			}.AsQueryable();
 
 			var results = data.OrderByClause("LastName ASC");

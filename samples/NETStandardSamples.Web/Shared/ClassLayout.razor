@@ -22,7 +22,8 @@
 		get
 		{
 			var routeView = (RouteView)Body.Target;
-			return routeView.RouteData.PageType.FullName.Replace("NETStandardSamples.Web.Pages", "NETStandardLibrary");
+			var fullName = routeView.RouteData.PageType.FullName;
+			return fullName.Replace("NETStandardSamples.Web.Pages", "NETStandardLibrary");
 		}
 	}
 }

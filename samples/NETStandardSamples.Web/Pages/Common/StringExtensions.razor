@@ -1,0 +1,69 @@
+@page "/common/string-extensions"
+@layout ClassLayout
+
+@using System.Text.RegularExpressions
+@using System.Threading.Tasks
+@using NETStandardLibrary.Common
+
+<strong>EqualsIgnore()</strong>
+<p>Runs an equality check while ignoring the provided regular expression.</p>
+<p>The following form will compare the values entered and ignore any 's' letters:</p>
+<form>
+	<div class="form-group">
+		<label for="text1">Text 1</label>
+		<input type="text" class="form-control" id="text1" @bind="text1" />
+	</div>
+	<div class="form-group">
+		<label for="text2">Text 2</label>
+		<input type="text" class="form-control" id="text2" @bind="text2" />
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="CompareIgnore">Compare</button>
+</form>
+<br>
+
+@if (ignoreResult != null)
+{
+	<br>
+	<p>Values are equal: @ignoreResult</p>
+}
+
+<strong>EqualsIgnoreLineBreaks()</strong>
+<p>Runs an equality check while ignoring typical line break patterns.</p>
+<p>The following form will compare the values entered and ignore line breaks:</p>
+<form>
+	<div class="form-group">
+		<label for="text3">Text 3</label>
+		<textarea class="form-control" id="text3" @bind="text3"></textarea>
+	</div>
+	<div class="form-group">
+		<label for="text4">Text 4</label>
+		<textarea class="form-control" id="text4" @bind="text4"></textarea>
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="CompareIgnoreLineBreaks">Compare</button>
+</form>
+<br>
+
+@if (ignoreLineBreaksResult != null)
+{
+	<br>
+	<p>Values are equal: @ignoreLineBreaksResult</p>
+}
+
+@code {
+	string text1 = string.Empty;
+	string text2 = string.Empty;
+	string text3 = string.Empty;
+	string text4 = string.Empty;
+	bool? ignoreResult = null;
+	bool? ignoreLineBreaksResult = null;
+
+	void CompareIgnore()
+	{
+		ignoreResult = text1?.EqualsIgnore(text2, new Regex("[Ss]"));
+	}
+
+	void CompareIgnoreLineBreaks()
+	{
+		ignoreLineBreaksResult = text3?.EqualsIgnoreLineBreaks(text4);
+	}
+}

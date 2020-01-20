@@ -35,11 +35,11 @@ namespace NETStandardLibrary.Search
 						return predicate.And(expression);
 					});
 
+				// NOTE: Is the .AsExpandable() really needed here?
+				// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
 				searchResults = (IOrderedQueryable<T>)searchResults.AsExpandable().Where(wherePredicate);
 			}
 
-			// NOTE: Is the .AsExpandable() really needed here?
-			// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
 
 			if (parameters.OrderBys != null)
 			{

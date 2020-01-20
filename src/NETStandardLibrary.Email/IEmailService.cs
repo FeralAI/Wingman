@@ -1,13 +1,12 @@
-using System;
 using System.Threading.Tasks;
 using RazorLight;
 
-namespace	NETStandardLibrary.Email
+namespace NETStandardLibrary.Email
 {
-	/// <summary>
-	/// An interface for handling rendering and sending of emails using Razor templating.
-	/// </summary>
-	public interface IEmailService
+  /// <summary>
+  /// An interface for handling rendering and sending of emails using Razor templating.
+  /// </summary>
+  public interface IEmailService
 	{
 		/// <summary>
 		/// The <c>RazorLightEngine</c> instance to be used for rendering and caching email templates.

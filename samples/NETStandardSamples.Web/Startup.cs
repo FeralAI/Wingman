@@ -24,8 +24,6 @@ namespace NETStandardSamples.Web
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
 
-			services.AddSingleton<WeatherForecastService>();
-
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
 			services.AddSingleton<EmailService<Startup>>(s =>
 			{

@@ -52,13 +52,15 @@ namespace NETStandardLibrary.Email
 		/// <returns>A <c>MailMessage</c> object.</returns>
 		public virtual MailMessage ToMailMessage()
 		{
-			var required = new Dictionary<string, string>();
-			required.Add("Body", Body);
-			required.Add("From", From);
-			required.Add("Subject", Subject);
-			required.Add("To", To);
+      var required = new Dictionary<string, string>
+      {
+        { "Body", Body },
+        { "From", From },
+        { "Subject", Subject },
+        { "To", To }
+      };
 
-			var errors = required.Where(kv => string.IsNullOrWhiteSpace(kv.Value));
+      var errors = required.Where(kv => string.IsNullOrWhiteSpace(kv.Value));
 			if (errors.Count() > 0)
 			{
 				var prefix = string.Join(", ", errors.Select(kv => kv.Key));

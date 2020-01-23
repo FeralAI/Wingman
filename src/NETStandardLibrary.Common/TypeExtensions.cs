@@ -28,15 +28,15 @@ namespace NETStandardLibrary.Common
 			};
 
 		/// <summary>
-		/// Returns the property names and values from an object.
+		/// Returns the property names and values from an object, defaulting to all public instance properties.
 		/// </summary>
 		/// <param name="@this">The type.</param>
 		/// <param name="model">The object with the properties and values.</param>
 		/// <param name="flags">The <c>BindingFlags</c> to be used in the GetProperties call.</param>
 		/// <returns>A dictionary of properties and values.</returns>
-		public static Dictionary<string, object> GetPropertyDictionary(this Type @this, object model, BindingFlags flags = BindingFlags.Public)
+		public static Dictionary<string, object> GetPropertyValues(this Type @this, object model, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance)
 		{
-			var propertyInfos = @this.GetProperties();
+			var propertyInfos = @this.GetProperties(flags);
 			var result = new Dictionary<string, object>();
 			foreach (var propertyInfo in propertyInfos)
 			{

@@ -10,7 +10,7 @@ namespace NETStandardLibrary.Search
 	{
 		public static IEnumerable<SearchField> FromObject(object model)
 		{
-			var values = model.GetType().GetPropertyDictionary(model);
+			var values = model.GetType().GetPropertyValues(model);
 			// TODO: Make something more robust
 			var result = values
 				.Where(kv => kv.Value != null)

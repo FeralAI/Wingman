@@ -8,6 +8,26 @@ namespace NETStandardLibraryTests.Common
 	public class TypeExtensionsTests
 	{
 		[Theory]
+		[InlineData("John", "Smith", 45, null)]
+		[InlineData("Joe", null, 30, 175)]
+		public void GetPropertyValues(string firstName, string lastName, int age, int? weight)
+		{
+			var person = new TestPerson
+			{
+				FirstName = firstName,
+				LastName = lastName,
+				Age = age,
+				Weight = weight,
+			};
+
+			var results = typeof(TestPerson).GetPropertyValues(person);
+			Assert.Equal(firstName, results["FirstName"]);
+			Assert.Equal(lastName, results["LastName"]);
+			Assert.Equal(age, results["Age"]);
+			Assert.Equal(weight, results["Weight"]);
+		}
+
+		[Theory]
 		[InlineData(typeof(List<int>), false)]
 		[InlineData(typeof(bool), true)]
 		[InlineData(typeof(DateTime), true)]

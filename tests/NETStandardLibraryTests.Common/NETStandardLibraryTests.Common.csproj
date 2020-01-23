@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NETStandardLibraryTests\NETStandardLibraryTests.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Common\NETStandardLibrary.Common.csproj" />
   </ItemGroup>
 

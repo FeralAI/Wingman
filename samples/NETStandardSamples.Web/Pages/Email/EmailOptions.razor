@@ -12,7 +12,7 @@
 
 	protected override Task OnInitializedAsync()
 	{
-		optionsLookup = typeof(NETStandardLibrary.Email.EmailOptions).GetPropertyDictionary(options.CurrentValue);
+		optionsLookup = typeof(NETStandardLibrary.Email.EmailOptions).GetPropertyValues(options.CurrentValue);
 		return Task.CompletedTask;
 	}
 }

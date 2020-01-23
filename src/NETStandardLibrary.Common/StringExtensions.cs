@@ -22,12 +22,34 @@ namespace NETStandardLibrary.Common
 			if (regex == null)
 				throw new ArgumentNullException("A Regex must be provided");
 
-			if (string.IsNullOrWhiteSpace(@this) && string.IsNullOrWhiteSpace(otherValue))
+			if (@this == null && otherValue == null)
 				return true;
 
-			var cleanValue = regex.Replace(@this ?? string.Empty, string.Empty);
-			var cleanOther = regex.Replace(otherValue ?? string.Empty, string.Empty);
+			if ((@this == null && otherValue != null) || (@this != null && otherValue == null))
+				return false;
+
+			var cleanValue = regex.Replace(@this, string.Empty);
+			var cleanOther = regex.Replace(otherValue, string.Empty);
 			return cleanValue.Equals(cleanOther);
+		}
+
+		/// <summary>
+		/// Runs an equality check while ignoring case.
+		/// </summary>
+		/// <param name="@this">The string.</param>
+		/// <param name="otherValue">The value to compare against.</param>
+		/// <returns>Equality check boolean.</returns>
+		public static bool EqualsIgnoreCase(this string @this, string otherValue)
+		{
+			if (@this == null && otherValue == null)
+				return true;
+
+			if ((@this == null && otherValue != null) || (@this != null && otherValue == null))
+				return false;
+
+			var loweredValue = @this.ToLower();
+			var loweredOther = @otherValue.ToLower();
+			return loweredValue.Equals(loweredOther);
 		}
 
 		/// <summary>

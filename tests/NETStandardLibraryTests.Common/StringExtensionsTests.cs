@@ -34,6 +34,18 @@ namespace NETStandardLibraryTests.Common
 			Assert.False(result);
 		}
 
+		[Theory]
+		[InlineData(null, null, true)]
+		[InlineData(null, "", false)]
+		[InlineData("", null, false)]
+		[InlineData("test", "test", true)]
+		[InlineData("Test", "test", true)]
+		[InlineData("Test", "case", false)]
+		public void EqualsIgnoreCase(string value, string other, bool expected)
+		{
+			Assert.Equal(expected, value.EqualsIgnoreCase(other));
+		}
+
 		[Fact]
 		public void EqualsIgnore_Regex()
 		{

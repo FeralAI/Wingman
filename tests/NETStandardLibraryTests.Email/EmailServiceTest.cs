@@ -8,55 +8,16 @@ namespace NETStandardLibraryTests.Email
 	public class EmailServiceTest : IDisposable
 	{
 		private IEmailService emailService;
-		private IEmailService uninitializedService;
 
 		public EmailServiceTest()
 		{
 			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
-			emailService = new EmailService<TestEmail>();
-			emailService.Initialize(options);
-
-			uninitializedService = new EmailService<TestEmail>();
+			emailService = new EmailService(options);
 		}
 
 		public void Dispose()
 		{
 			emailService = null;
-			uninitializedService = null;
-		}
-
-		[Fact]
-		public void EmailService_Uninitialized()
-		{
-			Assert.Null(uninitializedService.Engine);
-		}
-
-		[Fact]
-		public async void EmailService_UninitializedAction()
-		{
-			await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
-			{
-				await uninitializedService.Render(new TestEmail());
-			});
-		}
-
-		[Fact]
-		public void EmailService_UninitializedOptions()
-		{
-			Assert.ThrowsAny<ArgumentNullException>(() =>
-			{
-				uninitializedService.Initialize(null);
-			});
-		}
-
-		[Theory]
-		[InlineData(typeof(TestEmail), "Hello test!")]
-		[InlineData(typeof(TestEmailInclude), "Hello test!\nI&#x27;m included!")]
-		public async void Render(Type emailType, string expected)
-		{
-			var email = (NETStandardLibrary.Email.Email)Activator.CreateInstance(emailType);
-			var result = await emailService.Render(email);
-			Assert.Equal(expected, result);
 		}
 
 		[Fact]
@@ -67,6 +28,7 @@ namespace NETStandardLibraryTests.Email
 				From = "test@test.com",
 				To = "test@test.com",
 				Subject = "Test",
+				Body = "Test",
 			};
 
 			await emailService.Send(email);

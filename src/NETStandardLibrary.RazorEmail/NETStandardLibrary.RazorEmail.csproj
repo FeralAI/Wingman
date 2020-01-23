@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RazorLight" Version="2.0.0-beta4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
+  </ItemGroup>
+
+</Project>

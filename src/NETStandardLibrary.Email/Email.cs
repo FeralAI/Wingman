@@ -33,19 +33,6 @@ namespace NETStandardLibrary.Email
 		public virtual string To { get; set; }
 
 		/// <summary>
-		/// The key of the Razor template for the email.
-		/// </summary>
-		public virtual string TemplateKey
-		{
-			get
-			{
-				var type = this.GetType();
-				var assemblyName = type.Assembly.GetName().Name;
-				return type.FullName.Replace(assemblyName + ".", "");
-			}
-		}
-
-		/// <summary>
 		/// Generates a MailMessage object using base properties.
 		/// Throws a <c>NullReferenceException</c> if any required fields are missing.
 		/// </summary>

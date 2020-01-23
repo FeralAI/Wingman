@@ -2,72 +2,24 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using RazorLight;
 
 namespace NETStandardLibrary.Email
 {
 	/// <summary>
-	/// A class for handling rendering and sending of emails using Razor templating.
+	/// A class for handling the sending of emails.
 	/// </summary>
-	/// <typeparam name="T">Any type property from the assembly with your email assets (classes, templates, etc.)</typeparam>
-	public class EmailService<T> : IEmailService
+	public class EmailService : IEmailService
 	{
 		public EmailService() { }
-
 		public EmailService(EmailOptions options)
 		{
-			Initialize(options);
+			Options = options;
 		}
-
-		/// <summary>
-		/// The <c>RazorLightEngine</c> instance to be used for rendering and caching email templates.
-		/// </summary>
-		public RazorLightEngine Engine { get; protected set; }
 
 		/// <summary>
 		/// The email sending options.
 		/// </summary>
-		public EmailOptions Options { get; protected set; }
-
-		/// <summary>
-		/// Initializes the <c>RazorLightEngine</c>.
-		/// </summary>
-		/// <param name="options">The mail delivery options.</param>
-		public virtual void Initialize(EmailOptions options)
-		{
-      Options = options ?? throw new ArgumentNullException("EmailOptions must be provided");
-			Engine = new RazorLightEngineBuilder()
-				.UseEmbeddedResourcesProject(typeof(T))
-				.UseMemoryCachingProvider()
-				.Build();
-		}
-
-		/// <summary>
-		/// Renders an email.
-		/// </summary>
-		/// <param name="email">The email object.</param>
-		/// <returns>The rendered email body.</returns>
-		public virtual async Task<string> Render(Email email)
-		{
-			CheckEngine();
-
-			var body = await Engine.CompileRenderAsync(email.TemplateKey, email);
-			return body;
-		}
-
-		/// <summary>
-		/// Renders an email.
-		/// </summary>
-		/// <param name="template">The email template as a string.</param>
-		/// <param name="model">The model for binding to the email template.</param>
-		/// <returns>The rendered email body.</returns>
-		public virtual async Task<string> Render(string template, object model = null)
-		{
-			CheckEngine();
-
-			var body = await Engine.CompileRenderStringAsync(template, template, model);
-			return body;
-		}
+		public virtual EmailOptions Options { get; protected set; }
 
 		/// <summary>
 		/// Sends an email.
@@ -75,14 +27,11 @@ namespace NETStandardLibrary.Email
 		/// <param name="email">The email object.</param>
 		public virtual async Task Send(Email email)
 		{
-			CheckEngine();
-
 			if (email == null)
 				throw new ArgumentNullException("Email must not be null");
 
 			using (var client = CreateSmtpClient(Options))
 			{
-				email.Body = await Render(email);
 				var message = email.ToMailMessage();
 				await client.SendMailAsync(message);
 			}
@@ -94,8 +43,6 @@ namespace NETStandardLibrary.Email
 		/// <param name="email">The email object.</param>
 		public virtual async Task Send(MailMessage message)
 		{
-			CheckEngine();
-
 			if (message == null)
 				throw new ArgumentNullException("MailMessage must not be null");
 
@@ -103,15 +50,6 @@ namespace NETStandardLibrary.Email
 			{
 				await client.SendMailAsync(message);
 			}
-		}
-
-		/// <summary>
-		/// Verifies the RazorLight engine is ready to be used.
-		/// </summary>
-		protected void CheckEngine()
-		{
-			if (Engine == null)
-				throw new InvalidOperationException("You must call EmailService.Initialize before using the email engine");
 		}
 
 		/// <summary>

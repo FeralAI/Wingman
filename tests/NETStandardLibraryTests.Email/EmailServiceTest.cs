@@ -1,6 +1,6 @@
 using System;
+using System.Net.Mail;
 using NETStandardLibrary.Email;
-using NETStandardLibraryTests.Email.Emails;
 using Xunit;
 
 namespace NETStandardLibraryTests.Email
@@ -23,15 +23,15 @@ namespace NETStandardLibraryTests.Email
 		[Fact]
 		public async void Send()
 		{
-			var email = new TestEmail
+			var message = new MailMessage
 			{
-				From = "test@test.com",
-				To = "test@test.com",
+				From = new MailAddress("test@test.com"),
 				Subject = "Test",
 				Body = "Test",
 			};
+			message.To.Add("test@test.com");
 
-			await emailService.Send(email);
+			await emailService.Send(message);
 			Assert.True(true);
 		}
 	}

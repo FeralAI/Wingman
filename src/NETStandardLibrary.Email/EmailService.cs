@@ -25,22 +25,6 @@ namespace NETStandardLibrary.Email
 		/// Sends an email.
 		/// </summary>
 		/// <param name="email">The email object.</param>
-		public virtual async Task Send(Email email)
-		{
-			if (email == null)
-				throw new ArgumentNullException("Email must not be null");
-
-			using (var client = CreateSmtpClient(Options))
-			{
-				var message = email.ToMailMessage();
-				await client.SendMailAsync(message);
-			}
-		}
-
-		/// <summary>
-		/// Sends an email.
-		/// </summary>
-		/// <param name="email">The email object.</param>
 		public virtual async Task Send(MailMessage message)
 		{
 			if (message == null)

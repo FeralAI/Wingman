@@ -1,5 +1,4 @@
-using System;
-using NETStandardLibraryTests.Email.Emails;
+using System.Net.Mail;
 using Xunit;
 
 namespace NETStandardLibraryTests.Email
@@ -9,27 +8,19 @@ namespace NETStandardLibraryTests.Email
 		[Fact]
 		public void ToMailMessage()
 		{
-			var email = new TestEmail
+			var message = new MailMessage
 			{
-				To = "to@test.com",
-				From = "from@test.com",
+				From = new MailAddress("from@test.com"),
 				Subject = "Test Subject",
 				Body = "Test Body",
 			};
+			message.To.Add("to@test.com");
 
-			var mailMessage = email.ToMailMessage();
-			Assert.NotNull(mailMessage);
-			Assert.Equal("to@test.com", mailMessage.To[0].Address);
-			Assert.Equal("from@test.com", mailMessage.From.Address);
-			Assert.Equal("Test Subject", mailMessage.Subject);
-			Assert.Equal("Test Body", mailMessage.Body);
-		}
-
-		[Fact]
-		public void ToMailMessage_Exception()
-		{
-			var email = new TestEmail();
-			Assert.ThrowsAny<NullReferenceException>(email.ToMailMessage);
+			Assert.NotNull(message);
+			Assert.Equal("to@test.com", message.To[0].Address);
+			Assert.Equal("from@test.com", message.From.Address);
+			Assert.Equal("Test Subject", message.Subject);
+			Assert.Equal("Test Body", message.Body);
 		}
 	}
 }

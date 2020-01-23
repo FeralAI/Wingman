@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NETStandardLibrary.Common;
 
 namespace NETStandardLibrary.Linq
 {
-	public class OrderByClauseList : List<OrderByClause>
+  public class OrderByClauseList : List<OrderByClause>
 	{
 		public OrderByClauseList() : base() { }
 		public OrderByClauseList(IEnumerable<OrderByClause> list) : base(list) { }

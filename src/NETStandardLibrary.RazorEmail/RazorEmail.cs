@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 
 namespace NETStandardLibrary.RazorEmail
 {
@@ -6,7 +7,7 @@ namespace NETStandardLibrary.RazorEmail
 	/// A class which represents both the entity for creating an email, and also the data model for that email
 	/// template.
 	/// </summary>
-	public abstract class RazorEmail : NETStandardLibrary.Email.Email
+	public abstract class RazorEmail : MailMessage
 	{
 		/// <summary>
 		/// The key of the Razor template for the email.

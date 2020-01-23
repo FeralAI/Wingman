@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace NETStandardLibrary.Email
@@ -15,7 +16,7 @@ namespace NETStandardLibrary.Email
 		/// <summary>
 		/// Sends an email.
 		/// </summary>
-		/// <param name="email">The email object.</param>
-		Task Send(Email email);
+		/// <param name="message">The <c>MailMessage</c> object.</param>
+		Task Send(MailMessage message);
 	}
 }

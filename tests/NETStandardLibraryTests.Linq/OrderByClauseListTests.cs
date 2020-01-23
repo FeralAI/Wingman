@@ -9,11 +9,11 @@ namespace NETStandardLibraryTests.Linq
 		[Fact]
 		public void Constructor()
 		{
-      var orderByList = new OrderByClauseList
-      {
-        new OrderByClause { Direction = OrderByDirection.ASC, Name = "FirstName" }
-      };
-      Assert.Single(orderByList);
+			var orderByList = new OrderByClauseList
+			{
+				new OrderByClause { Direction = OrderByDirection.ASC, Name = "FirstName" }
+			};
+			Assert.Single(orderByList);
 		}
 
 		[Fact]
@@ -42,6 +42,12 @@ namespace NETStandardLibraryTests.Linq
 			Assert.Equal(expected, list.Count);
 		}
 
+		[Fact]
+		public void Parse_ArgumentException()
+		{
+			Assert.ThrowsAny<ArgumentException>(() => OrderByClauseList.Parse("First Name ASC"));
+		}
+
 		[Theory]
 		[InlineData(null, null)]
 		[InlineData("", null)]
@@ -56,16 +62,6 @@ namespace NETStandardLibraryTests.Linq
 
 			var result = orderBys.ToString();
 			Assert.Equal(expected, result);
-		}
-
-		[Theory]
-		[InlineData(null)]
-		[InlineData("")]
-		[InlineData(",,,")]
-		[InlineData("First Name ASC")]
-		public void Parse_ArgumentException(string clause)
-		{
-			Assert.ThrowsAny<ArgumentException>(() => OrderByClauseList.Parse(clause));
 		}
 	}
 }

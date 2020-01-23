@@ -26,7 +26,7 @@ namespace NETStandardLibrary.Linq
     public static List<OrderByClause> Parse(string clause)
 		{
 			if (string.IsNullOrWhiteSpace(clause))
-				throw new ArgumentNullException("Must not be null or empty", "clause");
+				return new List<OrderByClause>();
 ;
 			var parts = clause.Split(',')
 				.Where(p => !string.IsNullOrWhiteSpace(p))
@@ -34,7 +34,7 @@ namespace NETStandardLibrary.Linq
 				.ToArray();
 
 			if (parts.Length == 0)
-				throw new ArgumentNullException("Must not be null or empty", "clause");
+				return new List<OrderByClause>();
 
 			var orderByClauses = new List<OrderByClause>();
 			foreach (var part in parts)

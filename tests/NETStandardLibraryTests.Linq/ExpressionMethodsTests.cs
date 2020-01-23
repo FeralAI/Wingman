@@ -8,6 +8,21 @@ namespace NETStandardLibraryTests.Linq
 	public class ExpressionMethodsTests
 	{
 		[Theory]
+		[InlineData(typeof(string), null)]
+		[InlineData(typeof(string), "")]
+		[InlineData(null, "FirstName")]
+		public void ToWhereExpression_ArgumentNullException(Type valueType, string propertyName)
+		{
+			Assert.ThrowsAny<ArgumentNullException>(() =>
+			{
+				var clause = ExpressionMethods.ToWhereExpression<TestPerson>(propertyName, WhereClauseType.Equal, valueType, null);
+				TestPerson.Data.Where(clause);
+			});
+		}
+
+		#region ToWhereExpression - IComparable/IComparable<>
+
+		[Theory]
 		// Comparable type
 		[InlineData("Age", 25, 30, typeof(int), WhereClauseType.Between, "James")]
 		[InlineData("Age", 25, null, typeof(int), WhereClauseType.Equal, "Jackie")]
@@ -29,10 +44,7 @@ namespace NETStandardLibraryTests.Linq
 		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereClauseType.GreaterThanOrEqual, "Bob")]
 		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereClauseType.LessThan, "Steven")]
 		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereClauseType.LessThanOrEqual, "Steven")]
-		// Strings
-		[InlineData("LastName", "mit", null, typeof(string), WhereClauseType.Contains, "Bob")]
-		[InlineData("LastName", "Brown", null, typeof(string), WhereClauseType.Equal, "James")]
-		public void ToWhereExpression(string name, object rawValue, object rawMaxValue, Type valueType, WhereClauseType clauseType, string expected)
+		public void ToWhereExpression_Comparable(string name, object rawValue, object rawMaxValue, Type valueType, WhereClauseType clauseType, string expected)
 		{
 			var value = rawValue;
 			var maxValue = rawMaxValue;
@@ -52,5 +64,80 @@ namespace NETStandardLibraryTests.Linq
 
 			Assert.Equal(expected, result.FirstName);
 		}
+
+		[Theory]
+		[InlineData(WhereClauseType.Contains)]
+		public void ToWhereExpression_Comparable_NotImplementedException(WhereClauseType clauseType)
+		{
+			Assert.ThrowsAny<NotImplementedException>(() =>
+			{
+				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Weight", clauseType, typeof(int?), null);
+				TestPerson.Data.Where(clause);
+			});
+		}
+
+		#endregion ToWhereExpression - IComparable/IComparable<>
+
+		#region ToWhereExpression - object
+
+		[Theory]
+		[InlineData(WhereClauseType.Equal, 2)]
+		public void ToWhereExpression_Object(WhereClauseType clauseType, int expected)
+		{
+			var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Mother", clauseType, typeof(TestPerson), TestPerson.Mom);
+			var results = TestPerson.Data.Where(clause);
+			Assert.Equal(expected, results.Count());
+		}
+
+		[Theory]
+		[InlineData(WhereClauseType.Between)]
+		[InlineData(WhereClauseType.Contains)]
+		[InlineData(WhereClauseType.GreaterThan)]
+		[InlineData(WhereClauseType.GreaterThanOrEqual)]
+		[InlineData(WhereClauseType.LessThan)]
+		[InlineData(WhereClauseType.LessThanOrEqual)]
+		public void ToWhereExpression_Object_NotImplementedException(WhereClauseType clauseType)
+		{
+			Assert.ThrowsAny<NotImplementedException>(() =>
+			{
+				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Mother", clauseType, typeof(TestPerson), null);
+				TestPerson.Data.Where(clause);
+			});
+		}
+
+		#endregion ToWhereExpression - object
+
+		#region ToWhereExpression - string
+
+		[Theory]
+		[InlineData("LastName", "mit", WhereClauseType.Contains, "Bob")]
+		[InlineData("LastName", "Brown", WhereClauseType.Equal, "James")]
+		public void ToWhereExpression_String(string name, string value, WhereClauseType clauseType, string expected)
+		{
+			var clause = ExpressionMethods.ToWhereExpression<TestPerson>(name, clauseType, value.GetType(), value);
+			var result = TestPerson.Data.Where(clause)
+				.OrderBy(p => p.LastName)
+				.ThenBy(p => p.FirstName)
+				.First();
+
+			Assert.Equal(expected, result.FirstName);
+		}
+
+		[Theory]
+		[InlineData(WhereClauseType.Between)]
+		[InlineData(WhereClauseType.GreaterThan)]
+		[InlineData(WhereClauseType.GreaterThanOrEqual)]
+		[InlineData(WhereClauseType.LessThan)]
+		[InlineData(WhereClauseType.LessThanOrEqual)]
+		public void ToWhereExpression_String_NotImplementedException(WhereClauseType clauseType)
+		{
+			Assert.ThrowsAny<NotImplementedException>(() =>
+			{
+				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("LastName", clauseType, typeof(string), null);
+				TestPerson.Data.Where(clause);
+			});
+		}
+
+		#endregion ToWhereExpression - string
 	}
 }

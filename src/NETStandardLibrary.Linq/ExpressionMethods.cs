@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NETStandardLibrary.Common;
@@ -9,35 +8,6 @@ namespace NETStandardLibrary.Linq
 	// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/how-to-use-expression-trees-to-build-dynamic-queries
 	public sealed class ExpressionMethods
 	{
-		public static MethodCallExpression ToMethodCallExpression<T>(
-			IQueryable<T> query,
-			string propertyName,
-			string methodName,
-			IComparer<object> comparer = null)
-		{
-			var parameter = Expression.Parameter(typeof(T));
-			var body = propertyName
-				.Split('.')
-				.Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
-
-			return comparer != null
-				? Expression.Call(
-						typeof(Queryable),
-						methodName,
-						new[] { typeof(T), body.Type },
-						query.Expression,
-						Expression.Lambda(body, parameter),
-						Expression.Constant(comparer)
-					)
-				: Expression.Call(
-						typeof(Queryable),
-						methodName,
-						new[] { typeof(T), body.Type },
-						query.Expression,
-						Expression.Lambda(body, parameter)
-					);
-		}
-
 		public static Expression<Func<T, object>> ToPropertyExpression<T>(string propertyName)
 		{
 			var parameter = Expression.Parameter(typeof(T));
@@ -105,15 +75,6 @@ namespace NETStandardLibrary.Linq
 				whereExpression = Expression.AndAlso(notNullCheck, whereExpression);
 
 			return Expression.Lambda<Func<T, bool>>(whereExpression, new ParameterExpression[] { parameter });
-		}
-
-		public static Expression<Func<T, bool>> ToWhereExpression<T, U>(
-			string propertyName,
-			WhereClauseType expressionType,
-			U value,
-			object maxValue = null)
-		{
-			return ToWhereExpression<T>(propertyName, expressionType, value.GetType(), value, maxValue);
 		}
 
 		/// <summary>

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using NETStandardLibrary.Linq;
 using Xunit;
@@ -7,40 +6,54 @@ namespace NETStandardLibraryTests.Linq
 {
 	public class IQueryableExtensionsTests
 	{
-		[Fact]
-		public void GetPage()
+		[Theory]
+		[InlineData(-1, -1, "")]
+		[InlineData(0, 0, "")]
+		[InlineData(1, 1, "this")]
+		[InlineData(2, 2, "a test")]
+		[InlineData(3, 3, "code")]
+		[InlineData(4, 4, "")]
+		public void GetPage(int page, int pageSize, string expected)
 		{
-			var list = new List<string>
-			{
-				"this",
-				"is",
-				"a",
-				"test",
-				"of",
-				"the",
-				"code",
-			}.AsQueryable();
-
-			var results = list.GetPage(2, 2).ToList();
-			var expected = new List<string>
-			{
-				"a",
-				"test",
-			};
-
-			Assert.Equal(expected, results);
+			var list = "this is a test of the code".Split(' ').AsQueryable();
+			var result = string.Join(" ", list.GetPage(page, pageSize));
+			Assert.Equal(expected, result);
 		}
 
-		[Fact]
-		public void OrderByClause()
-		{
-			var data = new List<TestPerson> {
-				new TestPerson { FirstName = "Bob", LastName = "Smith", Age = 20 },
-				new TestPerson { FirstName = "John", LastName = "Johnson", Age = 23 },
-			}.AsQueryable();
+		#region OrderByClause
 
-			var results = data.OrderByClause("LastName ASC");
-			Assert.Equal("John", results.First().FirstName);
+		// The test data for the methods in this region should stay in sync to
+		// test all possible logic routes.
+
+		[Theory]
+		[InlineData(null, "James")]
+		[InlineData("", "James")]
+		[InlineData(",", "James")]
+		[InlineData("LastName DESC", "Bob")]
+		[InlineData("Age DESC", "Mary")]
+		[InlineData("Age, LastName", "Chris")]
+		[InlineData("LastName, FirstName DESC", "James")]
+		public void OrderByClause_Clauses(string clauseString, string expected)
+		{
+			var clause = new OrderByClauseList(clauseString);
+			var results = TestPerson.Data.OrderByClause(clause);
+			Assert.Equal(expected, results.First().FirstName);
 		}
+
+		[Theory]
+		[InlineData(null, "James")]
+		[InlineData("", "James")]
+		[InlineData(",", "James")]
+		[InlineData("LastName DESC", "Bob")]
+		[InlineData("Age DESC", "Mary")]
+		[InlineData("Age, LastName", "Chris")]
+		[InlineData("LastName, FirstName DESC", "James")]
+		public void OrderByClause_String(string clause, string expected)
+		{
+			var results = TestPerson.Data.OrderByClause(clause);
+			Assert.Equal(expected, results.First().FirstName);
+		}
+
+		#endregion OrderByClause
 	}
 }

@@ -35,10 +35,7 @@ namespace NETStandardLibrary.Email
 		/// <param name="options">The mail delivery options.</param>
 		public virtual void Initialize(EmailOptions options)
 		{
-			if (options == null)
-				throw new ArgumentNullException("EmailOptions must be provided");
-
-			Options = options;
+      Options = options ?? throw new ArgumentNullException("EmailOptions must be provided");
 			Engine = new RazorLightEngineBuilder()
 				.UseEmbeddedResourcesProject(typeof(T))
 				.UseMemoryCachingProvider()
@@ -87,6 +84,23 @@ namespace NETStandardLibrary.Email
 			{
 				email.Body = await Render(email);
 				var message = email.ToMailMessage();
+				await client.SendMailAsync(message);
+			}
+		}
+
+		/// <summary>
+		/// Sends an email.
+		/// </summary>
+		/// <param name="email">The email object.</param>
+		public virtual async Task Send(MailMessage message)
+		{
+			CheckEngine();
+
+			if (message == null)
+				throw new ArgumentNullException("MailMessage must not be null");
+
+			using (var client = CreateSmtpClient(Options))
+			{
 				await client.SendMailAsync(message);
 			}
 		}

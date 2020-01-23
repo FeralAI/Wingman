@@ -67,11 +67,13 @@ namespace NETStandardLibrary.Email
 				throw new NullReferenceException($"{prefix} must not be null to create a MailMessage object");
 			}
 
-			var message = new MailMessage();
-			message.From = new MailAddress(From);
-			message.To.Add(To);
-			message.Body = Body;
-			message.Subject = Subject;
+      var message = new MailMessage
+      {
+        From = new MailAddress(From),
+        Body = Body,
+        Subject = Subject
+      };
+      message.To.Add(To);
 			return message;
 		}
 	}

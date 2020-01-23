@@ -37,7 +37,7 @@ namespace NETStandardLibrary.Linq
 			if (string.IsNullOrWhiteSpace(originalClause))
 				return orderedQueryable;
 
-			var orderByClauses = Parser.ParseOrderBys(originalClause);
+			var orderByClauses = OrderByClauseList.Parse(originalClause);
 			if (orderByClauses == null || orderByClauses.Count == 0)
 				return orderedQueryable;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NETStandardLibrary.Common;
 
 namespace NETStandardLibrary.Linq
 {
@@ -10,6 +11,10 @@ namespace NETStandardLibrary.Linq
 		public OrderByClauseList(IEnumerable<OrderByClause> list) : base(list) { }
     public OrderByClauseList(string clause) : base(Parse(clause)) { }
 
+		/// <summary>
+		/// Add <c>OrderByClause</c> objects to the list by providing a SQL-like syntax using the <c>Parse</c> method.
+		/// </summary>
+		/// <param name="clause">The order by clause string.</param>
     public void AddByClause(string clause) => AddRange(Parse(clause));
 
     /// <summary>
@@ -22,15 +27,17 @@ namespace NETStandardLibrary.Linq
 		{
 			if (string.IsNullOrWhiteSpace(clause))
 				throw new ArgumentNullException("Must not be null or empty", "clause");
+;
+			var parts = clause.Split(',')
+				.Where(p => !string.IsNullOrWhiteSpace(p))
+				.Select(p => p.Trim())
+				.ToArray();
 
-			var parts = clause.Split(',');
-			parts.ToList().ForEach(p => p.Trim());
-			parts = parts.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
 			if (parts.Length == 0)
 				throw new ArgumentNullException("Must not be null or empty", "clause");
 
 			var orderByClauses = new List<OrderByClause>();
-			foreach(var part in parts)
+			foreach (var part in parts)
 			{
 				var orderByParts = part.Trim().Split(' ');
 				if (orderByParts.Length > 2)

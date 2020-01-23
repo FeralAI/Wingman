@@ -15,7 +15,7 @@ namespace NETStandardLibrary.Linq
 		public static IQueryable<T> GetPage<T>(this IQueryable<T> @this, int page, int pageSize)
 		{
 			return @this
-				.Skip((pageSize * (Math.Max(page, 1) - 1)))
+				.Skip(pageSize * (Math.Max(page, 1) - 1))
 				.Take(pageSize);
 		}
 

@@ -7,33 +7,6 @@ namespace NETStandardLibraryTests.Common
 {
 	public class StringExtensionsTests
 	{
-		[Fact]
-		public void EqualsIgnoreLineBreaks()
-		{
-			var value = "This\r\nhas\nline\r\nbreaks\n";
-			var other = "This\nhas\nline\r\nbreaks\r\n";
-			var result = value.EqualsIgnoreLineBreaks(other);
-			Assert.True(result);
-		}
-
-		[Fact]
-		public void EqualsIgnoreLineBreaks_Blanks()
-		{
-			var value = (string)null;
-			var other = string.Empty;
-			var result = value.EqualsIgnoreLineBreaks(other);
-			Assert.True(result);
-		}
-
-		[Fact]
-		public void EqualsIgnoreLineBreaks_False()
-		{
-			var value = "This\r\nhas\nline\r\nbreaks\n";
-			var other = "This\nhas\nline\r\nbreaks\r\ntoo";
-			var result = value.EqualsIgnoreLineBreaks(other);
-			Assert.False(result);
-		}
-
 		[Theory]
 		[InlineData(null, null, true)]
 		[InlineData(null, "", false)]
@@ -46,13 +19,26 @@ namespace NETStandardLibraryTests.Common
 			Assert.Equal(expected, value.EqualsIgnoreCase(other));
 		}
 
-		[Fact]
-		public void EqualsIgnore_Regex()
+		[Theory]
+		[InlineData(null, null, true)]
+		[InlineData(null, "", false)]
+		[InlineData("", null, false)]
+		[InlineData("This\r\nhas\nline\r\nbreaks\n", "This\nhas\nline\r\nbreaks\r\n", true)]
+		[InlineData("This\r\nhas\nline\r\nbreaks\n", "This\nhas\nline\r\nbreaks\r\ntoo", false)]
+		public void EqualsIgnoreLineBreaks(string value, string other, bool expected)
 		{
-			var value = "The number is 987654321";
-			var other = "The number is 1234567890";
-			var result = value.EqualsIgnore(other, new Regex(@"[0-9]+"));
-			Assert.True(result);
+			Assert.Equal(expected, value.EqualsIgnoreLineBreaks(other));
+		}
+
+		[Theory]
+		[InlineData(null, null, true)]
+		[InlineData(null, "", false)]
+		[InlineData("", null, false)]
+		[InlineData("The number is 987654321", "The number is 1234567890", true)]
+		[InlineData("The number is 987654321", "The number is 1234567890 still", false)]
+		public void EqualsIgnore_Regex(string value, string other, bool expected)
+		{
+			Assert.Equal(expected, value.EqualsIgnore(other, new Regex(@"[0-9]+")));
 		}
 
 		[Fact]

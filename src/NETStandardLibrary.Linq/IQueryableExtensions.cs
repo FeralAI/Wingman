@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace NETStandardLibrary.Linq
@@ -7,12 +6,12 @@ namespace NETStandardLibrary.Linq
 	public static class IQueryableExtensions
 	{
 		/// <summary>
-		/// Retuns a page of data using <c>IQueryable.Skip</c> and <c> IQueryable.Take</c>.
+		/// Filters an <c>IQueryable<></c> using <c>IQueryable.Skip</c> and <c> IQueryable.Take</c>.
 		/// </summary>
-		/// <param name="queryable"></param>
-		/// <param name="page"></param>
-		/// <param name="pageSize"></param>
-		/// <returns></returns>
+		/// <param name="@this">The queryable object.</param>
+		/// <param name="page">The page number.</param>
+		/// <param name="pageSize">The page size.</param>
+		/// <returns>A <c>IQueryable<></c> object.</returns>
 		public static IQueryable<T> GetPage<T>(this IQueryable<T> @this, int page, int pageSize)
 		{
 			return @this
@@ -21,29 +20,20 @@ namespace NETStandardLibrary.Linq
 		}
 
 		/// <summary>
-		/// Parses order by clause using standard SQL-like syntax.
-		/// e.g. LastName ASC, FirstName DESC, Age
-		///
-		/// TODO: https://stackoverflow.com/questions/1689199/c-sharp-code-to-order-by-a-property-using-the-property-name-as-a-string
-		/// TODO: This only works for static types. Need to implement this for dynamic types as well.
+		/// Applies order by logic to an <c>IQueryable<></c> object.
 		/// </summary>
-		/// <param name="queryable"></param>
-		/// <param name="orderBy"></param>
-		/// <returns></returns>
-		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, string originalClause)
+		/// <param name="@this">The queryable object.</param>
+		/// <param name="orderBys">The order by clauses.</param>
+		/// <returns>An <c>IOrderedQueryable</c> object.</returns>
+		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, OrderByClauseList orderBys)
 		{
 			var orderedQueryable = (IOrderedQueryable<T>)@this;
-
-			if (string.IsNullOrWhiteSpace(originalClause))
-				return orderedQueryable;
-
-			var orderByClauses = OrderByClauseList.Parse(originalClause);
-			if (orderByClauses == null || orderByClauses.Count == 0)
+			if (orderBys == null || orderBys.Count == 0)
 				return orderedQueryable;
 
 			// Pluck out the first clause so we can start with an .OrderBy() call
 			var i = 0;
-			var orderByClause = orderByClauses[i];
+			var orderByClause = orderBys[i];
 			var propertyExpression = ExpressionMethods.ToPropertyExpression<T>(orderByClause.Name);
 			if (orderByClause.Direction == OrderByDirection.DESC)
 				orderedQueryable = orderedQueryable.OrderByDescending(propertyExpression);
@@ -51,9 +41,9 @@ namespace NETStandardLibrary.Linq
 				orderedQueryable = orderedQueryable.OrderBy(propertyExpression);
 
 			// Loop over the remaining clauses and append .ThenBy() calls
-			for (i = 1; i < orderByClauses.Count; i++)
+			for (i = 1; i < orderBys.Count; i++)
 			{
-				orderByClause = orderByClauses[i];
+				orderByClause = orderBys[i];
 				propertyExpression = ExpressionMethods.ToPropertyExpression<T>(orderByClause.Name);
 				if (orderByClause.Direction == OrderByDirection.DESC)
 					orderedQueryable = orderedQueryable.ThenByDescending(propertyExpression);
@@ -64,37 +54,19 @@ namespace NETStandardLibrary.Linq
 			return orderedQueryable;
 		}
 
-		public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> @this, string propertyName, IComparer<object> comparer = null)
-		{
-			return @this.CallOrderedQueryable("OrderBy", propertyName, comparer);
-		}
-
-		public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> @this, string propertyName, IComparer<object> comparer = null)
-		{
-			return @this.CallOrderedQueryable("OrderByDescending", propertyName, comparer);
-		}
-
-		public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> @this, string propertyName, IComparer<object> comparer = null)
-		{
-			return @this.CallOrderedQueryable("ThenBy", propertyName, comparer);
-		}
-
-		public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> @this, string propertyName, IComparer<object> comparer = null)
-		{
-			return @this.CallOrderedQueryable("ThenByDescending", propertyName, comparer);
-		}
-
 		/// <summary>
-		/// Builds the Queryable functions using a TSource property name.
+		/// Applies order by logic to an <c>IQueryable<></c> object using standard SQL-like syntax.
 		/// </summary>
-		private static IOrderedQueryable<T> CallOrderedQueryable<T>(
-			this IQueryable<T> @this,
-			string methodName,
-			string propertyName,
-			IComparer<object> comparer = null)
+		/// <param name="@this">The queryable object.</param>
+		/// <param name="orderBy">The order by clause string.</param>
+		/// <returns>An <c>IOrderedQueryable</c> object.</returns>
+		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, string orderBy)
 		{
-			var methodCallExpression = ExpressionMethods.ToMethodCallExpression(@this, propertyName, methodName, comparer);
-			return (IOrderedQueryable<T>)@this.Provider.CreateQuery(methodCallExpression);
+			if (string.IsNullOrWhiteSpace(orderBy))
+				return (IOrderedQueryable<T>)@this;
+
+			var orderByClauses = new OrderByClauseList(orderBy);
+			return @this.OrderByClause(orderByClauses);
 		}
 	}
 }

@@ -10,15 +10,8 @@ namespace NETStandardLibrary.Search
 		public int? Page { get; set; }
 		public int? PageSize { get; set; }
 		public int TotalCount { get; set; }
-		public int TotalPages
-		{
-			get
-			{
-				if ((PageSize ?? 0) == 0)
-					return 1;
 
-				return (int)Math.Ceiling(TotalCount / (double)PageSize);
-			}
-		}
+		public bool HasPaging => (Page ?? 0) > 0 && (PageSize ?? 0) > 0;
+		public int TotalPages => ((PageSize ?? 0) == 0) ? 1 : (int)Math.Ceiling(TotalCount / (double)PageSize);
 	}
 }

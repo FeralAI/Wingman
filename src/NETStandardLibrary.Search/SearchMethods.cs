@@ -41,37 +41,14 @@ namespace NETStandardLibrary.Search
 			}
 
 			if (parameters.OrderBys != null)
-			{
-				var firstOrderBy = true;
-				foreach(var orderBy in parameters.OrderBys)
-				{
-					if (firstOrderBy)
-					{
-						if (orderBy.Direction == OrderByDirection.ASC)
-							searchResults = searchResults.OrderBy(orderBy.Name);
-						else if (orderBy.Direction == OrderByDirection.DESC)
-							searchResults = searchResults.OrderByDescending(orderBy.Name);
-					}
-					else
-					{
-						if (orderBy.Direction == OrderByDirection.ASC)
-							searchResults = searchResults.ThenBy(orderBy.Name);
-						else if (orderBy.Direction == OrderByDirection.DESC)
-							searchResults = searchResults.ThenByDescending(orderBy.Name);
-					}
-				}
-			}
+				searchResults = searchResults.OrderByClause(new OrderByClauseList(parameters.OrderBys));
 
 			results.TotalCount = searchResults.Count();
 
-			if ((results.Page ?? 0) > 0 && (results.PageSize ?? 0) > 0)
-			{
+			if (results.HasPaging)
 				results.Results = searchResults.GetPage(results.Page.Value, results.PageSize.Value);
-			}
 			else
-			{
 				results.Results = searchResults;
-			}
 
 			return results;
 		}

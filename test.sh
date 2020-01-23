@@ -1,28 +1,22 @@
 #!/bin/bash
 
-# dotnet tool install -g dotnet-reportgenerator-globaltool
+# Clear previous results
+rm -rf tests/_results/*
 
-cd tests/NETStandardLibraryTests.Common
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Common.xml" -p:Exclude="[*]Tests.*"
-cd ../..
+# Find all directories that start with "NETStandardLibrary."
+for d in ./tests/NETStandardLibraryTests.*
+do
+	cd $d
+	dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/${d/.\/tests\//}.Common.xml" -p:Exclude="[*]Tests.*"
+	cd ../..
+done
 
-cd tests/NETStandardLibraryTests.Email
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Email.xml" -p:Exclude="[*]Tests.*"
-cd ../..
-
-cd tests/NETStandardLibraryTests.Linq
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Linq.xml" -p:Exclude="[*]Tests.*"
-cd ../..
-
-cd tests/NETStandardLibraryTests.Search
-dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/NETStandardLibraryTests.Search.xml" -p:Exclude="[*]Tests.*"
-cd ../..
-
+# Generate HTML report
 cd tests/NETStandardLibraryTests
 dotnet restore
 dotnet reportgenerator "-reports:../_results/*.xml" "-targetdir:../_results/html"
 cd ../..
 
-# dotnet reportgenerator "-reports:_results/*.xml" "-targetdir:_results/html"
+# Open the HTML report
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 start chrome "${DIR}/tests/_results/html/index.htm"

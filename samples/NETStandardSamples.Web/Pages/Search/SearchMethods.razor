@@ -56,9 +56,9 @@
 			Page = 1,
 			PageSize = 2,
 			OrderBys = new List<OrderByClause>
-				{
-					new OrderByClause { Direction = OrderByDirection.ASC, Name = "LastName" }
-				},
+			{
+				new OrderByClause { Direction = OrderByDirection.ASC, Name = "LastName" }
+			},
 		};
 
 		searchResults = PersonService.GetData().Search(searchParams);

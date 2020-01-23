@@ -22,12 +22,12 @@ namespace NETStandardLibrary.Search
 				// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
 				// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
 				var wherePredicate = parameters.Fields
-					.Aggregate<SearchField, ExpressionStarter<T>>(PredicateBuilder.New<T>(true), (predicate, field) =>
+					.Aggregate(PredicateBuilder.New<T>(true), (predicate, field) =>
 					{
 						var expression = ExpressionMethods.ToWhereExpression<T>(
 							field.Name,
 							field.Operator,
-							field.Value.GetType(),
+							field.ValueType,
 							field.Value,
 							field.MaxValue
 						);

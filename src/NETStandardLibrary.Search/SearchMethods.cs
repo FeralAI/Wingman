@@ -40,7 +40,6 @@ namespace NETStandardLibrary.Search
 				searchResults = (IOrderedQueryable<T>)searchResults.AsExpandable().Where(wherePredicate);
 			}
 
-
 			if (parameters.OrderBys != null)
 			{
 				var firstOrderBy = true;

@@ -19,7 +19,7 @@ namespace NETStandardLibrary.Email
 		/// <summary>
 		/// The email sending options.
 		/// </summary>
-		public virtual EmailOptions Options { get; protected set; }
+		public virtual EmailOptions Options { get; set; }
 
 		/// <summary>
 		/// Sends an email.

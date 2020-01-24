@@ -1,7 +1,7 @@
 @page "/email/email-service"
 
 @using NETStandardLibrary.Common
-@inject NETStandardLibrary.Email.EmailService<Startup> MailService
+@inject NETStandardLibrary.Email.EmailService MailService
 @layout ClassLayout
 
 <p>
@@ -14,64 +14,12 @@
 	<EmailOptionsList @bind-OptionsLookup="optionsLookup" />
 </p>
 
-<h2>EmailService.Render()</h2>
-<strong>Class Test</strong>
-<form>
-	<div class="form-group">
-		<label for="text">Greeting</label>
-		<input type="text" class="form-control" id="text" @bind="email.Greeting">
-	</div>
-	<div class="form-group">
-		<label for="text">Name</label>
-		<input type="text" class="form-control" id="text" @bind="email.Name">
-	</div>
-	<button type="button" class="btn btn-primary"  @onclick="RenderClass">Render</button>
-</form>
-<br>
-
-<strong>String Template Test</strong>
-<form>
-	<div class="form-group">
-		<label for="template">Template</label>
-		<input type="text" class="form-control" id="template" @bind="template">
-		<small class="form-text text-muted">Use @@Model.Text to use the value you will enter below</small>
-	</div>
-	<div class="form-group">
-		<label for="text">Text</label>
-		<input type="text" class="form-control" id="text" @bind="text">
-		<small class="form-text text-muted">Use @@Model.Text in your template to see this text</small>
-	</div>
-	<button type="button" class="btn btn-primary"  @onclick="RenderTemplate">Render</button>
-</form>
-<br>
-
-<br>
-
-<div>
-	<strong>Result from EmailService.Render()</strong>
-	<div>@result</div>
-</div>
-
 @code {
-	private EmailServiceEmail email = new EmailServiceEmail();
 	private Dictionary<string, object> optionsLookup = new Dictionary<string, object>();
-	private string result;
-	private string template;
-	private string text = "";
 
 	protected override Task OnInitializedAsync()
 	{
 		optionsLookup = typeof(NETStandardLibrary.Email.EmailOptions).GetPropertyValues(MailService.Options);
 		return Task.CompletedTask;
-	}
-
-	private async void RenderClass()
-	{
-		result = await MailService.Render(email);
-	}
-
-	private async void RenderTemplate()
-	{
-		result = await MailService.Render(template, new { Text = text });
 	}
 }

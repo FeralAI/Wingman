@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NETStandardLibrary.Email;
+using NETStandardLibrary.RazorEmail;
 using NETStandardSamples.Web.Data;
 
 namespace NETStandardSamples.Web
@@ -25,11 +26,18 @@ namespace NETStandardSamples.Web
 			services.AddServerSideBlazor();
 
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
-			services.AddSingleton<EmailService<Startup>>(s =>
+			services.AddSingleton(s =>
 			{
 				var options = new EmailOptions();
 				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
-				var emailService = new EmailService<Startup>(options);
+				var emailService = new EmailService(options);
+				return emailService;
+			});
+			services.AddSingleton(s =>
+			{
+				var options = new EmailOptions();
+				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
+				var emailService = new RazorEmailService<Startup>(options);
 				return emailService;
 			});
 			services.AddSingleton<TestPersonService>();

@@ -9,53 +9,48 @@ namespace NETStandardLibraryTests.RazorEmail
 	public class RazorEmailServiceTest : IDisposable
 	{
 		private IRazorEmailService emailService;
-		private IRazorEmailService uninitializedService;
 
 		public RazorEmailServiceTest()
 		{
-			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
 			emailService = new RazorEmailService<TestEmail>();
-			emailService.Initialize(options);
-			uninitializedService = new RazorEmailService<TestEmail>();
 		}
 
 		public void Dispose()
 		{
 			emailService = null;
-			uninitializedService = null;
 		}
 
 		[Fact]
-		public void EmailService_Uninitialized()
+		public void Render_ArgumentNullException()
 		{
-			Assert.Null(uninitializedService.Engine);
-		}
-
-		[Fact]
-		public async void EmailService_UninitializedAction()
-		{
-			await Assert.ThrowsAnyAsync<InvalidOperationException>(async () =>
+			Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
 			{
-				await uninitializedService.Render(new TestEmail());
+				await emailService.Render(null);
 			});
-		}
 
-		[Fact]
-		public void EmailService_UninitializedOptions()
-		{
-			Assert.ThrowsAny<ArgumentNullException>(() =>
+			Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
 			{
-				uninitializedService.Initialize(null);
+				await emailService.Render(null, null);
 			});
 		}
 
 		[Theory]
 		[InlineData(typeof(TestEmail), "Hello test!")]
 		[InlineData(typeof(TestEmailInclude), "Hello test!\nI&#x27;m included!")]
-		public async void Render(Type emailType, string expected)
+		public async void Render_RazorEmail(Type emailType, string expected)
 		{
 			var email = (NETStandardLibrary.RazorEmail.RazorEmail)Activator.CreateInstance(emailType);
 			var result = await emailService.Render(email);
+			Assert.Equal(expected, result);
+		}
+
+		[Theory]
+		[InlineData("Testing", null, "Testing")]
+		[InlineData("@Model.Text", "Testing", "Testing")]
+		public async void Render_StringTemplate(string template, string text, string expected)
+		{
+			var model = new { Text = text };
+			var result = await emailService.Render(template, model);
 			Assert.Equal(expected, result);
 		}
 	}

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NETStandardLibrary.Linq;
-using NETStandardLibrary.Search;
 using Xunit;
 
-namespace NETStandardLibraryTests.Search
+namespace NETStandardLibraryTests.Linq
 {
 	public class SearchMethodsTests
 	{

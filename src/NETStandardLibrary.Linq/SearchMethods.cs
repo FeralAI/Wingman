@@ -1,9 +1,7 @@
-using System;
 using System.Linq;
 using LinqKit;
-using NETStandardLibrary.Linq;
 
-namespace NETStandardLibrary.Search
+namespace NETStandardLibrary.Linq
 {
 	public static class SearchMethods
 	{

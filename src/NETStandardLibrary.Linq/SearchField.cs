@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NETStandardLibrary.Common;
-using NETStandardLibrary.Linq;
 
-namespace NETStandardLibrary.Search
+namespace NETStandardLibrary.Linq
 {
 	public class SearchField : ISearchField
 	{

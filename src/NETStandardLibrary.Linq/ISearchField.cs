@@ -1,7 +1,6 @@
 using System;
-using NETStandardLibrary.Linq;
 
-namespace NETStandardLibrary.Search
+namespace NETStandardLibrary.Linq
 {
 	public interface ISearchField
 	{

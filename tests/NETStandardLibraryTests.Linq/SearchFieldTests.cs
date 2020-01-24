@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using NETStandardLibrary.Search;
+using NETStandardLibrary.Linq;
 using Xunit;
 
-namespace NETStandardLibraryTests.Search
+namespace NETStandardLibraryTests.Linq
 {
 	public class SearchFieldTests
 	{

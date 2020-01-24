@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using NETStandardLibrary.Linq;
 
-namespace NETStandardLibrary.Search
+namespace NETStandardLibrary.Linq
 {
 	public class SearchParameters
 	{

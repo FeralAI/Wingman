@@ -60,3 +60,8 @@ foreach(Dictionary<string, object> field in fields)
 This also has drawbacks of needing to be maintained when querying new data.
 
 This library serves to make that much easier with a flexible approach to building query parameters and executing search queries.
+
+## Links
+
+<https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/>
+<http://www.albahari.com/nutshell/predicatebuilder.aspx>

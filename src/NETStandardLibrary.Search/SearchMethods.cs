@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using LinqKit;
 using NETStandardLibrary.Linq;
@@ -8,19 +9,18 @@ namespace NETStandardLibrary.Search
 	{
 		public static SearchResults<T> Search<T>(IQueryable<T> queryable, SearchParameters parameters)
 		{
-			var results = new SearchResults<T>
+			var orderedQueryable = (IOrderedQueryable<T>)queryable;
+			var searchResults = new SearchResults<T>
 			{
-				Page = parameters?.Page,
-				PageSize = parameters?.PageSize,
 				Parameters = parameters,
+				Results = orderedQueryable,
 			};
 
-			var searchResults = (IOrderedQueryable<T>)queryable;
+			if (parameters == null)
+				return searchResults;
 
-			if (parameters != null && parameters.Fields != null && parameters.Fields.Count > 0)
+			if (parameters.Fields != null && parameters.Fields.Count > 0)
 			{
-				// TODO: https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/
-				// TODO: http://www.albahari.com/nutshell/predicatebuilder.aspx
 				var wherePredicate = parameters.Fields
 					.Aggregate(PredicateBuilder.New<T>(true), (predicate, field) =>
 					{
@@ -37,20 +37,21 @@ namespace NETStandardLibrary.Search
 
 				// NOTE: Is the .AsExpandable() really needed here?
 				// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
-				searchResults = (IOrderedQueryable<T>)searchResults.AsExpandable().Where(wherePredicate);
+				orderedQueryable = (IOrderedQueryable<T>)orderedQueryable.AsExpandable().Where(wherePredicate);
 			}
 
 			if (parameters.OrderBys != null)
-				searchResults = searchResults.OrderByClause(new OrderByClauseList(parameters.OrderBys));
+				orderedQueryable = orderedQueryable.OrderByClause(new OrderByClauseList(parameters.OrderBys));
 
-			results.TotalCount = searchResults.Count();
+			// Make sure we get the count BEFORE applying pagination
+			searchResults.TotalCount = orderedQueryable.Count();
 
-			if (results.HasPaging)
-				results.Results = searchResults.GetPage(results.Page.Value, results.PageSize.Value);
+			if (searchResults.HasPaging)
+				searchResults.Results = orderedQueryable.GetPage(searchResults.Page.Value, searchResults.PageSize.Value);
 			else
-				results.Results = searchResults;
+				searchResults.Results = orderedQueryable;
 
-			return results;
+			return searchResults;
 		}
 	}
 }

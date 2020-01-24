@@ -10,7 +10,11 @@ namespace NETStandardLibrary.Search
 	{
 		public static IEnumerable<SearchField> FromObject(object model)
 		{
+			if (model == null)
+				throw new ArgumentNullException("Model is required");
+
 			var values = model.GetType().GetPropertyValues(model);
+
 			// TODO: Make something more robust
 			var result = values
 				.Where(kv => kv.Value != null)
@@ -18,7 +22,6 @@ namespace NETStandardLibrary.Search
 				{
 					Name = kv.Key,
 					Value = kv.Value,
-					// MaxValue = ???,
 					ValueType = kv.Value.GetType(),
 					Operator = kv.Value.GetType() == typeof(string)
 						? WhereClauseType.Contains

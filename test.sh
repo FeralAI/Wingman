@@ -7,7 +7,7 @@ rm -rf tests/_results/*
 for d in ./tests/NETStandardLibraryTests.*
 do
 	cd $d
-	dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/${d/.\/tests\//}.Common.xml" -p:Exclude="[*]Tests.*" &
+	dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/${d/.\/tests\//}.xml" -p:Exclude="[*]Tests.*" &
 	cd ../..
 done
 

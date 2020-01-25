@@ -22,7 +22,7 @@ namespace NETStandardSamples.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public ActionResult<SearchResults<TestPerson>> Search(SearchForm form)
 		{
-			var searchFields = SearchField.FromObject(form).ToList();
+			var searchFields = SearchField.FromObject(form).Where(f => f.Value != null).ToList();
 			var parameters = new SearchParameters
 			{
 				Fields = searchFields,
@@ -39,7 +39,10 @@ namespace NETStandardSamples.Controllers
 
 	public class SearchForm
 	{
+		[SearchField(WhereClauseType.Contains)]
 		public string FirstName { get; set; }
+
+		[SearchField(WhereClauseType.Contains)]
 		public string LastName { get; set; }
 	}
 }

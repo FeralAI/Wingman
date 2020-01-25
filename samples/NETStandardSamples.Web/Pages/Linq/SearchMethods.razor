@@ -75,6 +75,7 @@
 	{
 		var writeOptions = new JsonSerializerOptions
 		{
+			IgnoreNullValues = true,
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 		var json = JsonSerializer.Serialize(new { FirstName = form.FirstName, LastName = form.LastName }, writeOptions);

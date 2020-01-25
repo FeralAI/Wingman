@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using NETStandardLibrary.Common;
+using System.Reflection;
 
 namespace NETStandardLibrary.Linq
 {
@@ -12,20 +11,22 @@ namespace NETStandardLibrary.Linq
 			if (model == null)
 				throw new ArgumentNullException("Model is required");
 
-			var values = model.GetType().GetPropertyValues(model);
-
-			// TODO: Make something more robust
-			var result = values
-				.Where(kv => kv.Value != null)
-				.Select(kv => new SearchField
+			var properties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			var result = new List<SearchField>();
+			foreach (var property in properties)
+			{
+				var value = property.GetValue(model);
+				var attribute = (SearchFieldAttribute)property.GetCustomAttribute(typeof(SearchFieldAttribute));
+				var searchField = new SearchField
 				{
-					Name = kv.Key,
-					Value = kv.Value,
-					ValueType = kv.Value.GetType(),
-					Operator = kv.Value.GetType() == typeof(string)
-						? WhereClauseType.Contains
-						: WhereClauseType.Equal,
-				});
+					Name = attribute?.Name ?? property.Name,
+					Operator = attribute?.WhereClauseType ?? WhereClauseType.Equal,
+					Value = value,
+					ValueType = value?.GetType(),
+				};
+
+				result.Add(searchField);
+			}
 
 			return result;
 		}

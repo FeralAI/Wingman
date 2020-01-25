@@ -75,9 +75,7 @@ namespace NETStandardLibrary.Linq
 
 			var clauses = new string[count];
 			for (var i = 0; i < count; i++)
-			{
 				clauses[i] = this[i].ToString();
-			}
 
 			return string.Join(", ", clauses);
 		}

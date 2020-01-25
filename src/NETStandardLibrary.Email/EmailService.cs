@@ -55,9 +55,7 @@ namespace NETStandardLibrary.Email
 				throw new ArgumentNullException("MailMessage must not be null");
 
 			using (var client = SmtpClientFactory())
-			{
 				await client.SendMailAsync(message);
-			}
 		}
 
 		/// <summary>

@@ -81,9 +81,7 @@ namespace NETStandardLibrary.RazorEmail
 				email.Body = await Render(email);
 
 			using (var client = SmtpClientFactory())
-			{
 				await client.SendMailAsync(email);
-			}
 		}
 	}
 }

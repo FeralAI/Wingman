@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using NETStandardLibrary.Email;
 using RazorLight;
@@ -11,10 +12,20 @@ namespace NETStandardLibrary.RazorEmail
 	/// <typeparam name="T">Any type property from the assembly with your email assets (classes, templates, etc.)</typeparam>
 	public class RazorEmailService<T> : EmailService, IRazorEmailService
 	{
-		public RazorEmailService() : this(null) { }
+		public RazorEmailService()
+			: base()
+		{
+			Initialize();
+		}
 		public RazorEmailService(EmailOptions options)
+			: this()
 		{
 			Initialize(options);
+		}
+		public RazorEmailService(EmailOptions options, Func<SmtpClient> smtpClientFactory)
+			: this(options)
+		{
+			SmtpClientFactory = smtpClientFactory;
 		}
 
 		/// <summary>
@@ -69,7 +80,7 @@ namespace NETStandardLibrary.RazorEmail
 			if (string.IsNullOrWhiteSpace(email.Body))
 				email.Body = await Render(email);
 
-			using (var client = SmtpFactory(Options))
+			using (var client = SmtpClientFactory())
 			{
 				await client.SendMailAsync(email);
 			}

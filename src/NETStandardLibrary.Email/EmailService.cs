@@ -10,10 +10,19 @@ namespace NETStandardLibrary.Email
 	/// </summary>
 	public class EmailService : IEmailService
 	{
-		public EmailService() { }
+		public EmailService()
+		{
+			SmtpClientFactory = () => CreateSmtpClient(Options);
+		}
 		public EmailService(EmailOptions options)
+			: this()
 		{
 			Options = options;
+		}
+		public EmailService(EmailOptions options, Func<SmtpClient> smtpClientFactory)
+			: this(options)
+		{
+			SmtpClientFactory = smtpClientFactory;
 		}
 
 		/// <summary>
@@ -25,15 +34,15 @@ namespace NETStandardLibrary.Email
 		/// The method for creating the <c>SmtpClient</c> when sending emails.
 		/// </summary>
 		/// <value></value>
-		protected Func<EmailOptions, SmtpClient> SmtpFactory { get; private set; } = CreateSmtpClient;
+		protected Func<SmtpClient> SmtpClientFactory { get; set; }
 
 		/// <summary>
 		/// Sets a reference to the smtp factory function.
 		/// </summary>
 		/// <param name="factory"></param>
-		public void SetSmtpFactory(Func<EmailOptions, SmtpClient> factory)
+		public void SetSmtpClientFactory(Func<SmtpClient> factory)
 		{
-			SmtpFactory = factory ?? CreateSmtpClient;
+			SmtpClientFactory = factory ?? (() => CreateSmtpClient(Options));
 		}
 
 		/// <summary>
@@ -45,7 +54,7 @@ namespace NETStandardLibrary.Email
 			if (message == null)
 				throw new ArgumentNullException("MailMessage must not be null");
 
-			using (var client = SmtpFactory(Options))
+			using (var client = SmtpClientFactory())
 			{
 				await client.SendMailAsync(message);
 			}

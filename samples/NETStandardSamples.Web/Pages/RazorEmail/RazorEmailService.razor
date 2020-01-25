@@ -1,8 +1,8 @@
-@page "/email/email-service"
-
-@using NETStandardLibrary.Common
-@inject NETStandardLibrary.RazorEmail.RazorEmailService<Startup> MailService
+@page "/razor-email/razor-email-service"
 @layout ClassLayout
+
+@using NETStandardSamples.Web.Data
+@inject NETStandardLibrary.RazorEmail.RazorEmailService<Startup> MailService
 
 <p>
 	This class provides a method of embedding, caching, generating and sending emails using Razor templates and the built-in .NET SMTP

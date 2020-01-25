@@ -40,6 +40,7 @@ namespace NETStandardSamples.Web
 				var emailService = new RazorEmailService<Startup>(options);
 				return emailService;
 			});
+			services.AddSingleton<PageService>();
 			services.AddSingleton<TestPersonService>();
 		}
 

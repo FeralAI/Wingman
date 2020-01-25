@@ -1,4 +1,4 @@
-namespace NETStandardSamples.Web.Pages.RazorEmail
+namespace NETStandardSamples.Web.Data
 {
 	public class RazorEmailServiceEmail : NETStandardLibrary.RazorEmail.RazorEmail
 	{

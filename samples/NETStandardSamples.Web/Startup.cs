@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +25,16 @@ namespace NETStandardSamples.Web
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddControllers();
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
+
+			services.AddTransient(s =>
+			{
+				var httpClientHandler = new HttpClientHandler();
+				httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+				return new HttpClient(httpClientHandler) { BaseAddress = new Uri("https://localhost:5001") };
+			});
 
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
 			services.AddSingleton(s =>
@@ -65,6 +76,7 @@ namespace NETStandardSamples.Web
 
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapControllers();
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
 			});

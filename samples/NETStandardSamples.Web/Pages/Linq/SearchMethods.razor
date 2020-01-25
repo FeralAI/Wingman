@@ -1,8 +1,15 @@
 @page "/linq/search-methods"
 @layout ClassLayout
 
+@using System.IO
+@using System.Net
+@using System.Net.Http
+@using System.Text
+@using System.Text.Json
 @using NETStandardLibrary.Linq
 @using NETStandardSamples.Web.Data
+
+@inject HttpClient Http
 @inject TestPersonService PersonService
 
 <form>
@@ -15,6 +22,7 @@
 		<input type="text" class="form-control" id="lastName" @bind="form.LastName">
 	</div>
 	<button type="button" class="btn btn-primary" @onclick="Search">Search</button>
+	<button type="button" class="btn btn-primary" @onclick="SearchAsync">SearchAsync</button>
 </form>
 
 <br><br>
@@ -61,5 +69,31 @@
 		};
 
 		searchResults = PersonService.GetData().Search(searchParams);
+	}
+
+	private async Task SearchAsync()
+	{
+		var writeOptions = new JsonSerializerOptions
+		{
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
+		var json = JsonSerializer.Serialize(new { FirstName = form.FirstName, LastName = form.LastName }, writeOptions);
+		var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+		var response = await Http.PostAsync("api/search/people", content);
+		if (response.StatusCode == HttpStatusCode.OK)
+		{
+			var body = await response.Content.ReadAsStringAsync();
+			var bytes = Encoding.UTF8.GetBytes(body);
+			using (var bodyStream = new MemoryStream(bytes))
+			{
+				var readOptions = new JsonSerializerOptions
+				{
+					PropertyNameCaseInsensitive = true,
+					IgnoreReadOnlyProperties = true,
+				};
+				searchResults = await JsonSerializer.DeserializeAsync<SearchResults<TestPerson>>(bodyStream, readOptions);
+			}
+		}
 	}
 }

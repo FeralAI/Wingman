@@ -8,12 +8,7 @@ namespace NETStandardLibrary.Linq
 		public static SearchResults<T> Search<T>(IQueryable<T> queryable, SearchParameters parameters)
 		{
 			var orderedQueryable = (IOrderedQueryable<T>)queryable;
-			var searchResults = new SearchResults<T>
-			{
-				Parameters = parameters,
-				Results = orderedQueryable,
-			};
-
+			var searchResults = new SearchResults<T> { Results = orderedQueryable };
 			if (parameters == null)
 				return searchResults;
 
@@ -43,6 +38,8 @@ namespace NETStandardLibrary.Linq
 
 			// Make sure we get the count BEFORE applying pagination
 			searchResults.TotalCount = orderedQueryable.Count();
+			searchResults.Page = parameters.Page;
+			searchResults.PageSize = parameters.PageSize;
 
 			if (searchResults.HasPaging)
 				searchResults.Results = orderedQueryable.GetPage(searchResults.Page.Value, searchResults.PageSize.Value);

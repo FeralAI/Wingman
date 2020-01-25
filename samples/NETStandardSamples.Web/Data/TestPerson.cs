@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace NETStandardSamples.Web.Data
 {
@@ -9,7 +10,9 @@ namespace NETStandardSamples.Web.Data
 		public DateTime? Date { get; set; }
 		public int Age { get; set; }
 		public int? Weight { get; set; }
+		[JsonIgnore]
 		public TestPerson Mother { get; set; }
+		[JsonIgnore]
 		public TestPerson Father { get; set; }
 	}
 }

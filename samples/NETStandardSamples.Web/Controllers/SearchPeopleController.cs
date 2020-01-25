@@ -22,14 +22,12 @@ namespace NETStandardSamples.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public ActionResult<SearchResults<TestPerson>> Search(SearchForm form)
 		{
-			var searchFields = SearchField.FromObject(form).Where(f => f.Value != null).ToList();
+			var searchFields = SearchFieldList.FromObject(form, true);
+			searchFields.RemoveAll(f => f.Value == null);
 			var parameters = new SearchParameters
 			{
 				Fields = searchFields,
-				OrderBys = new List<OrderByClause>
-				{
-					new OrderByClause { Name = "LastName", Direction = OrderByDirection.ASC },
-				},
+				OrderBys = new OrderByClauseList("LastName ASC"),
 			};
 
 			var results = personService.GetData().Search(parameters);

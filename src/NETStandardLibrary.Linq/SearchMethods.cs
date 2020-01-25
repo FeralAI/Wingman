@@ -25,7 +25,10 @@ namespace NETStandardLibrary.Linq
 							field.MaxValue
 						);
 
-						return predicate.And(expression);
+						if (parameters.Fields.WhereOperator == WhereClauseOperator.AND)
+							return predicate.And(expression);
+						else
+							return predicate.Or(expression);
 					});
 
 				// NOTE: Is the .AsExpandable() really needed here?

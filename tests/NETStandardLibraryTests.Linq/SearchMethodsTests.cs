@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NETStandardLibrary.Linq;
 using Xunit;
 
@@ -16,7 +15,7 @@ namespace NETStandardLibraryTests.Linq
 		{
 			var searchParameters = new SearchParameters
 			{
-				Fields = new List<SearchField>
+				Fields = new SearchFieldList
 				{
 					new SearchField
 					{
@@ -27,14 +26,7 @@ namespace NETStandardLibraryTests.Linq
 						Operator = clauseType,
 					},
 				},
-				OrderBys = new List<OrderByClause>
-				{
-					new OrderByClause
-					{
-						Name = "LastName",
-						Direction = OrderByDirection.ASC,
-					},
-				},
+				OrderBys = new OrderByClauseList("LastName ASC"),
 			};
 
 			var results = TestPerson.Data.Search(searchParameters);
@@ -61,5 +53,53 @@ namespace NETStandardLibraryTests.Linq
 			var results = TestPerson.Data.Search(searchParameters);
 			Assert.NotEmpty(results.Results);
 		}
+
+		// [Fact]
+		// public void Search_Subclauses()
+		// {
+		// 	var subclauses = new SearchFieldList(new List<SearchField>
+		// 	{
+		// 		new SearchField
+		// 		{
+		// 			Name = "LastName",
+		// 			Value = "on",
+		// 			ValueType = typeof(string),
+		// 			Operator = WhereClauseType.Contains,
+		// 		},
+		// 		new SearchField
+		// 		{
+		// 			Name = "LastName",
+		// 			Value = "th",
+		// 			ValueType = typeof(string),
+		// 			Operator = WhereClauseType.Contains,
+		// 		}
+		// 	}, WhereClauseOperator.OR);
+
+		// 	var fields = new SearchFieldList
+		// 	(
+		// 		new List<SearchField>
+		// 		{
+		// 			new SearchField
+		// 			{
+		// 				Name = "Age",
+		// 				Value = 20,
+		// 				MaxValue = 30,
+		// 				ValueType = typeof(int),
+		// 				Operator = WhereClauseType.Between,
+		// 			}
+		// 		}
+		// 	)	{
+		// 		Subclauses = subclauses
+		// 	};
+
+		// 	var searchParameters = new SearchParameters
+		// 	{
+		// 		Fields = fields,
+		// 		OrderBys = new OrderByClauseList("LastName ASC"),
+		// 	};
+
+		// 	var results = TestPerson.Data.Search(searchParameters);
+		// 	Assert.Equal(4, results.TotalCount);
+		// }
 	}
 }

@@ -56,16 +56,13 @@
 
 	private void Search()
 	{
-		var searchFields = SearchField.FromObject(form);
+		var fields = SearchFieldList.FromObject(form);
 		var searchParams = new SearchParameters
 		{
-			Fields = searchFields.ToList(),
+			Fields = fields,
 			Page = 1,
 			PageSize = 2,
-			OrderBys = new List<OrderByClause>
-			{
-				new OrderByClause { Direction = OrderByDirection.ASC, Name = "LastName" }
-			},
+			OrderBys = new OrderByClauseList("LastName ASC"),
 		};
 
 		searchResults = PersonService.GetData().Search(searchParams);

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NETStandardSamples.Web.Data;
 
-namespace NETStandardSamples.Web.Data
+namespace NETStandardSamples.Web.Services
 {
 	public class TestPersonService
 	{

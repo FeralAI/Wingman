@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NETStandardLibrary.Email;
 using NETStandardLibrary.RazorEmail;
-using NETStandardSamples.Web.Data;
+using NETStandardSamples.Web.Services;
 
 namespace NETStandardSamples.Web
 {

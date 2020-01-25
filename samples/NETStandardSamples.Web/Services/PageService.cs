@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NETStandardSamples
+namespace NETStandardSamples.Web.Services
 {
 	public class PageService
 	{

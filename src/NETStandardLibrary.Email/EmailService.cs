@@ -22,6 +22,21 @@ namespace NETStandardLibrary.Email
 		public virtual EmailOptions Options { get; set; }
 
 		/// <summary>
+		/// The method for creating the <c>SmtpClient</c> when sending emails.
+		/// </summary>
+		/// <value></value>
+		protected Func<EmailOptions, SmtpClient> SmtpFactory { get; private set; } = CreateSmtpClient;
+
+		/// <summary>
+		/// Sets a reference to the smtp factory function.
+		/// </summary>
+		/// <param name="factory"></param>
+		public void SetSmtpFactory(Func<EmailOptions, SmtpClient> factory)
+		{
+			SmtpFactory = factory ?? CreateSmtpClient;
+		}
+
+		/// <summary>
 		/// Sends an email.
 		/// </summary>
 		/// <param name="email">The email object.</param>
@@ -30,18 +45,18 @@ namespace NETStandardLibrary.Email
 			if (message == null)
 				throw new ArgumentNullException("MailMessage must not be null");
 
-			using (var client = CreateSmtpClient(Options))
+			using (var client = SmtpFactory(Options))
 			{
 				await client.SendMailAsync(message);
 			}
 		}
 
 		/// <summary>
-		/// Create the SMTP client using the given email options.
+		/// Create the SMTP client using the provided email options.
 		/// </summary>
 		/// <param name="options">The mail delivery options.</param>
 		/// <returns>An <c>SmtpClient</c> object.</returns>
-		protected SmtpClient CreateSmtpClient(EmailOptions options)
+		protected static SmtpClient CreateSmtpClient(EmailOptions options)
 		{
 			if (options == null)
 				throw new ArgumentNullException("EmailOptions must not be null");

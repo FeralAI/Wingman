@@ -69,7 +69,7 @@ namespace NETStandardLibrary.RazorEmail
 			if (string.IsNullOrWhiteSpace(email.Body))
 				email.Body = await Render(email);
 
-			using (var client = CreateSmtpClient(Options))
+			using (var client = SmtpFactory(Options))
 			{
 				await client.SendMailAsync(email);
 			}

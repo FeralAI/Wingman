@@ -34,5 +34,11 @@ namespace NETStandardLibrary.RazorEmail
 		/// <param name="model"></param>
 		/// <returns></returns>
 		Task<string> Render(string template, object model);
+
+		/// <summary>
+		/// Sends an email.
+		/// </summary>
+		/// <param name="email">The <c>RazorEmail</c> object.</param>
+		Task Send(RazorEmail email);
 	}
 }

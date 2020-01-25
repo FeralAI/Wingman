@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using NETStandardLibrary.Email;
 using RazorLight;
@@ -54,6 +55,24 @@ namespace NETStandardLibrary.RazorEmail
 		{
 			var body = await Engine.CompileRenderStringAsync(template, template, model);
 			return body;
+		}
+
+		/// <summary>
+		/// Sends an email.
+		/// </summary>
+		/// <param name="email">The <c>RazorEmail</c> object.</param>
+		public async Task Send(RazorEmail email)
+		{
+			if (email == null)
+				throw new NullReferenceException("Email is required");
+
+			if (string.IsNullOrWhiteSpace(email.Body))
+				email.Body = await Render(email);
+
+			using (var client = CreateSmtpClient(Options))
+			{
+				await client.SendMailAsync(email);
+			}
 		}
 	}
 }

@@ -39,10 +39,10 @@ namespace NETStandardSamples.Controllers
 
 	public class SearchForm
 	{
-		[SearchField(WhereClauseType.Contains)]
+		[SearchField(WhereClauseType.Contains, typeof(string))]
 		public string FirstName { get; set; }
 
-		[SearchField(WhereClauseType.Contains)]
+		[SearchField(WhereClauseType.Contains, typeof(string))]
 		public string LastName { get; set; }
 	}
 }

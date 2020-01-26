@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NETStandardLibrary.Linq;
 using NETStandardSamples.Web.Data;
@@ -16,9 +15,24 @@ namespace NETStandardSamples.Controllers
 			this.personService = personService;
 		}
 
+		/// <summary>
+		/// Search the dummy database for test people
+		/// </summary>
+		/// <remarks>
+		/// Sample request:
+		///
+		///	POST /api/search/people
+		///	{
+		///		"firstName": "Bob",
+		///		"lastName": "Smith"
+		///	}
+		/// </remarks>
+		/// <param name="form"></param>
+		/// <returns>A <c>SearchResults&lt;TestPerson&gt;</c> object</returns>
+		/// <response code="200">Returns the search results</response>
+		/// <response code="400">If the query fails</response>
 		[HttpPost()]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
 		public ActionResult<SearchResults<TestPerson>> Search(SearchForm form)
 		{
 			var searchFields = SearchFieldList.FromObject(form, true);

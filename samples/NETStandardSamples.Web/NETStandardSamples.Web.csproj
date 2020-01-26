@@ -6,6 +6,11 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\NETStandardLibrary.Common\NETStandardLibrary.Common.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
@@ -19,6 +24,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Pages/Email/**/*.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

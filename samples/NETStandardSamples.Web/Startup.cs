@@ -4,12 +4,14 @@ using System.Net.Http;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NETStandardLibrary.Email;
 using NETStandardLibrary.RazorEmail;
+using NETStandardSamples.Web.Data;
 using NETStandardSamples.Web.Services;
 
 namespace NETStandardSamples.Web
@@ -27,7 +29,10 @@ namespace NETStandardSamples.Web
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllers(o =>
+			{
+				o.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+			});
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
 
@@ -58,7 +63,6 @@ namespace NETStandardSamples.Web
 				httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
 				return new HttpClient(httpClientHandler) { BaseAddress = new Uri("https://localhost:5001") };
 			});
-
 
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
 			services.AddSingleton(s =>
@@ -101,7 +105,6 @@ namespace NETStandardSamples.Web
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints =>

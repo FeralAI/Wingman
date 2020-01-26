@@ -5,12 +5,13 @@ using NETStandardSamples.Web.Services;
 
 namespace NETStandardSamples.Controllers
 {
-	[Route("api/search/people")]
-	public class SearchPeopleController : ApiController
+	// Not necessary since there is a transformer wired up, but I like being explicit here
+	[Route("api/people")]
+	public class PeopleController : ApiController
 	{
 		private readonly TestPersonService personService;
 
-		public SearchPeopleController(TestPersonService personService)
+		public PeopleController(TestPersonService personService)
 		{
 			this.personService = personService;
 		}
@@ -21,7 +22,7 @@ namespace NETStandardSamples.Controllers
 		/// <remarks>
 		/// Sample request:
 		///
-		///	POST /api/search/people
+		///	POST /api/people/search
 		///	{
 		///		"firstName": "Bob",
 		///		"lastName": "Smith"
@@ -31,7 +32,7 @@ namespace NETStandardSamples.Controllers
 		/// <returns>A <c>SearchResults&lt;TestPerson&gt;</c> object</returns>
 		/// <response code="200">Returns the search results</response>
 		/// <response code="400">If the query fails</response>
-		[HttpPost()]
+		[HttpPost("search")]
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
 		public ActionResult<SearchResults<TestPerson>> Search(SearchForm form)
 		{

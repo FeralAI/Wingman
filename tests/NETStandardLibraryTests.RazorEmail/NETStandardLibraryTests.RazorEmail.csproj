@@ -19,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NETStandardLibraryTests\NETStandardLibraryTests.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.RazorEmail\NETStandardLibrary.RazorEmail.csproj" />
-    <ProjectReference Include="..\NETStandardLibraryTests\NETStandardLibraryTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

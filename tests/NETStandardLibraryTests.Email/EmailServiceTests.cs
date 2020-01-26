@@ -5,14 +5,13 @@ using Xunit;
 
 namespace NETStandardLibraryTests.Email
 {
-	public class EmailServiceTest : IDisposable
+	public class EmailServiceTests : IDisposable
 	{
 		private IEmailService emailService;
 
-		public EmailServiceTest()
+		public EmailServiceTests()
 		{
-			var options = new EmailOptions { PickupDirectory = "C:\\Windows\\Temp" };
-			emailService = new EmailService(options);
+			emailService = new EmailService(Constants.Email_PickupOptions);
 		}
 
 		public void Dispose()
@@ -55,29 +54,44 @@ namespace NETStandardLibraryTests.Email
 		public async void Send_SmtpException()
 		{
 			await Assert.ThrowsAnyAsync<SmtpException>(async () =>
-			{
-				var options = new EmailOptions
-				{
-					Host = "localhost",
-					Port = 587,
-					Override = "test-override@test.com",
-					Username = "test",
-					Password = "test",
-					UseSSL = true,
-				};
-				var smtpService = new EmailService(options);
+			{;
+				var smtpService = new EmailService(Constants.Email_LocalOptions);
 				var message = new MailMessage
 				{
 					From = new MailAddress("test@test.com"),
 					Subject = "Test",
 					Body = "Test",
 				};
-				message.To.Add(options.Override);
+				message.To.Add(Constants.Email_LocalOptions.Override);
 
 				await smtpService.Send(message);
 			});
 		}
 
+		[Fact]
+		public async void SetSmtpClientFactory()
+		{
+			var factoryService = new EmailService(Constants.Email_LocalOptions, () =>
+			{
+				var client = new SmtpClient
+				{
+					DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+					PickupDirectoryLocation = Constants.Email_PickupOptions.PickupDirectory,
+				};
 
+				return client;
+			});
+
+			var message = new MailMessage
+			{
+				From = new MailAddress("test@test.com"),
+				Subject = "Test",
+				Body = "Test",
+			};
+			message.To.Add("test@test.com");
+
+			await factoryService.Send(message);
+			Assert.True(true);
+		}
 	}
 }

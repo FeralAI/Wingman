@@ -3,7 +3,7 @@ using Xunit;
 
 namespace NETStandardLibraryTests.RazorEmail
 {
-	public class RazorEmailTest
+	public class RazorEmailTests
 	{
 		[Fact]
 		public void TemplateKey()

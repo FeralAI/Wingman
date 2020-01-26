@@ -3,7 +3,7 @@ using Xunit;
 
 namespace NETStandardLibraryTests.Email
 {
-	public class EmailTest
+	public class EmailTests
 	{
 		[Fact]
 		public void ToMailMessage()

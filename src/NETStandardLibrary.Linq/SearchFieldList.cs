@@ -35,17 +35,7 @@ namespace NETStandardLibrary.Linq
 					continue;
 
 				var attribute = (SearchFieldAttribute)property.GetCustomAttribute(typeof(SearchFieldAttribute));
-				var valueType = (Type)null;
-
-				try
-				{
-					valueType = attribute?.ValueType ?? value.GetType();
-				}
-				catch (NullReferenceException e)
-				{
-					throw new NullReferenceException($"A ValueType must be provided via a non-null value or the SearchField attribute for property {property.Name}", e);
-				}
-
+				var valueType = attribute?.ValueType ?? property.PropertyType;
 				var searchField = new SearchField
 				{
 					Name = attribute?.Name ?? property.Name,

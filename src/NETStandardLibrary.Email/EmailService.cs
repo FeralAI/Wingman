@@ -12,7 +12,7 @@ namespace NETStandardLibrary.Email
 	{
 		public EmailService()
 		{
-			SmtpClientFactory = () => CreateSmtpClient(Options);
+			SetSmtpClientFactory();
 		}
 		public EmailService(EmailOptions options)
 			: this()
@@ -20,9 +20,9 @@ namespace NETStandardLibrary.Email
 			Options = options;
 		}
 		public EmailService(EmailOptions options, Func<SmtpClient> smtpClientFactory)
-			: this(options)
 		{
-			SmtpClientFactory = smtpClientFactory;
+			Options = options;
+			SetSmtpClientFactory(smtpClientFactory);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace NETStandardLibrary.Email
 		/// Sets a reference to the smtp factory function.
 		/// </summary>
 		/// <param name="factory"></param>
-		public void SetSmtpClientFactory(Func<SmtpClient> factory)
+		public void SetSmtpClientFactory(Func<SmtpClient> factory = null)
 		{
 			SmtpClientFactory = factory ?? (() => CreateSmtpClient(Options));
 		}

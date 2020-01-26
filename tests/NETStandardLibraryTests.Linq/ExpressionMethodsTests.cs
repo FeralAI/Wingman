@@ -112,6 +112,7 @@ namespace NETStandardLibraryTests.Linq
 		[Theory]
 		[InlineData("LastName", "mit", WhereClauseType.Contains, "Bob")]
 		[InlineData("LastName", "Brown", WhereClauseType.Equal, "James")]
+		[InlineData("Father.FirstName", "Steven", WhereClauseType.Equal, "James")]
 		public void ToWhereExpression_String(string name, string value, WhereClauseType clauseType, string expected)
 		{
 			var clause = ExpressionMethods.ToWhereExpression<TestPerson>(name, clauseType, value.GetType(), value);

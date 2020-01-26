@@ -28,5 +28,20 @@ namespace NETStandardLibraryTests.Linq
 			var result = SearchFieldList.FromObject(new {});
 			Assert.Empty(result);
 		}
+
+		[Fact]
+		public void FromObject_SearchFieldAttribute()
+		{
+			var result = SearchFieldList.FromObject(new SearchForm()).First();
+			Assert.Equal("Words", result.Name);
+			Assert.Equal(typeof(string), result.ValueType);
+			Assert.Equal(WhereClauseType.Equal, result.Operator);
+		}
+
+		private class SearchForm
+		{
+			[SearchField(WhereClauseType.Equal, typeof(string), "Words")]
+			public string Text { get; set; }
+		}
 	}
 }

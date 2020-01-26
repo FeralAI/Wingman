@@ -1,18 +1,18 @@
 using System;
-using NETStandardLibrary.Email;
+using System.Net.Mail;
 using NETStandardLibrary.RazorEmail;
 using NETStandardLibraryTests.RazorEmail.Emails;
 using Xunit;
 
 namespace NETStandardLibraryTests.RazorEmail
 {
-	public class RazorEmailServiceTest : IDisposable
+	public class RazorEmailServiceTests : IDisposable
 	{
 		private IRazorEmailService emailService;
 
-		public RazorEmailServiceTest()
+		public RazorEmailServiceTests()
 		{
-			emailService = new RazorEmailService<TestEmail>();
+			emailService = new RazorEmailService<TestEmail>(Constants.Email_PickupOptions);
 		}
 
 		public void Dispose()
@@ -52,6 +52,53 @@ namespace NETStandardLibraryTests.RazorEmail
 			var model = new { Text = text };
 			var result = await emailService.Render(template, model);
 			Assert.Equal(expected, result);
+		}
+
+		[Fact]
+		public async void Send()
+		{
+			var factoryService = new RazorEmailService<TestEmail>(Constants.Email_LocalOptions, () =>
+			{
+				var client = new SmtpClient
+				{
+					DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+					PickupDirectoryLocation = Constants.Email_PickupOptions.PickupDirectory,
+				};
+
+				return client;
+			});
+
+			var email = new TestEmail
+			{
+				From = new MailAddress("test@test.com"),
+				Subject = "Test",
+			};
+			email.To.Add("test@test.com");
+			await emailService.Send(email);
+			Assert.True(true);
+		}
+
+		[Fact]
+		public async void Send_Body()
+		{
+			var email = new TestEmail
+			{
+				From = new MailAddress("test@test.com"),
+				Subject = "Test",
+				Body = "New body",
+			};
+			email.To.Add("test@test.com");
+			await emailService.Send(email);
+			Assert.True(true);
+		}
+
+		[Fact]
+		public async void Send_EmailNull()
+		{
+			await Assert.ThrowsAnyAsync<NullReferenceException>(async () =>
+			{
+				await new RazorEmailService<TestEmail>().Send(null);
+			});
 		}
 	}
 }

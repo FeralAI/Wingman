@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\NETStandardLibrary.Common\NETStandardLibrary.Common.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Email\NETStandardLibrary.Email.csproj" />
     <ProjectReference Include="..\..\src\NETStandardLibrary.Linq\NETStandardLibrary.Linq.csproj" />
@@ -24,10 +30,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Pages/Email/**/*.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

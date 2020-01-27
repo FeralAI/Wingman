@@ -1,19 +1,22 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NETStandardLibrary.Linq;
 using NETStandardSamples.Web.Data;
-using NETStandardSamples.Web.Services;
 
-namespace NETStandardSamples.Controllers
+namespace NETStandardSamples.Web.Controllers
 {
-	// Not necessary since there is a transformer wired up, but I like being explicit here
-	[Route("api/people")]
-	public class PeopleController : ApiController
+	[ApiVersion(ApiVersions.v11)]
+	public partial class PeopleController : ApiController
 	{
-		private readonly TestPersonService personService;
-
-		public PeopleController(TestPersonService personService)
+		/// <summary>
+		/// Returns all test person data.
+		/// </summary>
+		/// <returns>An <c>IEnumerable&lt;TestPerson&gt;</c> object.</returns>
+		[HttpGet, MapToApiVersion(ApiVersions.v10), MapToApiVersion(ApiVersions.v11)]
+		[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
+		public ActionResult<IEnumerable<TestPerson>> Get()
 		{
-			this.personService = personService;
+			return Ok(personService.GetData());
 		}
 
 		/// <summary>
@@ -22,7 +25,7 @@ namespace NETStandardSamples.Controllers
 		/// <remarks>
 		/// Sample request:
 		///
-		///	POST /api/people/search
+		///	POST /api/v1.1/people/search
 		///	{
 		///		"firstName": "Bob",
 		///		"lastName": "Smith"
@@ -32,12 +35,11 @@ namespace NETStandardSamples.Controllers
 		/// <returns>A <c>SearchResults&lt;TestPerson&gt;</c> object</returns>
 		/// <response code="200">Returns the search results</response>
 		/// <response code="400">If the query fails</response>
-		[HttpPost("search")]
+		[HttpPost("search"), MapToApiVersion(ApiVersions.v11)]
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
-		public ActionResult<SearchResults<TestPerson>> Search(SearchForm form)
+		public ActionResult<SearchResults<TestPerson>> Search_v11(SearchForm form)
 		{
 			var searchFields = SearchFieldList.FromObject(form, true);
-			searchFields.RemoveAll(f => f.Value == null);
 			var parameters = new SearchParameters
 			{
 				Fields = searchFields,
@@ -47,14 +49,5 @@ namespace NETStandardSamples.Controllers
 			var results = personService.GetData().Search(parameters);
 			return Ok(results);
 		}
-	}
-
-	public class SearchForm
-	{
-		[SearchField(WhereClauseType.Contains, typeof(string))]
-		public string FirstName { get; set; }
-
-		[SearchField(WhereClauseType.Contains, typeof(string))]
-		public string LastName { get; set; }
 	}
 }

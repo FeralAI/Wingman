@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace NETStandardSamples.Controllers
+namespace NETStandardSamples.Web.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/[controller]")]
+	[Route("api/v{version:apiVersion}/[controller]")]
 	[ApiController]
 	public abstract class ApiController : ControllerBase
 	{

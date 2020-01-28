@@ -70,9 +70,12 @@ namespace NETStandardSamples.Web
 			// .NET services
 			services.AddTransient(provider =>
 			{
-				var httpClientHandler = new HttpClientHandler();
-				// Disable SSL validation since we're hitting localhost with a self-signed cert
-				httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+				var httpClientHandler = new HttpClientHandler
+				{
+					// Disable SSL validation since we're hitting localhost with a self-signed cert
+					ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
+				};
+
 				return new HttpClient(httpClientHandler)
 				{
 					// TODO: Make this pull from config/env/???

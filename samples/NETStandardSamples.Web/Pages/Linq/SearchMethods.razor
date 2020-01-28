@@ -47,8 +47,13 @@
 @code {
 	class SearchPerson
 	{
+		[SearchField(WhereClauseType.Contains)]
 		public string FirstName { get; set; }
+
+		[SearchField(WhereClauseType.Contains)]
 		public string LastName { get; set; }
+
+		[SearchField(WhereClauseType.Equal)]
 		public int? Age { get; set; }
 	}
 
@@ -57,7 +62,7 @@
 
 	private void Search()
 	{
-		var fields = SearchFieldList.FromObject(form);
+		var fields = SearchFieldList.FromObject(form, true);
 		var searchParams = new SearchParameters
 		{
 			Fields = fields,
@@ -79,7 +84,7 @@
 		var json = JsonSerializer.Serialize(new { FirstName = form.FirstName, LastName = form.LastName }, writeOptions);
 		var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 		ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-		var response = await Http.PostAsync("api/people/search", content);
+		var response = await Http.PostAsync("api/v1.1/people/search", content);
 		if (response.StatusCode == HttpStatusCode.OK)
 		{
 			var body = await response.Content.ReadAsStringAsync();

@@ -11,9 +11,8 @@ namespace NETStandardSamples.Web.Services
 		{
 			return Assembly.GetAssembly(typeof(PageService))
 				.GetTypes()
+				.Where(t => t.FullName.StartsWith("NETStandardSamples.Web.Pages."))
 				.Where(t => !t.FullName.Contains("+"))
-				.Where(t => !t.Namespace?.EndsWith("Pages") ?? false)
-				.Where(t => t.FullName.StartsWith("NETStandardSamples.Web.Pages"))
 				.OrderBy(t => t.FullName);
 		}
 	}

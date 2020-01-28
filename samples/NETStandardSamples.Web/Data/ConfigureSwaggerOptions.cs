@@ -43,15 +43,15 @@ namespace NETStandardSamples.Web.Data
 				License = new OpenApiLicense { Name = "UNLICENSED" },
 				Contact = new OpenApiContact
 				{
-					Name = "Jason Skuby",
-					Email = "jskuby@gmail.com",
-					Url = new Uri("https://github.com/jskuby"),
+					Name = "Some One",
+					Email = "someone@example.com",
+					Url = new Uri("https://www.google.com"),
 				},
 			};
 
 			if (description.IsDeprecated)
 			{
-				info.Description += " This API version has been deprecated.";
+				info.Description += @" <b style=""color: red"">[DEPRECATED]</b>";
 			}
 
 			return info;

@@ -33,9 +33,9 @@ namespace NETStandardSamples.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Add core services
-			services.AddControllers(o =>
+			services.AddControllers(options =>
 			{
-				o.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+				options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 			});
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
@@ -43,32 +43,32 @@ namespace NETStandardSamples.Web
 			// API versioning and documentation
 			// https://github.com/microsoft/aspnet-api-versioning/tree/master/samples/aspnetcore/SwaggerSample
 			// https://github.com/microsoft/aspnet-api-versioning/wiki/Versioning-via-the-URL-Path
-			services.AddApiVersioning(o => {
-				o.ReportApiVersions = true;
-				o.AssumeDefaultVersionWhenUnspecified = true;
-				o.DefaultApiVersion = new ApiVersion(
+			services.AddApiVersioning(options => {
+				options.ReportApiVersions = true;
+				options.AssumeDefaultVersionWhenUnspecified = true;
+				options.DefaultApiVersion = new ApiVersion(
 					ApiVersions.CurrentVersion.Item1,
 					ApiVersions.CurrentVersion.Item2,
 					ApiVersions.CurrentVersion.Item3
 				);
 			});
-			services.AddVersionedApiExplorer(o =>
+			services.AddVersionedApiExplorer(options =>
 			{
-				o.GroupNameFormat = "'v'VVVV";
-				o.SubstituteApiVersionInUrl = true;
+				options.GroupNameFormat = "'v'VVVV";
+				options.SubstituteApiVersionInUrl = true;
 			});
 			services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-			services.AddSwaggerGen(o =>
+			services.AddSwaggerGen(options =>
 			{
-				o.OperationFilter<SwaggerDefaultValues>();
+				options.OperationFilter<SwaggerDefaultValues>();
 
 				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-				o.IncludeXmlComments(xmlPath);
+				options.IncludeXmlComments(xmlPath);
 			});
 
 			// .NET services
-			services.AddTransient(s =>
+			services.AddTransient(provider =>
 			{
 				var httpClientHandler = new HttpClientHandler();
 				// Disable SSL validation since we're hitting localhost with a self-signed cert
@@ -82,14 +82,14 @@ namespace NETStandardSamples.Web
 
 			// NETStandardLibrary services
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
-			services.AddSingleton(s =>
+			services.AddSingleton(provider =>
 			{
 				var options = new EmailOptions();
 				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
 				var emailService = new EmailService(options);
 				return emailService;
 			});
-			services.AddSingleton(s =>
+			services.AddSingleton(provider =>
 			{
 				var options = new EmailOptions();
 				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
@@ -106,11 +106,12 @@ namespace NETStandardSamples.Web
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
 			app.UseSwagger();
-			app.UseSwaggerUI(o =>
+			app.UseSwaggerUI(options =>
 			{
 				foreach (var description in provider.ApiVersionDescriptions)
 				{
-					o.SwaggerEndpoint( $"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant() );
+					var url = $"/swagger/{description.GroupName}/swagger.json";
+					options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant() );
 				}
 			});
 

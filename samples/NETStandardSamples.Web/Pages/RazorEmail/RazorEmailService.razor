@@ -1,6 +1,7 @@
 @page "/razor-email/razor-email-service"
 @layout ClassLayout
 
+@using NETStandardLibrary.Common
 @using NETStandardSamples.Web.Data
 @inject NETStandardLibrary.RazorEmail.RazorEmailService<Startup> MailService
 
@@ -9,13 +10,12 @@
 	capabilities. This page will demonstrate some of the data and functionality in this class.
 </p>
 
-<h2>EmailService.Options</h2>
+<strong>Options</strong>
 <p>
 	<EmailOptionsList @bind-OptionsLookup="optionsLookup" />
 </p>
 
-<h2>EmailService.Render()</h2>
-<strong>Class Test</strong>
+<strong>Render() - Class Test</strong>
 <form>
 	<div class="form-group">
 		<label for="text">Greeting</label>
@@ -29,7 +29,13 @@
 </form>
 <br>
 
-<strong>String Template Test</strong>
+<div>
+	<strong>Result from EmailService.Render()</strong>
+	<div>@renderResultClass</div>
+</div>
+<br>
+
+<strong>Render() - String Template Test</strong>
 <form>
 	<div class="form-group">
 		<label for="template">Template</label>
@@ -45,27 +51,33 @@
 </form>
 <br>
 
-<br>
-
 <div>
 	<strong>Result from EmailService.Render()</strong>
-	<div>@result</div>
+	<div>@renderResultString</div>
 </div>
+<br>
 
 @code {
 	private RazorEmailServiceEmail email = new RazorEmailServiceEmail();
 	private Dictionary<string, object> optionsLookup = new Dictionary<string, object>();
-	private string result;
+	private string renderResultClass;
+	private string renderResultString;
 	private string template;
 	private string text = "";
 
+	protected override Task OnInitializedAsync()
+	{
+		optionsLookup = typeof(NETStandardLibrary.Email.EmailOptions).GetPropertyValues(MailService.Options);
+		return Task.CompletedTask;
+	}
+
 	private async void RenderClass()
 	{
-		result = await MailService.Render(email);
+		renderResultClass = await MailService.Render(email);
 	}
 
 	private async void RenderTemplate()
 	{
-		result = await MailService.Render(template, new { Text = text });
+		renderResultString = await MailService.Render(template, new { Text = text });
 	}
 }

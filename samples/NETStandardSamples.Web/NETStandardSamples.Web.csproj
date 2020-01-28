@@ -25,11 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Pages/Email/**/*.cshtml" />
+    <Content Remove="Data/**/*.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Pages/Email/**/*.cshtml" />
+    <EmbeddedResource Include="Data/**/*.cshtml" />
   </ItemGroup>
 
 </Project>

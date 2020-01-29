@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NETStandardLibrary.Linq;
 using NETStandardSamples.Web.Data;
+using NETStandardSamples.Web.Models;
 
 namespace NETStandardSamples.Web.Controllers
 {

@@ -49,9 +49,9 @@ namespace NETStandardSamples.Web
 				options.ReportApiVersions = true;
 				options.AssumeDefaultVersionWhenUnspecified = true;
 				options.DefaultApiVersion = new ApiVersion(
-					ApiVersions.CurrentVersion.Item1,
-					ApiVersions.CurrentVersion.Item2,
-					ApiVersions.CurrentVersion.Item3
+					Api.CurrentVersion.Item1,
+					Api.CurrentVersion.Item2,
+					Api.CurrentVersion.Item3
 				);
 			});
 			services.AddVersionedApiExplorer(options =>

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -87,17 +89,20 @@ namespace NETStandardSamples.Web
 			services.Configure<EmailOptions>(Configuration.GetSection(nameof(EmailOptions)));
 			services.AddSingleton(provider =>
 			{
-				var options = new EmailOptions();
-				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
-				var emailService = new EmailService(options);
-				return emailService;
+				var options = provider.GetService<IOptions<EmailOptions>>().Value;
+				return new EmailService(options);
 			});
 			services.AddSingleton(provider =>
 			{
-				var options = new EmailOptions();
-				Configuration.GetSection(nameof(EmailOptions)).Bind(options);
-				var emailService = new RazorEmailService<Startup>(options);
-				return emailService;
+				var options = provider.GetService<IOptions<EmailOptions>>().Value;
+				return new RazorEmailService<Startup>(options, () =>
+				{
+					return new SmtpClient(options.Host, options.Port.Value)
+					{
+						Credentials = new NetworkCredential(options.Username, options.Password),
+						EnableSsl = options.UseSSL,
+					};
+				});
 			});
 
 			// NETStandardSamples services

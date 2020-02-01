@@ -13,6 +13,7 @@ namespace NETStandardSamples.Web.Services
 				.GetTypes()
 				.Where(t => t.FullName.StartsWith("NETStandardSamples.Web.Pages."))
 				.Where(t => !t.FullName.Contains("+"))
+				.Where(t => t.FullName.Split(".").Length > 4)
 				.OrderBy(t => t.FullName);
 		}
 	}

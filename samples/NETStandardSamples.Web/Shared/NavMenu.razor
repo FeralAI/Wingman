@@ -11,7 +11,7 @@
 	</button>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+<div class="@navMenuCssClass" @onclick="ToggleNavMenu">
 	<ul class="nav flex-column">
 		<li class="nav-item px-3">
 			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -24,10 +24,10 @@
 			</NavLink>
 		</li>
 		<li><br><br></li>
-		@foreach (var classPage in ClassPages)
+		@foreach (var classPage in classPages)
 		{
 			<li class="nav-item px-3">
-				<NavLink class="nav-link" href="@(classPage.Item2)">
+				<NavLink class="nav-link" href="@classPage.Item2">
 					<span class="oi oi-code" aria-hidden="true"></span> @classPage.Item1
 				</NavLink>
 			</li>
@@ -39,13 +39,13 @@
 	private bool collapseNavMenu = true;
 	private string swaggerUrl = $"/swagger/index.html?urls.primaryName=V{ApiVersions.CurrentVersionString}";
 
-	private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-	private List<Tuple<string, string>> ClassPages;
+	private string navMenuCssClass => collapseNavMenu ? "collapse" : null;
+	private List<Tuple<string, string>> classPages;
 
 	protected override Task OnInitializedAsync()
 	{
 		var pageTypes = PageService.GetAllPages();
-		ClassPages = new List<Tuple<string, string>>();
+		classPages = new List<Tuple<string, string>>();
 		var regex = new Regex(@"([A-Z])");
 		foreach (var pageType in pageTypes)
 		{
@@ -56,7 +56,7 @@
 				.Replace(" ", "-")
 				.Replace("/-", "/")
 				.ToLower();
-			ClassPages.Add(new Tuple<string, string>(name, url));
+			classPages.Add(new Tuple<string, string>(name, url));
 		}
 
 		return Task.CompletedTask;

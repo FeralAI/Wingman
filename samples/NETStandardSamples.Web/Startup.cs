@@ -113,19 +113,18 @@ namespace NETStandardSamples.Web
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
-			app.UseSwagger();
-			app.UseSwaggerUI(options =>
-			{
-				foreach (var description in provider.ApiVersionDescriptions)
-				{
-					var url = $"/swagger/{description.GroupName}/swagger.json";
-					options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant() );
-				}
-			});
-
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+				app.UseSwagger();
+				app.UseSwaggerUI(options =>
+				{
+					foreach (var description in provider.ApiVersionDescriptions)
+					{
+						var url = $"/swagger/{description.GroupName}/swagger.json";
+						options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant() );
+					}
+				});
 			}
 			else
 			{

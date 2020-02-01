@@ -5,7 +5,7 @@ using NETStandardSamples.Web.Models;
 
 namespace NETStandardSamples.Web.Controllers
 {
-	[ApiVersion(ApiVersions.v10, Deprecated = true)]
+	[ApiVersion(ApiVersions.v1_0, Deprecated = true)]
 	public partial class PeopleController : ApiController
 	{
 		/// <summary>
@@ -24,7 +24,7 @@ namespace NETStandardSamples.Web.Controllers
 		/// <returns>A <c>SearchResults&lt;TestPerson&gt;</c> object</returns>
 		/// <response code="200">Returns the search results</response>
 		/// <response code="400">If the query fails</response>
-		[HttpPost("search"), MapToApiVersion(ApiVersions.v10)]
+		[HttpPost("search"), MapToApiVersion(ApiVersions.v1_0)]
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
 		public ActionResult<SearchResults<TestPerson>> Search_v10(SearchForm form)
 		{

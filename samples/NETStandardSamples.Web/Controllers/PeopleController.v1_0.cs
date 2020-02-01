@@ -28,6 +28,9 @@ namespace NETStandardSamples.Web.Controllers
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
 		public ActionResult<SearchResults<TestPerson>> Search_v10(SearchForm form)
 		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
 			var searchFields = SearchFieldList.FromObject(form, true);
 			var parameters = new SearchParameters
 			{

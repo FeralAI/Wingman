@@ -62,10 +62,10 @@
 
 	private void Search()
 	{
-		var fields = SearchFieldList.FromObject(form, true);
+		var fields = WhereClause.FromObject(form, true);
 		var searchParams = new SearchParameters
 		{
-			Fields = fields,
+			WhereClause = fields,
 			Page = 1,
 			PageSize = 2,
 			OrderBys = new OrderByClauseList("LastName ASC"),

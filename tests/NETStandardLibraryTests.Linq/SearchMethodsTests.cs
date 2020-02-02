@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NETStandardLibrary.Linq;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace NETStandardLibraryTests.Linq
 		{
 			var searchParameters = new SearchParameters
 			{
-				Fields = new SearchFieldList
+				WhereClause = new WhereClause
 				{
 					new SearchField
 					{
@@ -23,7 +24,7 @@ namespace NETStandardLibraryTests.Linq
 						Value = value,
 						MaxValue = maxValue,
 						ValueType = valueType,
-						Operator = clauseType,
+						WhereOperator = clauseType,
 					},
 				},
 				OrderBys = new OrderByClauseList("LastName ASC"),
@@ -54,52 +55,56 @@ namespace NETStandardLibraryTests.Linq
 			Assert.NotEmpty(results.Results);
 		}
 
-		// [Fact]
-		// public void Search_Subclauses()
-		// {
-		// 	var subclauses = new SearchFieldList(new List<SearchField>
-		// 	{
-		// 		new SearchField
-		// 		{
-		// 			Name = "LastName",
-		// 			Value = "on",
-		// 			ValueType = typeof(string),
-		// 			Operator = WhereClauseType.Contains,
-		// 		},
-		// 		new SearchField
-		// 		{
-		// 			Name = "LastName",
-		// 			Value = "th",
-		// 			ValueType = typeof(string),
-		// 			Operator = WhereClauseType.Contains,
-		// 		}
-		// 	}, WhereClauseOperator.OR);
+		[Fact]
+		public void Search_Subclauses()
+		{
+			// WHERE (FirstName LIKE '%ob%' AND LastName LIKE '%mith%')
+			// OR (FirstName = 'Chris'
+			// 	AND (LastName = 'Nelson'
+			// 		AND (Age = 20 OR Age = 22 OR Age = 25 OR Age = 30 OR Age = 48)
+			// 	)
+			// )
+			var list1 = new WhereClause(new List<SearchField> {
+				new SearchField("FirstName", "ob", WhereOperator.Contains),
+				new SearchField("LastName", "mith", WhereOperator.Contains),
+			}, WhereJoinOperator.And);
 
-		// 	var fields = new SearchFieldList
-		// 	(
-		// 		new List<SearchField>
-		// 		{
-		// 			new SearchField
-		// 			{
-		// 				Name = "Age",
-		// 				Value = 20,
-		// 				MaxValue = 30,
-		// 				ValueType = typeof(int),
-		// 				Operator = WhereClauseType.Between,
-		// 			}
-		// 		}
-		// 	)	{
-		// 		Subclauses = subclauses
-		// 	};
+			var subSubList = new WhereClause(new List<SearchField> {
+				new SearchField("Age", 20, WhereOperator.Equal),
+				new SearchField("Age", 22, WhereOperator.Equal),
+				new SearchField("Age", 25, WhereOperator.Equal),
+				new SearchField("Age", 30, WhereOperator.Equal),
+				new SearchField("Age", 48, WhereOperator.Equal),
+			}, WhereJoinOperator.Or);
 
-		// 	var searchParameters = new SearchParameters
-		// 	{
-		// 		Fields = fields,
-		// 		OrderBys = new OrderByClauseList("LastName ASC"),
-		// 	};
+			var subList = new WhereClause(new List<SearchField> {
+				new SearchField("LastName", "Nelson", WhereOperator.Contains)
+			}, WhereJoinOperator.And) {
+				Subclauses = new List<WhereClause> { subSubList },
+				SubclauseJoinOperator = WhereJoinOperator.And,
+			};
 
-		// 	var results = TestPerson.Data.Search(searchParameters);
-		// 	Assert.Equal(4, results.TotalCount);
-		// }
+			var list2 = new WhereClause(new List<SearchField> {
+				new SearchField("FirstName", "Chris", WhereOperator.Equal)
+			}) {
+				Subclauses = new List<WhereClause> { subList },
+				SubclauseJoinOperator = WhereJoinOperator.And,
+			};
+
+			var whereClause = new WhereClause
+			{
+				Subclauses = new List<WhereClause> { list1, list2 },
+				SubclauseJoinOperator = WhereJoinOperator.Or,
+			};
+
+			var searchParameters = new SearchParameters
+			{
+				WhereClause = whereClause,
+				OrderBys = new OrderByClauseList("LastName ASC"),
+			};
+
+			var results = TestPerson.Data.Search(searchParameters);
+			Assert.Equal(2, results.TotalCount);
+		}
 	}
 }

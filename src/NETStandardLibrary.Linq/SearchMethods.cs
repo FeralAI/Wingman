@@ -12,25 +12,9 @@ namespace NETStandardLibrary.Linq
 			if (parameters == null)
 				return searchResults;
 
-			if (parameters.Fields != null && parameters.Fields.Count > 0)
+			var wherePredicate = parameters.WhereClause.ToWhereExpression<T>();
+			if (wherePredicate != null)
 			{
-				var wherePredicate = parameters.Fields
-					.Aggregate(PredicateBuilder.New<T>(true), (predicate, field) =>
-					{
-						var expression = ExpressionMethods.ToWhereExpression<T>(
-							field.Name,
-							field.Operator,
-							field.ValueType,
-							field.Value,
-							field.MaxValue
-						);
-
-						if (parameters.Fields.WhereOperator == WhereJoinOperator.And)
-							return predicate.And(expression);
-						else
-							return predicate.Or(expression);
-					});
-
 				// NOTE: Is the .AsExpandable() really needed here?
 				// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
 				orderedQueryable = (IOrderedQueryable<T>)orderedQueryable.AsExpandable().Where(wherePredicate);

@@ -32,10 +32,10 @@ namespace NETStandardSamples.Web.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var searchFields = SearchFieldList.FromObject(form, true);
+			var searchFields = WhereClause.FromObject(form, true);
 			var parameters = new SearchParameters
 			{
-				Fields = searchFields,
+				WhereClause = searchFields,
 				OrderBys = new OrderByClauseList("FirstName ASC, LastName"),
 			};
 

@@ -20,7 +20,7 @@ namespace NETStandardLibrary.Linq
 
 		public static Expression<Func<T, bool>> ToWhereExpression<T>(
 			string propertyName,
-			WhereClauseType clauseType,
+			WhereOperator clauseType,
 			Type valueType,
 			object value,
 			object maxValue = null)
@@ -85,26 +85,26 @@ namespace NETStandardLibrary.Linq
 		/// <param name="value"></param>
 		/// <param name="maxValue"></param>
 		/// <returns></returns>
-		private static Expression BuildWhereExpressionComparable(WhereClauseType clauseType, Expression property, Expression value, Expression maxValue = null)
+		private static Expression BuildWhereExpressionComparable(WhereOperator clauseType, Expression property, Expression value, Expression maxValue = null)
 		{
 			switch (clauseType)
 			{
-				case WhereClauseType.Between:
+				case WhereOperator.Between:
 					return Expression.AndAlso(Expression.GreaterThanOrEqual(property, value), Expression.LessThanOrEqual(property, maxValue));
 
-				case WhereClauseType.Equal:
+				case WhereOperator.Equal:
 					return Expression.Equal(property, value);
 
-				case WhereClauseType.GreaterThan:
+				case WhereOperator.GreaterThan:
 					return Expression.GreaterThan(property, value);
 
-				case WhereClauseType.GreaterThanOrEqual:
+				case WhereOperator.GreaterThanOrEqual:
 					return Expression.GreaterThanOrEqual(property, value);
 
-				case WhereClauseType.LessThan:
+				case WhereOperator.LessThan:
 					return Expression.LessThan(property, value);
 
-				case WhereClauseType.LessThanOrEqual:
+				case WhereOperator.LessThanOrEqual:
 					return Expression.LessThanOrEqual(property, value);
 
 				default:
@@ -119,12 +119,12 @@ namespace NETStandardLibrary.Linq
 		/// <param name="property"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		private static Expression BuildWhereExpressionObject(WhereClauseType clauseType, Expression property, Expression value)
+		private static Expression BuildWhereExpressionObject(WhereOperator clauseType, Expression property, Expression value)
 		{
 			// For objects we will only do an equality check
 			switch (clauseType)
 			{
-				case WhereClauseType.Equal:
+				case WhereOperator.Equal:
 					return Expression.Equal(property, value);
 
 				default:
@@ -140,16 +140,16 @@ namespace NETStandardLibrary.Linq
 		/// <param name="clauseType"></param>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		private static Expression BuildWhereExpressionString(WhereClauseType clauseType, Expression property, Expression value)
+		private static Expression BuildWhereExpressionString(WhereOperator clauseType, Expression property, Expression value)
 		{
 			// If it's a string, limit to only Contains and Equals
 			switch (clauseType)
 			{
-				case WhereClauseType.Contains:
+				case WhereOperator.Contains:
 					var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
 					return Expression.Call(property, method, value);
 
-				case WhereClauseType.Equal:
+				case WhereOperator.Equal:
 					return Expression.Equal(property, value);
 
 				default:

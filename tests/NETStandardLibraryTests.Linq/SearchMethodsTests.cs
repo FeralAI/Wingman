@@ -7,11 +7,11 @@ namespace NETStandardLibraryTests.Linq
 	public class SearchMethodsTests
 	{
 		[Theory]
-		[InlineData("FirstName", "Steven", null, typeof(string), WhereClauseType.Equal, 1)]
-		[InlineData("Weight", 200, null, typeof(int?), WhereClauseType.GreaterThan, 2)]
-		[InlineData("Age", 21, null, typeof(int), WhereClauseType.LessThanOrEqual, 2)]
-		[InlineData("Mother.FirstName", "Mary", null, typeof(string), WhereClauseType.Equal, 2)]
-		public void Search(string name, object value, object maxValue, Type valueType, WhereClauseType clauseType, int expected)
+		[InlineData("FirstName", "Steven", null, typeof(string), WhereOperator.Equal, 1)]
+		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, 2)]
+		[InlineData("Age", 21, null, typeof(int), WhereOperator.LessThanOrEqual, 2)]
+		[InlineData("Mother.FirstName", "Mary", null, typeof(string), WhereOperator.Equal, 2)]
+		public void Search(string name, object value, object maxValue, Type valueType, WhereOperator clauseType, int expected)
 		{
 			var searchParameters = new SearchParameters
 			{

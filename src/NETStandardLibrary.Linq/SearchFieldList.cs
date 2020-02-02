@@ -7,7 +7,7 @@ namespace NETStandardLibrary.Linq
 	public class SearchFieldList : List<SearchField>
 	{
 		public SearchFieldList() : base() { }
-		public SearchFieldList(IEnumerable<SearchField> searchFields, WhereClauseOperator? whereOperator = null)
+		public SearchFieldList(IEnumerable<SearchField> searchFields, WhereJoinOperator? whereOperator = null)
 			: base(searchFields)
 		{
 			WhereOperator = whereOperator ?? WhereOperator;
@@ -20,7 +20,7 @@ namespace NETStandardLibrary.Linq
 		/// <param name="ignoreNulls">Ignore properties with a value of <c>null</c>.</param>
 		/// <param name="whereOperator">The where clause operator.</param>
 		/// <returns>A <c>SearchFieldList</c>.</returns>
-		public static SearchFieldList FromObject(object model, bool ignoreNulls = false, WhereClauseOperator whereOperator =  WhereClauseOperator.AND)
+		public static SearchFieldList FromObject(object model, bool ignoreNulls = false, WhereJoinOperator whereOperator =  WhereJoinOperator.And)
 		{
 			if (model == null)
 				throw new ArgumentNullException("Model is required");
@@ -37,9 +37,9 @@ namespace NETStandardLibrary.Linq
 				var attribute = (SearchFieldAttribute)property.GetCustomAttribute(typeof(SearchFieldAttribute));
 				var valueType = attribute?.ValueType ?? property.PropertyType;
 				var searchField = new SearchField
-				{
+        {
 					Name = attribute?.Name ?? property.Name,
-					Operator = attribute?.WhereClauseType ?? WhereClauseType.Equal,
+					Operator = attribute?.WhereClauseType ?? Linq.WhereOperator.Equal,
 					Value = value,
 					ValueType = valueType,
 				};
@@ -59,11 +59,11 @@ namespace NETStandardLibrary.Linq
 		/// <summary>
 		/// The operator to join the where clauses generated from the search fields.
 		/// </summary>
-		public WhereClauseOperator? SubclauseWhereOperator { get; set; } = WhereClauseOperator.AND;
+		public WhereJoinOperator? SubclauseWhereOperator { get; set; } = WhereJoinOperator.And;
 
 		/// <summary>
 		/// The operator to join the where clauses generated from the search fields.
 		/// </summary>
-		public WhereClauseOperator WhereOperator { get; set; } = WhereClauseOperator.AND;
+		public WhereJoinOperator WhereOperator { get; set; } = WhereJoinOperator.And;
 	}
 }

@@ -47,13 +47,13 @@
 @code {
 	class SearchPerson
 	{
-		[SearchField(WhereClauseType.Contains)]
+		[SearchField(WhereOperator.Contains)]
 		public string FirstName { get; set; }
 
-		[SearchField(WhereClauseType.Contains)]
+		[SearchField(WhereOperator.Contains)]
 		public string LastName { get; set; }
 
-		[SearchField(WhereClauseType.Equal)]
+		[SearchField(WhereOperator.Equal)]
 		public int? Age { get; set; }
 	}
 

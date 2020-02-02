@@ -3,7 +3,7 @@ namespace NETStandardLibrary.Linq
 	/// <summary>
 	/// Enum which represents the supported factory methods from <c>System.Linq.Expressions.Expression</c>.
 	/// </summary>
-	public enum WhereClauseType
+	public enum WhereOperator
 	{
 		/// <summary>
 		/// Equals (=) operator.

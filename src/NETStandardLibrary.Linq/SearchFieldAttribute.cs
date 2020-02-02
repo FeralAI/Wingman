@@ -7,9 +7,9 @@ namespace NETStandardLibrary.Linq
 	{
 		public string Name { get; protected set; }
 		public Type ValueType { get; protected set; }
-		public WhereClauseType WhereClauseType { get; protected set; }
+		public WhereOperator WhereClauseType { get; protected set; }
 
-		public SearchFieldAttribute(WhereClauseType whereClauseType, Type valueType = null, string name = null)
+		public SearchFieldAttribute(WhereOperator whereClauseType, Type valueType = null, string name = null)
 		{
 			Name = name;
 			ValueType = valueType;

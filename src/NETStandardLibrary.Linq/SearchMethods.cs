@@ -25,7 +25,7 @@ namespace NETStandardLibrary.Linq
 							field.MaxValue
 						);
 
-						if (parameters.Fields.WhereOperator == WhereClauseOperator.AND)
+						if (parameters.Fields.WhereOperator == WhereJoinOperator.And)
 							return predicate.And(expression);
 						else
 							return predicate.Or(expression);

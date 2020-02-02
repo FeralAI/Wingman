@@ -7,7 +7,7 @@ namespace NETStandardLibrary.Linq
 		public string Name { get; set; }
 		public object Value { get; set; }
 		public object MaxValue { get; set; }
-		public WhereClauseType Operator { get; set; }
+		public WhereOperator Operator { get; set; }
 		public virtual Type ValueType { get; set; }
 	}
 }

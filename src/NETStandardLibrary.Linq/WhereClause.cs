@@ -55,9 +55,6 @@ namespace NETStandardLibrary.Linq
 
 		public ExpressionStarter<T> ToWhereExpression<T>()
 		{
-			if (Count == 0 && (Subclauses == null || Subclauses.Count == 0))
-				return null;
-
 			var predicate = PredicateBuilder.New<T>(true);
 
 			foreach (var searchField in this)
@@ -96,6 +93,11 @@ namespace NETStandardLibrary.Linq
 
 			return predicate;
 		}
+
+		/// <summary>
+		/// Calculated property to identify if any where clauses are present.
+		/// </summary>
+		public bool HasClauses => (Count > 0 || Subclauses?.Count > 0);
 
 		/// <summary>
 		/// The operator to join the where clauses and subclauses together with.

@@ -12,9 +12,10 @@ namespace NETStandardLibrary.Linq
 			if (parameters == null)
 				return searchResults;
 
-			var wherePredicate = parameters.WhereClause.ToWhereExpression<T>();
-			if (wherePredicate != null)
+			if (parameters.WhereClause != null && parameters.WhereClause.HasClauses)
 			{
+				var wherePredicate = parameters.WhereClause.ToWhereExpression<T>();
+
 				// NOTE: Is the .AsExpandable() really needed here?
 				// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
 				orderedQueryable = (IOrderedQueryable<T>)orderedQueryable.AsExpandable().Where(wherePredicate);

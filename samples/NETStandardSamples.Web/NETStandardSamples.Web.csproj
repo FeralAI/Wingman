@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <Configurations>Debug;Release;Major;Minor;Patch</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>

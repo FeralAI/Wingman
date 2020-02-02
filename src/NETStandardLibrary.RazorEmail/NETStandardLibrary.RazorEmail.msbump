@@ -1,0 +1,21 @@
+{
+  Configurations: {
+    "Major": {
+      BumpMajor: true,
+      ResetMinor: true,
+      ResetPatch: true,
+      ResetRevision: true
+    },
+
+    "Minor": {
+      BumpMinor: true,
+      ResetPatch: true,
+      ResetRevision: true
+    },
+
+    "Patch": {
+      BumpPatch: true,
+      ResetRevision: true
+    }
+  }
+}

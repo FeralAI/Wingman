@@ -5,6 +5,7 @@
     <LangVersion>8.0</LangVersion>
     <IsPackable>false</IsPackable>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <Configurations>Debug;Release;Major;Minor;Patch</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

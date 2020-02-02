@@ -6,7 +6,12 @@
     <Configurations>Debug;Release;Major;Minor;Patch</Configurations>
   </PropertyGroup>
 
-	<!-- The Microsoft.CSharp reference is because we're using dynamic types -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- The Microsoft.CSharp reference is because we're using dynamic types -->
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="MSBump" Version="2.3.2">

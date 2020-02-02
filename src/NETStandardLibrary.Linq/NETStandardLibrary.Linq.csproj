@@ -6,6 +6,11 @@
     <Configurations>Debug;Release;Major;Minor;Patch</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="LINQKit.Core" Version="1.1.17" />
     <PackageReference Include="MSBump" Version="2.3.2">

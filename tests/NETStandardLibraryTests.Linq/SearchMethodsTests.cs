@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NETStandardLibrary.Linq;
 using Xunit;
 
@@ -81,19 +82,20 @@ namespace NETStandardLibraryTests.Linq
 				new SearchField("LastName", "Nelson", WhereOperator.Contains)
 			}, WhereJoinOperator.And) {
 				Subclauses = new List<WhereClause> { subSubList },
-				SubclauseJoinOperator = WhereJoinOperator.And,
+				JoinToSubclauseOperator = WhereJoinOperator.And,
 			};
 
 			var list2 = new WhereClause(new List<SearchField> {
 				new SearchField("FirstName", "Chris", WhereOperator.Equal)
 			}) {
 				Subclauses = new List<WhereClause> { subList },
-				SubclauseJoinOperator = WhereJoinOperator.And,
+				JoinToSubclauseOperator = WhereJoinOperator.And,
 			};
 
 			var whereClause = new WhereClause
 			{
 				Subclauses = new List<WhereClause> { list1, list2 },
+				JoinToSubclauseOperator = WhereJoinOperator.And,
 				SubclauseJoinOperator = WhereJoinOperator.Or,
 			};
 
@@ -105,6 +107,8 @@ namespace NETStandardLibraryTests.Linq
 
 			var results = TestPerson.Data.Search(searchParameters);
 			Assert.Equal(2, results.TotalCount);
+			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Bob"));
+			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Chris"));
 		}
 	}
 }

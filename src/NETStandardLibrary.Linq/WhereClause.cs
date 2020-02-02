@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
 using LinqKit;
 
 namespace NETStandardLibrary.Linq
 {
-	public class WhereClause : List<SearchField>
+  public class WhereClause : List<SearchField>
 	{
 		public WhereClause() : base() { }
 		public WhereClause(IEnumerable<SearchField> searchFields, WhereJoinOperator? joinOperator = null)
@@ -85,7 +84,7 @@ namespace NETStandardLibrary.Linq
 						subclausePredicate = subclausePredicate.Or(subWhereExpression);
 				}
 
-				if (JoinOperator == WhereJoinOperator.And)
+				if (JoinToSubclauseOperator == WhereJoinOperator.And)
 					predicate = predicate.And(subclausePredicate);
 				else
 					predicate = predicate.Or(subclausePredicate);
@@ -103,6 +102,11 @@ namespace NETStandardLibrary.Linq
 		/// The operator to join the where clauses and subclauses together with.
 		/// </summary>
 		public WhereJoinOperator JoinOperator { get; set; } = WhereJoinOperator.And;
+
+		/// <summary>
+		/// Operator to use between the clause and subclauses.
+		/// </summary>
+		public WhereJoinOperator JoinToSubclauseOperator { get; set; } = WhereJoinOperator.And;
 
 		/// <summary>
 		/// Subclauses to be joined with the main clause.

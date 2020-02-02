@@ -6,12 +6,12 @@ namespace NETStandardLibrary.Linq
 	public static class IQueryableExtensions
 	{
 		/// <summary>
-		/// Filters an <c>IQueryable<></c> using <c>IQueryable.Skip</c> and <c> IQueryable.Take</c>.
+		/// Filters an <c>IQueryable&lt;&gt;</c> using <c>IQueryable.Skip</c> and <c> IQueryable.Take</c>.
 		/// </summary>
-		/// <param name="@this">The queryable object.</param>
+		/// <param name="this">The queryable object.</param>
 		/// <param name="page">The page number.</param>
 		/// <param name="pageSize">The page size.</param>
-		/// <returns>A <c>IQueryable<></c> object.</returns>
+		/// <returns>A <c>IQueryable&lt;&gt;</c> object.</returns>
 		public static IQueryable<T> GetPage<T>(this IQueryable<T> @this, int page, int pageSize)
 		{
 			return @this
@@ -20,9 +20,9 @@ namespace NETStandardLibrary.Linq
 		}
 
 		/// <summary>
-		/// Applies order by logic to an <c>IQueryable<></c> object.
+		/// Applies order by logic to an <c>IQueryable&lt;&gt;</c> object.
 		/// </summary>
-		/// <param name="@this">The queryable object.</param>
+		/// <param name="this">The queryable object.</param>
 		/// <param name="orderBys">The order by clauses.</param>
 		/// <returns>An <c>IOrderedQueryable</c> object.</returns>
 		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, OrderByClauseList orderBys)
@@ -55,9 +55,9 @@ namespace NETStandardLibrary.Linq
 		}
 
 		/// <summary>
-		/// Applies order by logic to an <c>IQueryable<></c> object using standard SQL-like syntax.
+		/// Applies order by logic to an <c>IQueryable&lt;&gt;</c> object using standard SQL-like syntax.
 		/// </summary>
-		/// <param name="@this">The queryable object.</param>
+		/// <param name="this">The queryable object.</param>
 		/// <param name="orderBy">The order by clause string.</param>
 		/// <returns>An <c>IOrderedQueryable</c> object.</returns>
 		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, string orderBy)

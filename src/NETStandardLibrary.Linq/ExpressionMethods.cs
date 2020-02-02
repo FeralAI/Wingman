@@ -135,10 +135,9 @@ namespace NETStandardLibrary.Linq
 		/// <summary>
 		/// Builds an expression for a string to be used in a .Where call.
 		/// </summary>
-		/// <param name="property"></param>
-		/// <param name="constant"></param>
 		/// <param name="clauseType"></param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="property"></param>
+		/// <param name="value"></param>
 		/// <returns></returns>
 		private static Expression BuildWhereExpressionString(WhereOperator clauseType, Expression property, Expression value)
 		{

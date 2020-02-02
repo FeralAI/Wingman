@@ -21,22 +21,22 @@ namespace NETStandardLibrary.Linq
 		Contains,
 
 		/// <summary>
-		/// Greater than (>) operator.
+		/// Greater than (&gt;) operator.
 		/// </summary>
 		GreaterThan,
 
 		/// <summary>
-		/// Greater than or equal (>=) operator.
+		/// Greater than or equal (&gt;=) operator.
 		/// </summary>
 		GreaterThanOrEqual,
 
 		/// <summary>
-		/// Less than (<) operator.
+		/// Less than (&lt;) operator.
 		/// </summary>
 		LessThan,
 
 		/// <summary>
-		/// Less than or equal (<=) operator.
+		/// Less than or equal (&lt;=) operator.
 		/// </summary>
 		LessThanOrEqual
 	}

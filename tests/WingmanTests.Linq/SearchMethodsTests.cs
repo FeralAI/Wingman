@@ -65,12 +65,12 @@ namespace WingmanTests.Linq
 			// 		AND (Age = 20 OR Age = 22 OR Age = 25 OR Age = 30 OR Age = 48)
 			// 	)
 			// )
-			var list1 = new WhereClause(new List<SearchField> {
+			var clause1 = new WhereClause(new List<SearchField> {
 				new SearchField("FirstName", "ob", WhereOperator.Contains),
 				new SearchField("LastName", "mith", WhereOperator.Contains),
 			}, WhereJoinOperator.And);
 
-			var subSubList = new WhereClause(new List<SearchField> {
+			var subSubclause = new WhereClause(new List<SearchField> {
 				new SearchField("Age", 20, WhereOperator.Equal),
 				new SearchField("Age", 22, WhereOperator.Equal),
 				new SearchField("Age", 25, WhereOperator.Equal),
@@ -78,23 +78,23 @@ namespace WingmanTests.Linq
 				new SearchField("Age", 48, WhereOperator.Equal),
 			}, WhereJoinOperator.Or);
 
-			var subList = new WhereClause(new List<SearchField> {
+			var subclause = new WhereClause(new List<SearchField> {
 				new SearchField("LastName", "Nelson", WhereOperator.Contains)
 			}, WhereJoinOperator.And) {
-				Subclauses = new List<WhereClause> { subSubList },
+				Subclauses = new List<WhereClause> { subSubclause },
 				JoinToSubclauseOperator = WhereJoinOperator.And,
 			};
 
-			var list2 = new WhereClause(new List<SearchField> {
+			var clause2 = new WhereClause(new List<SearchField> {
 				new SearchField("FirstName", "Chris", WhereOperator.Equal)
 			}) {
-				Subclauses = new List<WhereClause> { subList },
+				Subclauses = new List<WhereClause> { subclause },
 				JoinToSubclauseOperator = WhereJoinOperator.And,
 			};
 
 			var whereClause = new WhereClause
 			{
-				Subclauses = new List<WhereClause> { list1, list2 },
+				Subclauses = new List<WhereClause> { clause1, clause2 },
 				JoinToSubclauseOperator = WhereJoinOperator.And,
 				SubclauseJoinOperator = WhereJoinOperator.Or,
 			};

@@ -1,5 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using LinqKit;
+using Wingman.Common;
 
 namespace Wingman.Linq
 {
@@ -14,7 +15,7 @@ namespace Wingman.Linq
 		public static IOrderedQueryable<T> OrderByClause<T>(this IQueryable<T> @this, OrderByClauseList orderBys)
 		{
 			var orderedQueryable = (IOrderedQueryable<T>)@this;
-			if (orderBys == null || orderBys.Count == 0)
+			if (orderBys?.Count == 0)
 				return orderedQueryable;
 
 			// Pluck out the first clause so we can start with an .OrderBy() call
@@ -57,7 +58,34 @@ namespace Wingman.Linq
 
 		public static SearchResults<T> Search<T>(this IQueryable<T> @this, SearchParameters parameters)
 		{
-			return SearchMethods.Search<T>(@this, parameters);
+			var orderedQueryable = (IOrderedQueryable<T>)@this;
+			var searchResults = new SearchResults<T> { Results = orderedQueryable };
+			if (parameters == null)
+				return searchResults;
+
+			if (parameters.WhereClause != null && parameters.WhereClause.HasClauses)
+			{
+				var wherePredicate = parameters.WhereClause.ToWhereExpression<T>();
+
+				// NOTE: Is the .AsExpandable() really needed here?
+				// NOTE: Doesn't seem to hurt, but might only be for SQL Server...
+				orderedQueryable = (IOrderedQueryable<T>)orderedQueryable.AsExpandable().Where(wherePredicate);
+			}
+
+			if (parameters.OrderBys != null)
+				orderedQueryable = orderedQueryable.OrderByClause(new OrderByClauseList(parameters.OrderBys));
+
+			// Make sure we get the count BEFORE applying pagination
+			searchResults.TotalCount = orderedQueryable.Count();
+			searchResults.Page = parameters.Page;
+			searchResults.PageSize = parameters.PageSize;
+
+			if (searchResults.HasPaging)
+				searchResults.Results = orderedQueryable.GetPage(searchResults.Page.Value, searchResults.PageSize.Value);
+			else
+				searchResults.Results = orderedQueryable;
+
+			return searchResults;
 		}
 	}
 }

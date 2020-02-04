@@ -1,10 +1,10 @@
-# NETStandardLibrary.Search
+# Wingman.Search
 
 A library for building dynamic and flexible LINQ queries.
 
 ## Dependencies
 
-* NETStandardLibrary.Common
+* Wingman.Common
 * LINQKit.Core
 
 ## Introduction

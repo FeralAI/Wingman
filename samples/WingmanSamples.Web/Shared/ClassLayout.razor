@@ -1,0 +1,26 @@
+@inherits LayoutComponentBase
+
+<div class="sidebar">
+	<NavMenu />
+</div>
+
+<div class="main">
+	<HeaderBar />
+
+	<div class="content px-4">
+		<h1>@FullName</h1>
+		@Body
+	</div>
+</div>
+
+@code {
+	private string FullName
+	{
+		get
+		{
+			var routeView = (RouteView)Body.Target;
+			var fullName = routeView.RouteData.PageType.FullName;
+			return fullName.Replace("WingmanSamples.Web.Pages", "Wingman");
+		}
+	}
+}

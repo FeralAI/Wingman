@@ -10,14 +10,14 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/samples/NETStandardSamples.Web/bin/Debug/netcoreapp3.1/NETStandardSamples.Web.dll",
+            "program": "${workspaceFolder}/samples/WingmanSamples.Web/bin/Debug/netcoreapp3.1/WingmanSamples.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/samples/NETStandardSamples.Web",
+            "cwd": "${workspaceFolder}/samples/WingmanSamples.Web",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"

@@ -1,0 +1,98 @@
+@page "/common/string-extensions"
+@layout ClassLayout
+
+@using System.Text.RegularExpressions
+@using Wingman.Common
+
+<strong>EqualsIgnore()</strong>
+<p>Runs an equality check while ignoring the provided regular expression.</p>
+<p>The following form will compare the values entered and ignore any 's' letters:</p>
+<form>
+	<div class="form-group">
+		<label for="equalsIgnore1">EqualsIgnore 1</label>
+		<input type="text" class="form-control" id="equalsIgnore1" @bind="equalsIgnore1" />
+	</div>
+	<div class="form-group">
+		<label for="equalsIgnore2">EqualsIgnore 2</label>
+		<input type="text" class="form-control" id="equalsIgnore2" @bind="equalsIgnore2" />
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="EqualsIgnore">EqualsIgnore</button>
+</form>
+<br>
+
+@if (ignoreResult != null)
+{
+	<br>
+	<p>Values are equal: @ignoreResult</p>
+}
+
+<strong>EqualsIgnoreCase()</strong>
+<p>Runs an equality check while ignoring case.</p>
+<p>The following form will compare the values entered while ignoring case:</p>
+<form>
+	<div class="form-group">
+		<label for="equalsIgnoreCase1">EqualsIgnoreCase 1</label>
+		<input type="text" class="form-control" id="equalsIgnoreCase1" @bind="equalsIgnoreCase1" />
+	</div>
+	<div class="form-group">
+		<label for="equalsIgnoreCase2">EqualsIgnoreCase 2</label>
+		<input type="text" class="form-control" id="equalsIgnoreCase2" @bind="equalsIgnoreCase2" />
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="EqualsIgnoreCase">EqualsIgnoreCase</button>
+</form>
+<br>
+
+@if (ignoreCaseResult != null)
+{
+	<br>
+	<p>Values are equal: @ignoreCaseResult</p>
+}
+
+<strong>EqualsIgnoreLineBreaks()</strong>
+<p>Runs an equality check while ignoring typical line break patterns.</p>
+<p>The following form will compare the values entered and ignore line breaks:</p>
+<form>
+	<div class="form-group">
+		<label for="equalsIgnoreLineBreaks1">EqualsIgnoreLineBreaks 1</label>
+		<textarea class="form-control" id="equalsIgnoreLineBreaks1" @bind="equalsIgnoreLineBreaks1"></textarea>
+	</div>
+	<div class="form-group">
+		<label for="equalsIgnoreLineBreaks2">EqualsIgnoreLineBreaks 2</label>
+		<textarea class="form-control" id="equalsIgnoreLineBreaks2" @bind="equalsIgnoreLineBreaks2"></textarea>
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="EqualsIgnoreLineBreaks">EqualsIgnoreLineBreaks</button>
+</form>
+<br>
+
+@if (ignoreLineBreaksResult != null)
+{
+	<br>
+	<p>Values are equal: @ignoreLineBreaksResult</p>
+}
+
+@code {
+	string equalsIgnore1 = string.Empty;
+	string equalsIgnore2 = string.Empty;
+	string equalsIgnoreCase1 = string.Empty;
+	string equalsIgnoreCase2 = string.Empty;
+	string equalsIgnoreLineBreaks1 = string.Empty;
+	string equalsIgnoreLineBreaks2 = string.Empty;
+	bool? ignoreResult = null;
+	bool? ignoreCaseResult = null;
+	bool? ignoreLineBreaksResult = null;
+
+	void EqualsIgnore()
+	{
+		ignoreResult = equalsIgnore1.EqualsIgnore(equalsIgnore2, new Regex("[Ss]"));
+	}
+
+	void EqualsIgnoreCase()
+	{
+		ignoreCaseResult = equalsIgnoreCase1.EqualsIgnoreCase(equalsIgnoreCase2);
+	}
+
+	void EqualsIgnoreLineBreaks()
+	{
+		ignoreLineBreaksResult = equalsIgnoreLineBreaks1?.EqualsIgnoreLineBreaks(equalsIgnoreLineBreaks2);
+	}
+}

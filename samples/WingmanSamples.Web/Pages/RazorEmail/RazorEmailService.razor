@@ -1,0 +1,83 @@
+@page "/razor-email/razor-email-service"
+@layout ClassLayout
+
+@using Wingman.Common
+@using WingmanSamples.Web.Data
+@inject Wingman.RazorEmail.RazorEmailService<Startup> MailService
+
+<p>
+	This class provides a method of embedding, caching, generating and sending emails using Razor templates and the built-in .NET SMTP
+	capabilities. This page will demonstrate some of the data and functionality in this class.
+</p>
+
+<strong>Options</strong>
+<p>
+	<EmailOptionsList @bind-OptionsLookup="optionsLookup" />
+</p>
+
+<strong>Render() - Class Test</strong>
+<form>
+	<div class="form-group">
+		<label for="text">Greeting</label>
+		<input type="text" class="form-control" id="text" @bind="email.Greeting">
+	</div>
+	<div class="form-group">
+		<label for="text">Name</label>
+		<input type="text" class="form-control" id="text" @bind="email.Name">
+	</div>
+	<button type="button" class="btn btn-primary"  @onclick="RenderClass">Render</button>
+</form>
+<br>
+
+<div>
+	<strong>Result from EmailService.Render()</strong>
+	<div>@renderResultClass</div>
+</div>
+<br>
+
+<strong>Render() - String Template Test</strong>
+<form>
+	<div class="form-group">
+		<label for="template">Template</label>
+		<input type="text" class="form-control" id="template" @bind="template">
+		<small class="form-text text-muted">Use @@Model.Text to use the value you will enter below</small>
+	</div>
+	<div class="form-group">
+		<label for="text">Text</label>
+		<input type="text" class="form-control" id="text" @bind="text">
+		<small class="form-text text-muted">Use @@Model.Text in your template to see this text</small>
+	</div>
+	<button type="button" class="btn btn-primary"  @onclick="RenderTemplate">Render</button>
+</form>
+<br>
+
+<div>
+	<strong>Result from EmailService.Render()</strong>
+	<div>@renderResultString</div>
+</div>
+<br>
+
+@code {
+	private RazorEmailServiceEmail email = new RazorEmailServiceEmail();
+	private Dictionary<string, object> optionsLookup = new Dictionary<string, object>();
+	private string renderResultClass;
+	private string renderResultString;
+	private string template;
+	private string text = "";
+
+	protected override Task OnInitializedAsync()
+	{
+		optionsLookup = typeof(Wingman.Email.EmailOptions).GetPropertyValues(MailService.Options);
+		return Task.CompletedTask;
+	}
+
+	private async void RenderClass()
+	{
+		renderResultClass = await MailService.Render(email);
+	}
+
+	private async void RenderTemplate()
+	{
+		renderResultString = await MailService.Render(template, new { Text = text });
+	}
+}

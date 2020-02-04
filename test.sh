@@ -3,8 +3,8 @@
 # Clear previous results
 rm -rf tests/_results/*
 
-# Find all directories that start with "NETStandardLibrary."
-for d in ./tests/NETStandardLibraryTests.*
+# Find all directories that start with "Wingman."
+for d in ./tests/WingmanTests.*
 do
 	cd $d
 	dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput="../_results/${d/.\/tests\//}.xml" -p:Exclude="[*]Tests.*" &
@@ -14,7 +14,7 @@ done
 wait
 
 # Generate HTML report
-cd tests/NETStandardLibraryTests
+cd tests/WingmanTests
 dotnet restore
 dotnet reportgenerator "-reports:../_results/*.xml" "-targetdir:../_results/html"
 cd ../..

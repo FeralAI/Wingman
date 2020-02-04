@@ -1,3 +1,3 @@
-# NETStandardLibrary.Common
+# Wingman.Common
 
-NETStandardLibrary.Common contains general use classes and methods.
+Wingman.Common contains general use classes and methods.

@@ -1,0 +1,103 @@
+@page "/linq/search-methods"
+@layout ClassLayout
+
+@using System.IO
+@using System.Net
+@using System.Net.Http
+@using System.Text
+@using System.Text.Json
+@using Wingman.Linq
+@using WingmanSamples.Web.Data
+@using WingmanSamples.Web.Services
+
+@inject HttpClient Http
+@inject TestPersonService PersonService
+
+<form>
+	<div class="form-group">
+		<label for="firstName">First Name</label>
+		<input type="text" class="form-control" id="firstName" @bind="form.FirstName">
+	</div>
+	<div class="form-group">
+		<label for="lastName">Last Name</label>
+		<input type="text" class="form-control" id="lastName" @bind="form.LastName">
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="Search">Search</button>
+	<button type="button" class="btn btn-primary" @onclick="SearchAsync">SearchAsync</button>
+</form>
+
+<br><br>
+
+@if (searchResults != null)
+{
+	<strong>Search Results</strong>
+	<div>Page: @searchResults.Page / @searchResults.TotalPages</div>
+	<div>Total: @searchResults.TotalCount</div>
+	<br><br>
+	<div>
+		@foreach (var person in searchResults.Results)
+		{
+			<div>
+				@person.FirstName @person.LastName
+			</div>
+		}
+	</div>
+}
+
+@code {
+	class SearchPerson
+	{
+		[SearchField(WhereOperator.Contains)]
+		public string FirstName { get; set; }
+
+		[SearchField(WhereOperator.Contains)]
+		public string LastName { get; set; }
+
+		[SearchField(WhereOperator.Equal)]
+		public int? Age { get; set; }
+	}
+
+	private SearchPerson form = new SearchPerson();
+	private SearchResults<TestPerson> searchResults;
+
+	private void Search()
+	{
+		var fields = WhereClause.FromObject(form, true);
+		var searchParams = new SearchParameters
+		{
+			WhereClause = fields,
+			Page = 1,
+			PageSize = 2,
+			OrderBys = new OrderByClauseList("LastName ASC"),
+		};
+
+		searchResults = PersonService.GetData().Search(searchParams);
+	}
+
+	private async Task SearchAsync()
+	{
+		var writeOptions = new JsonSerializerOptions
+		{
+			IgnoreNullValues = true,
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
+		var json = JsonSerializer.Serialize(new { FirstName = form.FirstName, LastName = form.LastName }, writeOptions);
+		var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+		var response = await Http.PostAsync("api/v1.1/people/search", content);
+		if (response.StatusCode == HttpStatusCode.OK)
+		{
+			var body = await response.Content.ReadAsStringAsync();
+			var bytes = Encoding.UTF8.GetBytes(body);
+			using (var bodyStream = new MemoryStream(bytes))
+			{
+				var readOptions = new JsonSerializerOptions
+				{
+					PropertyNameCaseInsensitive = true,
+					IgnoreReadOnlyProperties = true,
+				};
+				searchResults = await JsonSerializer.DeserializeAsync<SearchResults<TestPerson>>(bodyStream, readOptions);
+			}
+		}
+	}
+}

@@ -1,0 +1,18 @@
+@page "/email/email-options"
+@layout ClassLayout
+
+@using Microsoft.Extensions.Options
+@using Wingman.Common;
+@inject IOptionsMonitor<Wingman.Email.EmailOptions> options
+
+<EmailOptionsList @bind-OptionsLookup="optionsLookup" />
+
+@code {
+	private Dictionary<string, object> optionsLookup { get; set; }
+
+	protected override Task OnInitializedAsync()
+	{
+		optionsLookup = typeof(Wingman.Email.EmailOptions).GetPropertyValues(options.CurrentValue);
+		return Task.CompletedTask;
+	}
+}

@@ -1,6 +1,6 @@
-# NETStandardLibrary.Linq
+# Wingman.Linq
 
-NETStandardLibrary.Linq contains classes and methods for working with LINQ, flexible querying, parsing and more.
+Wingman.Linq contains classes and methods for working with LINQ, flexible querying, parsing and more.
 
 ## Dependencies
 

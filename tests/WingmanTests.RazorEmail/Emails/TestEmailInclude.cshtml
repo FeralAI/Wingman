@@ -1,0 +1,4 @@
+@using RazorLight
+@inherits TemplatePage<WingmanTests.RazorEmail.Emails.TestEmailInclude>
+Hello @Model.Title!
+@{ await IncludeAsync("Emails.TestEmailInclude.Include.cshtml", Model); }

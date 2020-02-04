@@ -1,5 +1,6 @@
 using System.Linq;
 using LinqKit;
+using Wingman.Common;
 
 namespace Wingman.Linq
 {

@@ -30,7 +30,7 @@ namespace Wingman.Common
 		/// <summary>
 		/// Returns the property names and values from an object, defaulting to all public instance properties.
 		/// </summary>
-		/// <param name="@this">The type.</param>
+		/// <param name="this">The type.</param>
 		/// <param name="model">The object with the properties and values.</param>
 		/// <param name="flags">The <c>BindingFlags</c> to be used in the GetProperties call.</param>
 		/// <returns>A dictionary of properties and values.</returns>
@@ -48,9 +48,9 @@ namespace Wingman.Common
 		}
 
 		/// <summary>
-		/// Determines whether this type implements the <c>IComparable</c> or <c>IComparable<></c> interfaces.
+		/// Determines whether this type implements the <c>IComparable</c> or <c>IComparable&lt;&gt;</c> interfaces.
 		/// </summary>
-		/// <param name="@this">The type.</param>
+		/// <param name="this">The type.</param>
 		/// <returns>True if one of the interfaces is implemented, otherwise false.</returns>
 		public static bool IsComparable(this Type @this)
 		{

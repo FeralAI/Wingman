@@ -15,13 +15,38 @@ namespace Wingman.Linq
 		}
 
 		/// <summary>
+		/// Calculated property to identify if any where clauses are present.
+		/// </summary>
+		public bool HasClauses => Count > 0 || Subclauses?.Count > 0;
+
+		/// <summary>
+		/// The operator to join the where clauses and subclauses together with.
+		/// </summary>
+		public WhereJoinOperator JoinOperator { get; set; } = WhereJoinOperator.And;
+
+		/// <summary>
+		/// Operator to use between the clause and subclauses.
+		/// </summary>
+		public WhereJoinOperator JoinToSubclauseOperator { get; set; } = WhereJoinOperator.And;
+
+		/// <summary>
+		/// Subclauses to be joined with the main clause.
+		/// </summary>
+		public List<WhereClause> Subclauses { get; set; }
+
+		/// <summary>
+		/// The operator to join the subclauses together with.
+		/// </summary>
+		public WhereJoinOperator? SubclauseJoinOperator { get; set; } = WhereJoinOperator.And;
+
+		/// <summary>
 		/// Converts an object into a list of <c>SearchField</c> by scanning each public property of the object.
 		/// </summary>
 		/// <param name="model">The object to analyze.</param>
 		/// <param name="ignoreNulls">Ignore properties with a value of <c>null</c>.</param>
 		/// <param name="joinOperator">The where clause operator.</param>
 		/// <returns>A <c>SearchFieldList</c>.</returns>
-		public static WhereClause FromObject(object model, bool ignoreNulls = false, WhereJoinOperator joinOperator =  WhereJoinOperator.And)
+		public static WhereClause FromObject(object model, WhereJoinOperator joinOperator =  WhereJoinOperator.And, bool ignoreNulls = false)
 		{
 			if (model == null)
 				throw new ArgumentNullException("Model is required");
@@ -92,30 +117,5 @@ namespace Wingman.Linq
 
 			return predicate;
 		}
-
-		/// <summary>
-		/// Calculated property to identify if any where clauses are present.
-		/// </summary>
-		public bool HasClauses => (Count > 0 || Subclauses?.Count > 0);
-
-		/// <summary>
-		/// The operator to join the where clauses and subclauses together with.
-		/// </summary>
-		public WhereJoinOperator JoinOperator { get; set; } = WhereJoinOperator.And;
-
-		/// <summary>
-		/// Operator to use between the clause and subclauses.
-		/// </summary>
-		public WhereJoinOperator JoinToSubclauseOperator { get; set; } = WhereJoinOperator.And;
-
-		/// <summary>
-		/// Subclauses to be joined with the main clause.
-		/// </summary>
-		public List<WhereClause> Subclauses { get; set; }
-
-		/// <summary>
-		/// The operator to join the subclauses together with.
-		/// </summary>
-		public WhereJoinOperator? SubclauseJoinOperator { get; set; } = WhereJoinOperator.And;
 	}
 }

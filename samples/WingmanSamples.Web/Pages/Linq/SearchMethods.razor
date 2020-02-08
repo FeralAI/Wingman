@@ -62,7 +62,7 @@
 
 	private void Search()
 	{
-		var fields = WhereClause.FromObject(form, true);
+		var fields = WhereClause.FromObject(form, ignoreNulls: true);
 		var searchParams = new SearchParameters
 		{
 			WhereClause = fields,

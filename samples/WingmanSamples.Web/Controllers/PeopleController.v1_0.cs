@@ -32,7 +32,7 @@ namespace WingmanSamples.Web.Controllers
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var searchFields = WhereClause.FromObject(form, true);
+			var searchFields = WhereClause.FromObject(form, ignoreNulls: true);
 			var parameters = new SearchParameters
 			{
 				WhereClause = searchFields,

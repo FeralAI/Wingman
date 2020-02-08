@@ -110,5 +110,30 @@ namespace WingmanTests.Linq
 			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Bob"));
 			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Chris"));
 		}
+
+		[Fact]
+		public void Search_DynamicType()
+		{
+			var collection = new List<dynamic>
+			{
+				new { Name = "Bob", Age = 20 },
+				new { Name = "Joe", Age = 25 },
+				new { Name = "Mary", Age = 22 }
+			};
+
+			var whereClause = new WhereClause(new List<SearchField>
+			{
+				new SearchField("Name", "Joe", WhereOperator.Equal)
+			});
+
+			var searchParameters = new SearchParameters
+			{
+				WhereClause = whereClause
+			};
+
+			var results = collection.AsQueryable().Search(searchParameters);
+			Assert.Single(results.Results);
+			Assert.Equal(25, results.Results.First().Age);
+		}
 	}
 }

@@ -38,6 +38,11 @@ namespace Wingman.Linq
 		/// <summary>
 		/// Less than or equal (&lt;=) operator.
 		/// </summary>
-		LessThanOrEqual
+		LessThanOrEqual,
+
+		/// <summary>
+		/// Not equal (!=) operator.
+		/// </summary>
+		NotEqual,
 	}
 }

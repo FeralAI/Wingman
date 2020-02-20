@@ -10,9 +10,9 @@ namespace WingmanTests.Linq
 	{
 		[Theory]
 		[InlineData("FirstName", "Steven", null, typeof(string), WhereOperator.Equal, 1)]
-		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, 2)]
-		[InlineData("Age", 21, null, typeof(int), WhereOperator.LessThanOrEqual, 2)]
-		[InlineData("Mother.FirstName", "Mary", null, typeof(string), WhereOperator.Equal, 2)]
+		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, 24)]
+		[InlineData("Age", 21, null, typeof(int), WhereOperator.LessThanOrEqual, 14)]
+		[InlineData("Friend.FirstName", "Patty", null, typeof(string), WhereOperator.Equal, 1)]
 		public void Search(string name, object value, object maxValue, Type valueType, WhereOperator clauseType, int expected)
 		{
 			var searchParameters = new SearchParameters
@@ -31,7 +31,7 @@ namespace WingmanTests.Linq
 				OrderBys = new OrderByClauseList("LastName ASC"),
 			};
 
-			var results = TestPerson.Data.Search(searchParameters);
+			var results = TestPerson.GenerateData().Search(searchParameters);
 			Assert.Equal(expected, results.TotalCount);
 		}
 
@@ -44,29 +44,29 @@ namespace WingmanTests.Linq
 				PageSize = 5,
 			};
 
-			var results = TestPerson.Data.Search(searchParameters);
-			Assert.Equal(2, results.TotalPages);
+			var results = TestPerson.GenerateData().Search(searchParameters);
+			Assert.Equal(20, results.TotalPages);
 		}
 
 		[Fact]
 		public void Search_NullParameters()
 		{
-			var searchParameters = (SearchParameters)null;
-			var results = TestPerson.Data.Search(searchParameters);
+			var searchParameters = default(SearchParameters);
+			var results = TestPerson.GenerateData().Search(searchParameters);
 			Assert.NotEmpty(results.Results);
 		}
 
 		[Fact]
 		public void Search_Subclauses()
 		{
-			// WHERE (FirstName LIKE '%ob%' AND LastName LIKE '%mith%')
-			// OR (FirstName = 'Chris'
-			// 	AND (LastName = 'Nelson'
+			// WHERE (FirstName LIKE '%ac%' AND LastName LIKE '%mith%')
+			// OR (FirstName = 'Josephine'
+			// 	AND (LastName = 'Dickinson'
 			// 		AND (Age = 20 OR Age = 22 OR Age = 25 OR Age = 30 OR Age = 48)
 			// 	)
 			// )
 			var clause1 = new WhereClause(new List<SearchField> {
-				new SearchField("FirstName", "ob", WhereOperator.Contains),
+				new SearchField("FirstName", "ac", WhereOperator.Contains),
 				new SearchField("LastName", "mith", WhereOperator.Contains),
 			}, WhereJoinOperator.And);
 
@@ -79,14 +79,14 @@ namespace WingmanTests.Linq
 			}, WhereJoinOperator.Or);
 
 			var subclause = new WhereClause(new List<SearchField> {
-				new SearchField("LastName", "Nelson", WhereOperator.Contains)
+				new SearchField("LastName", "Dickinson", WhereOperator.Contains)
 			}, WhereJoinOperator.And) {
 				Subclauses = new List<WhereClause> { subSubclause },
 				JoinToSubclauseOperator = WhereJoinOperator.And,
 			};
 
 			var clause2 = new WhereClause(new List<SearchField> {
-				new SearchField("FirstName", "Chris", WhereOperator.Equal)
+				new SearchField("FirstName", "Josephine", WhereOperator.Equal)
 			}) {
 				Subclauses = new List<WhereClause> { subclause },
 				JoinToSubclauseOperator = WhereJoinOperator.And,
@@ -105,35 +105,35 @@ namespace WingmanTests.Linq
 				OrderBys = new OrderByClauseList("LastName ASC"),
 			};
 
-			var results = TestPerson.Data.Search(searchParameters);
+			var results = TestPerson.GenerateData().Search(searchParameters);
 			Assert.Equal(2, results.TotalCount);
-			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Bob"));
-			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Chris"));
+			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Josephine"));
+			Assert.NotEmpty(results.Results.Where(p => p.FirstName == "Tracey"));
 		}
 
-		[Fact]
-		public void Search_DynamicType()
-		{
-			var collection = new List<dynamic>
-			{
-				new { Name = "Bob", Age = 20 },
-				new { Name = "Joe", Age = 25 },
-				new { Name = "Mary", Age = 22 }
-			};
+		// [Fact]
+		// public void Search_DynamicType()
+		// {
+		// 	var collection = new List<dynamic>
+		// 	{
+		// 		new { Name = "Bob", Age = 20 },
+		// 		new { Name = "Joe", Age = 25 },
+		// 		new { Name = "Mary", Age = 22 }
+		// 	};
 
-			var whereClause = new WhereClause(new List<SearchField>
-			{
-				new SearchField("Name", "Joe", WhereOperator.Equal)
-			});
+		// 	var whereClause = new WhereClause(new List<SearchField>
+		// 	{
+		// 		new SearchField("Name", "Joe", WhereOperator.Equal)
+		// 	});
 
-			var searchParameters = new SearchParameters
-			{
-				WhereClause = whereClause
-			};
+		// 	var searchParameters = new SearchParameters
+		// 	{
+		// 		WhereClause = whereClause
+		// 	};
 
-			var results = collection.AsQueryable().Search(searchParameters);
-			Assert.Single(results.Results);
-			Assert.Equal(25, results.Results.First().Age);
-		}
+		// 	var results = collection.AsQueryable().Search(searchParameters);
+		// 	Assert.Single(results.Results);
+		// 	Assert.Equal(25, results.Results.First().Age);
+		// }
 	}
 }

@@ -13,4 +13,9 @@
     <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="29.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
 </Project>

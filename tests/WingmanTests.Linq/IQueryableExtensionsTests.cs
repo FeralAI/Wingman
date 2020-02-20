@@ -12,31 +12,31 @@ namespace WingmanTests.Linq
 		// test all possible logic routes.
 
 		[Theory]
-		[InlineData(null, "James")]
-		[InlineData("", "James")]
-		[InlineData(",", "James")]
-		[InlineData("LastName DESC", "Bob")]
-		[InlineData("Age DESC", "Mary")]
-		[InlineData("Age, LastName", "Chris")]
-		[InlineData("LastName, FirstName DESC", "James")]
+		[InlineData(null, "Juana")]
+		[InlineData("", "Juana")]
+		[InlineData(",", "Juana")]
+		[InlineData("LastName DESC", "Lucille")]
+		[InlineData("Age DESC", "Charlene")]
+		[InlineData("Age, LastName", "Miguel")]
+		[InlineData("LastName, FirstName DESC", "Miguel")]
 		public void OrderByClause_Clauses(string clauseString, string expected)
 		{
 			var clause = new OrderByClauseList(clauseString);
-			var results = TestPerson.Data.OrderByClause(clause);
+			var results = TestPerson.GenerateData().OrderByClause(clause);
 			Assert.Equal(expected, results.First().FirstName);
 		}
 
 		[Theory]
-		[InlineData(null, "James")]
-		[InlineData("", "James")]
-		[InlineData(",", "James")]
-		[InlineData("LastName DESC", "Bob")]
-		[InlineData("Age DESC", "Mary")]
-		[InlineData("Age, LastName", "Chris")]
-		[InlineData("LastName, FirstName DESC", "James")]
+		[InlineData(null, "Juana")]
+		[InlineData("", "Juana")]
+		[InlineData(",", "Juana")]
+		[InlineData("LastName DESC", "Lucille")]
+		[InlineData("Age DESC", "Charlene")]
+		[InlineData("Age, LastName", "Miguel")]
+		[InlineData("LastName, FirstName DESC", "Miguel")]
 		public void OrderByClause_String(string clause, string expected)
 		{
-			var results = TestPerson.Data.OrderByClause(clause);
+			var results = TestPerson.GenerateData().OrderByClause(clause);
 			Assert.Equal(expected, results.First().FirstName);
 		}
 

@@ -35,7 +35,7 @@ namespace Wingman.Linq
 
 			// We're hijacking the aggregate callbacks to do the work around null checks, original code was:
 			// var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
-			var notNullCheck = (Expression)null;
+			var notNullCheck = default(Expression);
 			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (e, s) =>
 			{
 				// Get the current property reference and a default value for its type.
@@ -57,12 +57,12 @@ namespace Wingman.Linq
 
 			// Create our value expressions
 			var constant = Expression.Convert(Expression.Constant(value), property.Type);
-			var maxConstant = (Expression)null;
+			var maxConstant = default(Expression);
 			if (maxValue != null)
 				maxConstant = Expression.Convert(Expression.Constant(maxValue), property.Type);
 
 			// Which where?
-			var whereExpression = (Expression)null;
+			var whereExpression = default(Expression);
 			if (valueType == typeof(string))
 				whereExpression = BuildWhereExpressionString(clauseType, property, constant);
 			else if (valueType.IsNumericType() || valueType.IsComparable())
@@ -107,6 +107,9 @@ namespace Wingman.Linq
 				case WhereOperator.LessThanOrEqual:
 					return Expression.LessThanOrEqual(property, value);
 
+				case WhereOperator.NotEqual:
+					return Expression.NotEqual(property, value);
+
 				default:
 					throw new NotImplementedException($"WhereClauseType.{clauseType} is not implemented");
 			}
@@ -126,6 +129,9 @@ namespace Wingman.Linq
 			{
 				case WhereOperator.Equal:
 					return Expression.Equal(property, value);
+
+				case WhereOperator.NotEqual:
+					return Expression.NotEqual(property, value);
 
 				default:
 					throw new NotImplementedException("Objects are limited to Equal expression types only");
@@ -150,6 +156,9 @@ namespace Wingman.Linq
 
 				case WhereOperator.Equal:
 					return Expression.Equal(property, value);
+
+				case WhereOperator.NotEqual:
+					return Expression.NotEqual(property, value);
 
 				default:
 					throw new NotImplementedException("Strings are limited to Contains and Equal expression types only");

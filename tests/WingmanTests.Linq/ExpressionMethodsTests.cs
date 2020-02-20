@@ -7,6 +7,8 @@ namespace WingmanTests.Linq
 {
 	public class ExpressionMethodsTests
 	{
+		private static IQueryable<TestPerson> Data = TestPerson.GenerateData();
+
 		[Theory]
 		[InlineData(typeof(string), null)]
 		[InlineData(typeof(string), "")]
@@ -16,7 +18,7 @@ namespace WingmanTests.Linq
 			Assert.ThrowsAny<ArgumentNullException>(() =>
 			{
 				var clause = ExpressionMethods.ToWhereExpression<TestPerson>(propertyName, WhereOperator.Equal, valueType, null);
-				TestPerson.Data.Where(clause);
+				Data.Where(clause);
 			});
 		}
 
@@ -24,26 +26,26 @@ namespace WingmanTests.Linq
 
 		[Theory]
 		// Comparable type
-		[InlineData("Age", 25, 30, typeof(int), WhereOperator.Between, "James")]
-		[InlineData("Age", 25, null, typeof(int), WhereOperator.Equal, "Jackie")]
-		[InlineData("Age", 35, null, typeof(int), WhereOperator.GreaterThan, "Mary")]
-		[InlineData("Age", 50, null, typeof(int), WhereOperator.GreaterThanOrEqual, "Mary")]
-		[InlineData("Age", 25, null, typeof(int), WhereOperator.LessThan, "Bob")]
-		[InlineData("Age", 30, null, typeof(int), WhereOperator.LessThanOrEqual, "James")]
+		[InlineData("Age", 25, 30, typeof(int), WhereOperator.Between, "Norman")]
+		[InlineData("Age", 25, null, typeof(int), WhereOperator.Equal, "Horace")]
+		[InlineData("Age", 35, null, typeof(int), WhereOperator.GreaterThan, "Miguel")]
+		[InlineData("Age", 50, null, typeof(int), WhereOperator.GreaterThanOrEqual, "Earl")]
+		[InlineData("Age", 25, null, typeof(int), WhereOperator.LessThan, "Miguel")]
+		[InlineData("Age", 30, null, typeof(int), WhereOperator.LessThanOrEqual, "Miguel")]
 		// Comparable type - nullable
-		[InlineData("Weight", 200, 300, typeof(int?), WhereOperator.Between, "Keith")]
-		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.Equal, "Bob")]
-		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, "Keith")]
-		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.GreaterThanOrEqual, "Keith")]
-		[InlineData("Weight", 250, null, typeof(int?), WhereOperator.LessThan, "Mary")]
-		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.LessThanOrEqual, "Mary")]
+		[InlineData("Weight", 200, 300, typeof(int?), WhereOperator.Between, "Miguel")]
+		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.Equal, "Seth")]
+		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, "Miguel")]
+		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.GreaterThanOrEqual, "Miguel")]
+		[InlineData("Weight", 250, null, typeof(int?), WhereOperator.LessThan, "Miguel")]
+		[InlineData("Weight", 175, null, typeof(int?), WhereOperator.LessThanOrEqual, "Miguel")]
 		// DateTime
-		[InlineData("Date", "2000-06-01", "2000-07-01", typeof(DateTime?), WhereOperator.Between, "Bob")]
-		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereOperator.Equal, "Keith")]
-		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereOperator.GreaterThan, "Bob")]
-		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereOperator.GreaterThanOrEqual, "Bob")]
-		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereOperator.LessThan, "Steven")]
-		[InlineData("Date", "2000-01-01", null, typeof(DateTime?), WhereOperator.LessThanOrEqual, "Steven")]
+		[InlineData("Updated", "2000-06-01", "2000-07-01", typeof(DateTime?), WhereOperator.Between, "Van")]
+		[InlineData("Updated", "2000-01-01", null, typeof(DateTime?), WhereOperator.Equal, "Alonzo")]
+		[InlineData("Updated", "2000-01-01", null, typeof(DateTime?), WhereOperator.GreaterThan, "Van")]
+		[InlineData("Updated", "2000-01-01", null, typeof(DateTime?), WhereOperator.GreaterThanOrEqual, "Van")]
+		[InlineData("Updated", "2000-01-01", null, typeof(DateTime?), WhereOperator.LessThan, "Margaret")]
+		[InlineData("Updated", "2000-01-01", null, typeof(DateTime?), WhereOperator.LessThanOrEqual, "Margaret")]
 		public void ToWhereExpression_Comparable(string name, object rawValue, object rawMaxValue, Type valueType, WhereOperator clauseType, string expected)
 		{
 			var value = rawValue;
@@ -57,7 +59,7 @@ namespace WingmanTests.Linq
 			}
 
 			var clause = ExpressionMethods.ToWhereExpression<TestPerson>(name, clauseType, valueType, value, maxValue);
-			var result = TestPerson.Data.Where(clause)
+			var result = Data.Where(clause)
 				.OrderBy(p => p.LastName)
 				.ThenBy(p => p.FirstName)
 				.First();
@@ -72,7 +74,7 @@ namespace WingmanTests.Linq
 			Assert.ThrowsAny<NotImplementedException>(() =>
 			{
 				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Weight", clauseType, typeof(int?), null);
-				TestPerson.Data.Where(clause);
+				Data.Where(clause);
 			});
 		}
 
@@ -81,12 +83,13 @@ namespace WingmanTests.Linq
 		#region ToWhereExpression - object
 
 		[Theory]
-		[InlineData(WhereOperator.Equal, 2)]
-		public void ToWhereExpression_Object(WhereOperator clauseType, int expected)
+		[InlineData(WhereOperator.Equal, "Claudia", "Kihn")]
+		public void ToWhereExpression_Object(WhereOperator clauseType, string firstName, string lastName)
 		{
-			var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Mother", clauseType, typeof(TestPerson), TestPerson.Mom);
-			var results = TestPerson.Data.Where(clause);
-			Assert.Equal(expected, results.Count());
+			var value = Data.Where(p => p.FirstName == firstName).Where(p => p.LastName == lastName).First();
+			var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Friend", clauseType, typeof(TestPerson), value);
+			var results = Data.Where(clause);
+			Assert.Single(results);
 		}
 
 		[Theory]
@@ -100,8 +103,8 @@ namespace WingmanTests.Linq
 		{
 			Assert.ThrowsAny<NotImplementedException>(() =>
 			{
-				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Mother", clauseType, typeof(TestPerson), null);
-				TestPerson.Data.Where(clause);
+				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("Friend", clauseType, typeof(TestPerson), null);
+				Data.Where(clause);
 			});
 		}
 
@@ -110,13 +113,13 @@ namespace WingmanTests.Linq
 		#region ToWhereExpression - string
 
 		[Theory]
-		[InlineData("LastName", "mit", WhereOperator.Contains, "Bob")]
-		[InlineData("LastName", "Brown", WhereOperator.Equal, "James")]
-		[InlineData("Father.FirstName", "Steven", WhereOperator.Equal, "James")]
+		[InlineData("LastName", "ittl", WhereOperator.Contains, "Lynne")]
+		[InlineData("LastName", "Klein", WhereOperator.Equal, "Jimmie")]
+		[InlineData("Friend.FirstName", "Claudia", WhereOperator.Equal, "Van")]
 		public void ToWhereExpression_String(string name, string value, WhereOperator clauseType, string expected)
 		{
 			var clause = ExpressionMethods.ToWhereExpression<TestPerson>(name, clauseType, value.GetType(), value);
-			var result = TestPerson.Data.Where(clause)
+			var result = Data.Where(clause)
 				.OrderBy(p => p.LastName)
 				.ThenBy(p => p.FirstName)
 				.First();
@@ -135,7 +138,7 @@ namespace WingmanTests.Linq
 			Assert.ThrowsAny<NotImplementedException>(() =>
 			{
 				var clause = ExpressionMethods.ToWhereExpression<TestPerson>("LastName", clauseType, typeof(string), null);
-				TestPerson.Data.Where(clause);
+				Data.Where(clause);
 			});
 		}
 

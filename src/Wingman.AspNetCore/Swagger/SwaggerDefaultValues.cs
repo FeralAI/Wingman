@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 
-namespace WingmanSamples.Web.Data
+namespace Wingman.AspNetCore.Swagger
 {
 	/// <summary>
 	/// Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.

@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 
-namespace WingmanSamples.Web.Data
+namespace Wingman.AspNetCore.Swagger
 {
 	/// <summary>
 	/// Configures the Swagger generation options.
@@ -14,13 +14,19 @@ namespace WingmanSamples.Web.Data
 	/// <see cref="IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
 	public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 	{
-		readonly IApiVersionDescriptionProvider provider;
+		private readonly AppInfo appInfo;
+		private readonly IApiVersionDescriptionProvider provider;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ConfigureSwaggerOptions"/> class.
 		/// </summary>
 		/// <param name="provider">The <see cref="IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
-		public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => this.provider = provider;
+		/// <param name="appInfoOptions">The options provider for <c>AppInfo</c>.null</param>
+		public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IOptions<AppInfo> appInfoOptions)
+		{
+			this.appInfo = appInfoOptions.Value;
+			this.provider = provider;
+		}
 
 		/// <inheritdoc />
 		public void Configure(SwaggerGenOptions options)
@@ -29,23 +35,23 @@ namespace WingmanSamples.Web.Data
 			// note: you might choose to skip or document deprecated API versions differently
 			foreach (var description in provider.ApiVersionDescriptions)
 			{
-				options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+				options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description, appInfo));
 			}
 		}
 
-		static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+		private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description, AppInfo appInfo)
 		{
 			var info = new OpenApiInfo
 			{
-				Title = "WingmanSamples.Web API",
+				Title = appInfo.Title,
 				Version = description.GroupName,
-				Description = "Sample Web API using Wingman",
-				License = new OpenApiLicense { Name = "UNLICENSED" },
+				Description = appInfo.Description,
+				License = new OpenApiLicense { Name = appInfo.License },
 				Contact = new OpenApiContact
 				{
-					Name = "Some One",
-					Email = "someone@example.com",
-					Url = new Uri("https://www.google.com"),
+					Name = appInfo.ContactName,
+					Email = appInfo.ContactEmail,
+					Url = new Uri(appInfo.ContactUrl),
 				},
 			};
 

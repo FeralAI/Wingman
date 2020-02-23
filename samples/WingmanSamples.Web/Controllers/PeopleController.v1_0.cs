@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Wingman.AspNetCore.Api;
 using Wingman.Linq;
 using WingmanSamples.Web.Data;
 using WingmanSamples.Web.Models;
@@ -44,7 +45,7 @@ namespace WingmanSamples.Web.Controllers
 		public ActionResult<SearchResults<TestPerson>> Search_v1_0(SearchForm form)
 		{
 			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
+				return BadRequestJson("Valiation errors", ModelState);
 
 			var searchFields = WhereClause.FromObject(form, ignoreNulls: true);
 			var parameters = new SearchParameters

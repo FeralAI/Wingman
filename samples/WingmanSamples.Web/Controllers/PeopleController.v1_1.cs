@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Wingman.AspNetCore.Api;
 using Wingman.Linq;
 using WingmanSamples.Web.Data;
 using WingmanSamples.Web.Models;

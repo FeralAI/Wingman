@@ -1,16 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace WingmanSamples.Web.Controllers
+namespace WingmanSamples.Web.Data
 {
-	[Produces("application/json")]
-	[Route("api/v{version:apiVersion}/[controller]")]
-	[ApiController]
-	public abstract class ApiController : ControllerBase
-	{
-
-	}
-
 	public static class ApiConventions
 	{
 		[ApiConventionNameMatch(ApiConventionNameMatchBehavior.Prefix)]

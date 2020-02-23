@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
 namespace Wingman.AspNetCore.Api
@@ -15,18 +12,6 @@ namespace Wingman.AspNetCore.Api
 		public ApiController(ILogger<ApiController> logger)
 		{
 			this.logger = logger;
-		}
-
-		protected JsonResult BadRequestJson(string message, IEnumerable<string> errors = null)
-		{
-			Response.StatusCode = (int)HttpStatusCode.BadRequest;
-			return new JsonResult(new ApiResult(message, errors));
-		}
-
-		protected JsonResult BadRequestJson(string message, ModelStateDictionary modelState = null)
-		{
-			Response.StatusCode = (int)HttpStatusCode.BadRequest;
-			return new JsonResult(new ApiResult(message, modelState));
 		}
 	}
 }

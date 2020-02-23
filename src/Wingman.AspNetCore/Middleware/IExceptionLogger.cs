@@ -1,6 +1,6 @@
 using System;
 
-namespace Wingman.AspNetCore
+namespace Wingman.AspNetCore.Middleware
 {
 	public interface IExceptionLogger
 	{

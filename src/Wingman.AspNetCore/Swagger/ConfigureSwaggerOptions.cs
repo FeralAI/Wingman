@@ -57,7 +57,7 @@ namespace Wingman.AspNetCore.Swagger
 
 			if (description.IsDeprecated)
 			{
-				info.Description += @" <b style=""color: red"">[DEPRECATED]</b>";
+				info.Description = $@"<b style=""color: red"">[DEPRECATED]</b><br />{info.Description}";
 			}
 
 			return info;

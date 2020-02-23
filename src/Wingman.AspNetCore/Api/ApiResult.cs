@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Wingman.AspNetCore.Api
@@ -10,14 +11,14 @@ namespace Wingman.AspNetCore.Api
 	/// </summary>
 	public class ApiResult
 	{
-		public ApiResult(string message = null, IEnumerable<string> errors = null, int statusCode = (int)HttpStatusCode.BadRequest)
+		public ApiResult(string message = null, IEnumerable<string> errors = null, int statusCode = StatusCodes.Status400BadRequest)
 		{
 			Message = message;
 			StatusCode = statusCode;
 			Errors = errors;
 		}
 
-		public ApiResult(string message = null, ModelStateDictionary modelState = null, int statusCode = (int)HttpStatusCode.BadRequest)
+		public ApiResult(string message = null, ModelStateDictionary modelState = null, int statusCode = StatusCodes.Status400BadRequest)
 		{
 			Message = message;
 			StatusCode = statusCode;
@@ -35,13 +36,13 @@ namespace Wingman.AspNetCore.Api
 	/// <typeparam name="T"></typeparam>
 	public class ApiResult<T> : ApiResult
 	{
-		public ApiResult(T result, string message = null, IEnumerable<string> errors = null, int statusCode = (int)HttpStatusCode.OK)
+		public ApiResult(T result, string message = null, IEnumerable<string> errors = null, int statusCode = StatusCodes.Status200OK)
 			: base(message, errors, statusCode)
 		{
 			Result = result;
 		}
 
-		public ApiResult(T result, string message = null, ModelStateDictionary errors = null, int statusCode = (int)HttpStatusCode.BadRequest)
+		public ApiResult(T result, string message = null, ModelStateDictionary errors = null, int statusCode = StatusCodes.Status400BadRequest)
 			: base(message, errors, statusCode)
 		{
 			Result = result;

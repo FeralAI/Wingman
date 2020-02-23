@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Wingman.AspNetCore;
 using Wingman.AspNetCore.Api;
+using Wingman.AspNetCore.Middleware;
 using Wingman.AspNetCore.Swagger;
+using Wingman.AspNetCore.Validation;
 using Wingman.Email;
 using Wingman.RazorEmail;
 using WingmanSamples.Web.Data;
@@ -37,6 +40,11 @@ namespace WingmanSamples.Web
 			services.AddControllers(options =>
 			{
 				options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+				options.Filters.Add(typeof(ValidateModelFilter));
+			});
+			services.Configure<ApiBehaviorOptions>(options =>
+			{
+				options.SuppressModelStateInvalidFilter = true;
 			});
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
@@ -82,7 +90,7 @@ namespace WingmanSamples.Web
 			});
 
 			// WingmanSamples services
-			services.AddSingleton<ExceptionLogger>();
+			services.AddSingleton<IExceptionLogger, ExceptionLogger>();
 			services.AddSingleton<PageService>();
 			services.AddSingleton<TestPersonService>();
 		}

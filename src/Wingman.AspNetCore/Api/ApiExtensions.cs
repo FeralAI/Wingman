@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Wingman.AspNetCore.Api
 {
-	public static class IServiceCollectionExtensions
+	public static class ApiExtensions
 	{
 		public static IServiceCollection AddVersionedApi(this IServiceCollection @this, ApiVersion defaultVersion, string nameFormat = "VVVV")
 		{

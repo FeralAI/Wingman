@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Wingman.AspNetCore
+namespace Wingman.AspNetCore.Middleware
 {
 	public class ExceptionHandlerMiddleware
 	{

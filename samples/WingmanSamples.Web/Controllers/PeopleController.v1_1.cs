@@ -40,9 +40,6 @@ namespace WingmanSamples.Web.Controllers
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
 		public ActionResult<SearchResults<TestPerson>> Search_v1_1(SearchForm form)
 		{
-			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
-
 			var searchFields = WhereClause.FromObject(form, ignoreNulls: true);
 			var parameters = new SearchParameters
 			{

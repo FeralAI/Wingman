@@ -1,11 +1,32 @@
+using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Wingman.AspNetCore.Swagger
 {
-	public static class IApplicationBuilderExtensions
+	public static class IServiceCollectionExtensions
 	{
+		public static IServiceCollection AddVersionedSwagger(this IServiceCollection @this)
+		{
+			@this.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+			@this.AddSwaggerGen(options =>
+			{
+				options.OperationFilter<SwaggerDefaultValues>();
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				options.IncludeXmlComments(xmlPath);
+			});
+
+			return @this;
+		}
+
 		public static IApplicationBuilder UseSwagger(this IApplicationBuilder @this, IApiVersionDescriptionProvider provider)
 		{
 			@this.UseSwagger();

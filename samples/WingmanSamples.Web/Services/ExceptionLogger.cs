@@ -1,5 +1,5 @@
 using System;
-using Wingman.AspNetCore;
+using Wingman.AspNetCore.Middleware;
 
 namespace WingmanSamples.Web.Services
 {

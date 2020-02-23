@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,11 +38,21 @@ namespace WingmanSamples.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Add core services
-			services.AddControllers(options =>
-			{
-				options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-				options.Filters.Add(typeof(ValidateModelFilter));
-			});
+			var serializerOptions = default(JsonSerializerOptions);
+			services
+				.AddControllers(options =>
+				{
+					options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+					options.Filters.Add(typeof(ValidateModelFilter));
+				})
+				.AddJsonOptions(options =>
+				{
+					options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+					serializerOptions = options.JsonSerializerOptions;
+				});
+
+			services.AddSingleton<JsonSerializerOptions>(provider => serializerOptions);
+
 			services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.SuppressModelStateInvalidFilter = true;

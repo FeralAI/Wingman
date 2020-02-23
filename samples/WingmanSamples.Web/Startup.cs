@@ -101,7 +101,7 @@ namespace WingmanSamples.Web
 			});
 
 			// WingmanSamples services
-			services.AddSingleton<IExceptionLogger, ExceptionLogger>();
+			services.AddSingleton<IExceptionHandler, WingmanSamplesExceptionHandler>();
 			services.AddSingleton<PageService>();
 			services.AddSingleton<TestPersonService>();
 		}

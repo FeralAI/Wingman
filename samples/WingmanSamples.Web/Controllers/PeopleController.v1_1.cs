@@ -14,12 +14,9 @@ namespace WingmanSamples.Web.Controllers
 		/// </summary>
 		/// <returns>An <c>IEnumerable&lt;TestPerson&gt;</c> object.</returns>
 		[HttpGet]
-		[MapToApiVersion(Api.v1_0), MapToApiVersion(Api.v1_1)]
+		[MapToApiVersion(Api.v1_1)]
 		[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-		public ActionResult<IEnumerable<TestPerson>> Get()
-		{
-			return Ok(personService.GetData());
-		}
+		public ActionResult<IEnumerable<TestPerson>> Get_v1_1() => Get_v1_0();
 
 		/// <summary>
 		/// Search the dummy database for test people
@@ -40,7 +37,7 @@ namespace WingmanSamples.Web.Controllers
 		[HttpPost("search")]
 		[MapToApiVersion(Api.v1_1)]
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
-		public ActionResult<SearchResults<TestPerson>> Search_v11(SearchForm form)
+		public ActionResult<SearchResults<TestPerson>> Search_v1_1(SearchForm form)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

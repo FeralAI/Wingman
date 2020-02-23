@@ -18,6 +18,7 @@ using Wingman.RazorEmail;
 using WingmanSamples.Web.Data;
 using WingmanSamples.Web.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
 
 namespace WingmanSamples.Web
 {
@@ -48,22 +49,17 @@ namespace WingmanSamples.Web
 			services.AddApiVersioning(options => {
 				options.ReportApiVersions = true;
 				options.AssumeDefaultVersionWhenUnspecified = true;
-				options.DefaultApiVersion = new ApiVersion(
-					Api.CurrentVersion.Item1,
-					Api.CurrentVersion.Item2,
-					Api.CurrentVersion.Item3
-				);
+				options.DefaultApiVersion = Api.CurrentVersion;
 			});
 			services.AddVersionedApiExplorer(options =>
 			{
-				options.GroupNameFormat = "'v'VVVV";
+				options.GroupNameFormat = Api.GroupNameFormat;
 				options.SubstituteApiVersionInUrl = true;
 			});
 			services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 			services.AddSwaggerGen(options =>
 			{
 				options.OperationFilter<SwaggerDefaultValues>();
-
 				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				options.IncludeXmlComments(xmlPath);
@@ -119,10 +115,16 @@ namespace WingmanSamples.Web
 				app.UseSwagger();
 				app.UseSwaggerUI(options =>
 				{
-					foreach (var description in provider.ApiVersionDescriptions)
+					// Sort them descending since swagger will default to the first endpoint mapped
+					var orderedDescriptions = provider.ApiVersionDescriptions
+						.OrderByDescending(d => d.ApiVersion.MajorVersion)
+						.ThenByDescending(d => d.ApiVersion.MinorVersion)
+						.ThenByDescending(d => d.ApiVersion.Status);
+
+					foreach (var description in orderedDescriptions)
 					{
 						var url = $"/swagger/{description.GroupName}/swagger.json";
-						options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant() );
+						options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant());
 					}
 				});
 			}

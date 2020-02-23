@@ -37,7 +37,7 @@
 
 @code {
 	private bool collapseNavMenu = true;
-	private string swaggerUrl = $"/swagger/index.html?urls.primaryName=V{Api.CurrentVersionString}";
+	private string swaggerUrl = $"/swagger/index.html?urls.primaryName=V{Api.CurrentVersion.ToString()}";
 
 	private string navMenuCssClass => collapseNavMenu ? "collapse" : null;
 	private List<Tuple<string, string>> classPages;

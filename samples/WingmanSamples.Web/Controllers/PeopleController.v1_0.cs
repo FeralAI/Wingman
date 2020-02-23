@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Wingman.Linq;
 using WingmanSamples.Web.Data;
@@ -8,6 +9,18 @@ namespace WingmanSamples.Web.Controllers
 	[ApiVersion(Api.v1_0, Deprecated = true)]
 	public partial class PeopleController : ApiController
 	{
+		/// <summary>
+		/// Returns all test person data.
+		/// </summary>
+		/// <returns>An <c>IEnumerable&lt;TestPerson&gt;</c> object.</returns>
+		[HttpGet]
+		[MapToApiVersion(Api.v1_0)]
+		[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
+		public ActionResult<IEnumerable<TestPerson>> Get_v1_0()
+		{
+			return Ok(personService.GetData());
+		}
+
 		/// <summary>
 		/// Search the dummy database for test people
 		/// </summary>
@@ -28,7 +41,7 @@ namespace WingmanSamples.Web.Controllers
 		[HttpPost("search")]
 		[MapToApiVersion(Api.v1_0)]
 		[ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Search))]
-		public ActionResult<SearchResults<TestPerson>> Search_v10(SearchForm form)
+		public ActionResult<SearchResults<TestPerson>> Search_v1_0(SearchForm form)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

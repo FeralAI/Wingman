@@ -22,8 +22,6 @@ namespace WingmanSamples.Web.Services
 		{
 			logger.LogError(ex, $"{nameof(ExceptionHandlerMiddleware)} handled this exception.");
 
-			context.Response.Clear();
-
 			var result = new ApiResult(
 				$"An error of type {ex.GetType().Name} occurred with your request",
 				new List<string> { ex.Message },
@@ -36,6 +34,7 @@ namespace WingmanSamples.Web.Services
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			};
 
+			context.Response.Clear();
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 			await context.Response.WriteAsync(JsonSerializer.Serialize(result, serializeOptions));

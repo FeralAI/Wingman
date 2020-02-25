@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Wingman.AspNetCore.Validation
 {
-	public class ValidateOptionAttribute : ValidationAttribute
+	public class InvalidOptionsAttribute : ValidationAttribute
 	{
 		public List<object> Values;
 
-		public ValidateOptionAttribute(params object[] values)
+		public InvalidOptionsAttribute(params object[] values)
 		{
 			Values = values?.ToList();
 		}
@@ -19,9 +19,9 @@ namespace Wingman.AspNetCore.Validation
 				return ValidationResult.Success;
 
 			if (Values == null || Values.Count == 0 || !Values.Contains(value))
-				return new ValidationResult($"The {validationContext.DisplayName ?? validationContext.MemberName} field is invalid.");
-			else
 				return ValidationResult.Success;
+			else
+				return new ValidationResult($"The {validationContext.DisplayName ?? validationContext.MemberName} field is invalid.");
 		}
 	}
 }

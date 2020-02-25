@@ -6,7 +6,7 @@ namespace Wingman.AspNetCore.Api
 	public static class ApiExtensions
 	{
 		/// <summary>
-		/// Adds versioning to a WebApi application.
+		/// Adds versioning to an ASP.NET Core WebApi.
 		/// </summary>
 		/// <remarks>
 		/// API versioning and documentation:
@@ -17,18 +17,17 @@ namespace Wingman.AspNetCore.Api
 		/// <param name="defaultVersion">The default API version to serve</param>
 		/// <param name="nameFormat">The API version format</param>
 		/// <returns>The service collection</returns>
-		public static IServiceCollection AddVersionedApi(this IServiceCollection @this, ApiVersion defaultVersion, string nameFormat = "VVVV")
+		public static IServiceCollection AddVersionedApi(this IServiceCollection @this, ApiVersion defaultVersion, string nameFormat = "'v'VVVV")
 		{
 			@this.AddApiVersioning(options => {
-				options.ReportApiVersions = true;
 				options.AssumeDefaultVersionWhenUnspecified = true;
 				options.DefaultApiVersion = defaultVersion;
+				options.ReportApiVersions = true;
 			});
 
 			@this.AddVersionedApiExplorer(options =>
 			{
 				options.GroupNameFormat = nameFormat;
-				options.SubstitutionFormat = nameFormat;
 				options.SubstituteApiVersionInUrl = true;
 			});
 

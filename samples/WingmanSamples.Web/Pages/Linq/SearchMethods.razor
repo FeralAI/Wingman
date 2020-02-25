@@ -84,7 +84,7 @@
 		var json = JsonSerializer.Serialize(new { FirstName = form.FirstName, LastName = form.LastName }, writeOptions);
 		var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 		ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-		var response = await Http.PostAsync("api/v1.1/people/search", content);
+		var response = await Http.PostAsync("api/v1.2/people/search", content);
 		if (response.StatusCode == HttpStatusCode.OK)
 		{
 			var body = await response.Content.ReadAsStringAsync();

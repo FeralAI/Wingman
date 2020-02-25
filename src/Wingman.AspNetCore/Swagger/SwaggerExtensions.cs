@@ -6,20 +6,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Wingman.AspNetCore.Swagger
 {
 	public static class IServiceCollectionExtensions
 	{
-		public static IServiceCollection AddVersionedSwagger(this IServiceCollection @this)
+		public static IServiceCollection AddSwagger(this IServiceCollection @this, string title, string version = "v1")
 		{
-			@this.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-
 			@this.AddSwaggerGen(options =>
 			{
-				options.OperationFilter<SwaggerDefaultValues>();
-				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				options.SwaggerDoc(version, new OpenApiInfo { Title = title, Version = version });
+				var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				options.IncludeXmlComments(xmlPath);
 			});
@@ -27,7 +26,31 @@ namespace Wingman.AspNetCore.Swagger
 			return @this;
 		}
 
-		public static IApplicationBuilder UseSwagger(this IApplicationBuilder @this, IApiVersionDescriptionProvider provider)
+		public static IServiceCollection AddVersionedSwagger(this IServiceCollection @this)
+		{
+			@this.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+			@this.AddSwaggerGen(options =>
+			{
+				options.OperationFilter<SwaggerDefaultValues>();
+				var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				options.IncludeXmlComments(xmlPath);
+			});
+
+			return @this;
+		}
+
+		public static IApplicationBuilder UseSwagger(this IApplicationBuilder @this, string title, string version = "v1")
+		{
+			@this.UseSwagger();
+
+			@this.UseSwaggerUI(options => options.SwaggerEndpoint($"./{version}/swagger.json", title));
+
+			return @this;
+		}
+
+		public static IApplicationBuilder UseVersionedSwagger(this IApplicationBuilder @this, IApiVersionDescriptionProvider provider)
 		{
 			@this.UseSwagger();
 
@@ -41,8 +64,8 @@ namespace Wingman.AspNetCore.Swagger
 
 				foreach (var description in orderedDescriptions)
 				{
-					var url = $"/swagger/{description.GroupName}/swagger.json";
-					options.SwaggerEndpoint(url, description.GroupName.ToUpperInvariant());
+					var url = $"./{description.GroupName}/swagger.json";
+					options.SwaggerEndpoint(url, description.GroupName);
 				}
 			});
 

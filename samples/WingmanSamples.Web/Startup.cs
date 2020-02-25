@@ -112,7 +112,7 @@ namespace WingmanSamples.Web
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseSwagger(provider);
+				app.UseVersionedSwagger(provider);
 			}
 			else
 			{

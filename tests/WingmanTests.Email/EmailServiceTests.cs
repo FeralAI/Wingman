@@ -37,7 +37,7 @@ namespace WingmanTests.Email
 		[Fact]
 		public async void Send_ArgumentNullException()
 		{
-			var badEmailService = new EmailService();
+			var badEmailService = new EmailService(null);
 			await Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
 			{
 				await badEmailService.Send(null);

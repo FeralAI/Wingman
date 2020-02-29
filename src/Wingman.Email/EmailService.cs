@@ -10,15 +10,9 @@ namespace Wingman.Email
 	/// </summary>
 	public class EmailService : IEmailService
 	{
-		public EmailService()
-		{
-			SetSmtpClientFactory();
-		}
 		public EmailService(EmailOptions options)
-			: this()
-		{
-			Options = options;
-		}
+			: this(options, null) { }
+
 		public EmailService(EmailOptions options, Func<SmtpClient> smtpClientFactory)
 		{
 			Options = options;
@@ -28,7 +22,7 @@ namespace Wingman.Email
 		/// <summary>
 		/// The email sending options.
 		/// </summary>
-		public virtual EmailOptions Options { get; set; }
+		public virtual EmailOptions Options { get; private set; }
 
 		/// <summary>
 		/// The method for creating the <c>SmtpClient</c> when sending emails.
@@ -37,18 +31,9 @@ namespace Wingman.Email
 		protected Func<SmtpClient> SmtpClientFactory { get; set; }
 
 		/// <summary>
-		/// Sets a reference to the smtp factory function.
-		/// </summary>
-		/// <param name="factory"></param>
-		public void SetSmtpClientFactory(Func<SmtpClient> factory = null)
-		{
-			SmtpClientFactory = factory ?? (() => CreateSmtpClient(Options));
-		}
-
-		/// <summary>
 		/// Sends an email.
 		/// </summary>
-		/// <param name="email">The email object.</param>
+		/// <param name="message">The email object.</param>
 		public virtual async Task Send(MailMessage message)
 		{
 			if (message == null)
@@ -56,6 +41,15 @@ namespace Wingman.Email
 
 			using (var client = SmtpClientFactory())
 				await client.SendMailAsync(message);
+		}
+
+		/// <summary>
+		/// Sets a reference to the smtp factory function. If no factory method is provided, a default method will be created.
+		/// </summary>
+		/// <param name="factory"></param>
+		public void SetSmtpClientFactory(Func<SmtpClient> factory)
+		{
+			SmtpClientFactory = factory ?? (() => CreateSmtpClient(Options));
 		}
 
 		/// <summary>

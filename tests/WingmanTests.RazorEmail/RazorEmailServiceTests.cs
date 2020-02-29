@@ -97,7 +97,7 @@ namespace WingmanTests.RazorEmail
 		{
 			await Assert.ThrowsAnyAsync<NullReferenceException>(async () =>
 			{
-				await new RazorEmailService<TestEmail>().Send(null);
+				await new RazorEmailService<TestEmail>(null).Send(null);
 			});
 		}
 	}

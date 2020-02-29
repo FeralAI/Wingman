@@ -12,13 +12,8 @@ namespace Wingman.RazorEmail
 	/// <typeparam name="T">Any type property from the assembly with your email assets (classes, templates, etc.)</typeparam>
 	public class RazorEmailService<T> : EmailService, IRazorEmailService
 	{
-		public RazorEmailService()
-			: base()
-		{
-			Initialize();
-		}
 		public RazorEmailService(EmailOptions options)
-			: this()
+			: base(options)
 		{
 			Initialize(options);
 		}

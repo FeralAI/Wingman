@@ -12,7 +12,9 @@ namespace WingmanTests.Linq
 		[InlineData("FirstName", "Steven", null, typeof(string), WhereOperator.Equal, 1)]
 		[InlineData("Weight", 200, null, typeof(int?), WhereOperator.GreaterThan, 24)]
 		[InlineData("Age", 21, null, typeof(int), WhereOperator.LessThanOrEqual, 14)]
+		[InlineData("Created", "1998-01-01", "1999-01-01", typeof(DateTime), WhereOperator.Between, 100)]
 		[InlineData("Friend.FirstName", "Patty", null, typeof(string), WhereOperator.Equal, 1)]
+		[InlineData("Friend.FirstName", "Patty", null, typeof(string), WhereOperator.NotEqual, 49)]
 		public void Search(string name, object value, object maxValue, Type valueType, WhereOperator clauseType, int expected)
 		{
 			var searchParameters = new SearchParameters
@@ -22,8 +24,8 @@ namespace WingmanTests.Linq
 					new SearchField
 					{
 						Name = name,
-						Value = value,
-						MaxValue = maxValue,
+						Value = (valueType == typeof(DateTime)) ? DateTime.Parse((string)value) : value,
+						MaxValue = (valueType == typeof(DateTime)) ? DateTime.Parse((string)maxValue) : maxValue,
 						ValueType = valueType,
 						WhereOperator = clauseType,
 					},
@@ -61,7 +63,7 @@ namespace WingmanTests.Linq
 		{
 			// WHERE (FirstName LIKE '%ac%' AND LastName LIKE '%mith%')
 			// OR (FirstName = 'Josephine'
-			// 	AND (LastName = 'Dickinson'
+			// 	OR (LastName = 'Dickinson'
 			// 		AND (Age = 20 OR Age = 22 OR Age = 25 OR Age = 30 OR Age = 48)
 			// 	)
 			// )
@@ -82,7 +84,7 @@ namespace WingmanTests.Linq
 				new SearchField("LastName", "Dickinson", WhereOperator.Contains)
 			}, WhereJoinOperator.And) {
 				Subclauses = new List<WhereClause> { subSubclause },
-				JoinToSubclauseOperator = WhereJoinOperator.And,
+				JoinToSubclauseOperator = WhereJoinOperator.Or,
 			};
 
 			var clause2 = new WhereClause(new List<SearchField> {

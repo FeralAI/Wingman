@@ -10,10 +10,11 @@ namespace WingmanTests.Linq
 		[Fact]
 		public void FromObject()
 		{
-			var result = WhereClause.FromObject(new { Quantity = 1, Size = 10 });
+			var result = WhereClause.FromObject(new { Quantity = 1, Size = 10, Shape = default(string) }, ignoreNulls: true);
 			Assert.Equal(2, result.Count());
 			Assert.Equal(1, (int)result.Where(s => s.Name == "Quantity").First().Value);
 			Assert.Equal(10, (int)result.Where(s => s.Name == "Size").First().Value);
+			Assert.Equal(false, result.Where(s => s.Name == "Shape").Any());
 		}
 
 		[Fact]

@@ -13,11 +13,6 @@ namespace Wingman.Linq
 			MaxValue = maxValue;
 			WhereOperator = whereOperator;
 		}
-		public SearchField(string name, object value, Type valueType, WhereOperator whereOperator, object maxValue = null)
-			: this(name, value, whereOperator, maxValue)
-		{
-			ValueType = valueType;
-		}
 
 		public string Name { get; set; }
 		public object Value { get; set; }

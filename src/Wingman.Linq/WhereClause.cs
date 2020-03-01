@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using LinqKit;
 
@@ -20,12 +21,12 @@ namespace Wingman.Linq
 		public bool HasClauses => Count > 0 || Subclauses?.Count > 0;
 
 		/// <summary>
-		/// The operator to join the where clauses and subclauses together with.
+		/// The operator to join the search fields together.
 		/// </summary>
 		public WhereJoinOperator JoinOperator { get; set; } = WhereJoinOperator.And;
 
 		/// <summary>
-		/// Operator to use between the clause and subclauses.
+		/// Operator to use between the search fields and subclauses.
 		/// </summary>
 		public WhereJoinOperator JoinToSubclauseOperator { get; set; } = WhereJoinOperator.And;
 
@@ -46,7 +47,7 @@ namespace Wingman.Linq
 		/// <param name="ignoreNulls">Ignore properties with a value of <c>null</c>.</param>
 		/// <param name="joinOperator">The where clause operator.</param>
 		/// <returns>A <c>SearchFieldList</c>.</returns>
-		public static WhereClause FromObject(object model, WhereJoinOperator joinOperator =  WhereJoinOperator.And, bool ignoreNulls = false)
+		public static WhereClause FromObject(object model, WhereJoinOperator joinOperator =  WhereJoinOperator.And, bool ignoreNulls = true)
 		{
 			if (model == null)
 				throw new ArgumentNullException("Model is required");
@@ -64,10 +65,10 @@ namespace Wingman.Linq
 				var valueType = attribute?.ValueType ?? property.PropertyType;
 				var searchField = new SearchField
         {
-					Name = attribute?.Name ?? property.Name,
+					Name          = attribute?.Name ?? property.Name,
 					WhereOperator = attribute?.WhereClauseType ?? Linq.WhereOperator.Equal,
-					Value = value,
-					ValueType = valueType,
+					Value         = value,
+					ValueType     = valueType,
 				};
 
 				searchFields.Add(searchField);
@@ -77,20 +78,13 @@ namespace Wingman.Linq
 			return result;
 		}
 
-		public ExpressionStarter<T> ToWhereExpression<T>()
+		public Expression<Func<T, bool>> ToWhereExpression<T>()
 		{
 			var predicate = PredicateBuilder.New<T>(true);
 
 			foreach (var searchField in this)
 			{
-				var whereExpression = ExpressionMethods.ToWhereExpression<T>(
-					searchField.Name,
-					searchField.WhereOperator,
-					searchField.ValueType,
-					searchField.Value,
-					searchField.MaxValue
-				);
-
+				var whereExpression = ExpressionMethods.ToWhereExpression<T>(searchField);
 				if (JoinOperator == WhereJoinOperator.And)
 					predicate = predicate.And(whereExpression);
 				else

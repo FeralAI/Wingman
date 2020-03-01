@@ -18,7 +18,15 @@ namespace Wingman.Linq
 			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
 		}
 
-		public static Expression<Func<T, bool>> ToWhereExpression<T>(
+    public static Expression<Func<T, bool>> ToWhereExpression<T>(SearchField searchField) => ToWhereExpression<T>(
+			searchField.Name,
+			searchField.WhereOperator,
+			searchField.ValueType,
+			searchField.Value,
+			searchField.MaxValue
+		);
+
+    public static Expression<Func<T, bool>> ToWhereExpression<T>(
 			string propertyName,
 			WhereOperator clauseType,
 			Type valueType,
@@ -36,11 +44,11 @@ namespace Wingman.Linq
 			// We're hijacking the aggregate callbacks to do the work around null checks, original code was:
 			// var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, Expression.PropertyOrField);
 			var notNullCheck = default(Expression);
-			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (e, s) =>
+			var property = propertyName.Split('.').Aggregate<string, Expression>(parameter, (expression, part) =>
 			{
 				// Get the current property reference and a default value for its type.
 				// If it's null, then start building out not null expressions to prepend to the final expression.
-				var currentProperty = Expression.PropertyOrField(e, s);
+				var currentProperty = Expression.PropertyOrField(expression, part);
 				var defaultValue = Expression.Lambda(Expression.Default(currentProperty.Type), "", null).Compile().DynamicInvoke();
 				if (defaultValue == null)
 				{
@@ -51,7 +59,7 @@ namespace Wingman.Linq
 						notNullCheck = Expression.AndAlso(notNullCheck, notNull);
 				}
 
-				// This will be "e" in the next callback, so we pass the property expression for this "s"
+				// This will be expression in the next callback, so we pass the property expression for this "s"
 				return currentProperty;
 			});
 
@@ -70,7 +78,7 @@ namespace Wingman.Linq
 			else
 				whereExpression = BuildWhereExpressionObject(clauseType, property, constant);
 
-			// No where there?
+			// Null check?
 			if (notNullCheck != null)
 				whereExpression = Expression.AndAlso(notNullCheck, whereExpression);
 

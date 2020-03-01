@@ -10,7 +10,7 @@ namespace WingmanTests.Linq
 		[Fact]
 		public void FromObject()
 		{
-			var result = WhereClause.FromObject(new { Quantity = 1, Size = 10, Shape = default(string) }, ignoreNulls: true);
+			var result = WhereClause.FromObject(new { Quantity = 1, Size = 10, Shape = default(string) });
 			Assert.Equal(2, result.Count());
 			Assert.Equal(1, (int)result.Where(s => s.Name == "Quantity").First().Value);
 			Assert.Equal(10, (int)result.Where(s => s.Name == "Size").First().Value);
@@ -33,7 +33,7 @@ namespace WingmanTests.Linq
 		[Fact]
 		public void FromObject_SearchFieldAttribute()
 		{
-			var result = WhereClause.FromObject(new SearchForm()).First();
+			var result = WhereClause.FromObject(new SearchForm(), ignoreNulls: false).First();
 			Assert.Equal("Words", result.Name);
 			Assert.Equal(typeof(string), result.ValueType);
 			Assert.Equal(WhereOperator.Equal, result.WhereOperator);
